@@ -1,0 +1,46 @@
+- hosts: all
+  become: true
+  tasks:
+    - name: Update and upgrade apt packages
+      apt:
+        update_cache: no
+        upgrade: dist
+
+    - name: Install TFTP server
+      apt:
+        name: tftpd-hpa
+        state: present
+
+    - name: Ensure TFTP boot directory exists
+      ansible.builtin.file:
+        path: /srv/tftp
+        state: directory
+        owner: tftp
+        group: tftp
+        mode: '0755'
+
+    - name: Configure TFTP server
+      copy:
+        dest: /etc/default/tftpd-hpa
+        content: |
+          TFTP_USERNAME="tftp"
+          TFTP_DIRECTORY="/srv/tftp"
+          TFTP_ADDRESS="0.0.0.0:69"
+          TFTP_OPTIONS="--secure"
+      notify: Restart TFTP server
+
+    - name: Gather service facts
+      ansible.builtin.service_facts:
+
+    - name: Verify TFTP server is running
+      assert:
+        that:
+          - ansible_facts.services['tftpd-hpa'].state == 'running'
+        fail_msg: "TFTP server (tftpd-hpa) is not running."
+        success_msg: "TFTP server (tftpd-hpa) is running."
+
+  handlers:
+    - name: Restart TFTP server
+      service:
+        name: tftpd-hpa
+        state: restarted

@@ -1,0 +1,47 @@
+- hosts: all
+  become: true
+  tasks:
+    - name: Remove TFTP server
+      apt:
+        name: tftpd-hpa
+        state: absent
+
+    - name: Remove PXE Linux files
+      ansible.builtin.file:
+        state: absent
+        path: /srv/tftp
+
+    - name: Flush all iptables rules
+      ansible.builtin.command: iptables -F
+
+    - name: Delete all user-defined iptables chains
+      ansible.builtin.command: iptables -X
+
+    - name: Flush all NAT iptables rules
+      ansible.builtin.command: iptables -t nat -F
+
+    - name: Delete all user-defined NAT iptables chains
+      ansible.builtin.command: iptables -t nat -X
+
+    - name: Flush all mangle iptables rules
+      ansible.builtin.command: iptables -t mangle -F
+
+    - name: Delete all user-defined mangle iptables chains
+      ansible.builtin.command: iptables -t mangle -X
+
+    - name: Flush all raw iptables rules
+      ansible.builtin.command: iptables -t raw -F
+
+    - name: Delete all user-defined raw iptables chains
+      ansible.builtin.command: iptables -t raw -X
+
+    - name: Flush all security iptables rules
+      ansible.builtin.command: iptables -t security -F
+
+    - name: Delete all user-defined security iptables chains
+      ansible.builtin.command: iptables -t security -X
+
+    - name: Remove iptables-persistent package
+      apt:
+        name: iptables-persistent
+        state: absent

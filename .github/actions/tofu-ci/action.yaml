@@ -1,0 +1,44 @@
+---
+name: Run Tofu CI
+description: Run taskfiles associated with Tofu CI
+
+inputs:
+  tofu_version:
+    description: 'The version of Tofu to use'
+    required: true
+    default: '1.8.8'
+  terraform_docs_version:
+    description: 'The version of Terraform Docs to use'
+    required: true
+    default: 'v0.18.0'
+  tflint_version:
+    description: 'The version of TFLint to use'
+    required: true
+    default: 'v0.47.0'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Taskfile
+      uses: Illbjorn/setup-task@0.1.0
+
+    - name: Setup Tofu
+      uses: opentofu/setup-opentofu@v1
+      with:
+        tofu_version: ${{ inputs.tofu_version}}
+
+    - name: Install a binary from GitHub releases
+      uses: jaxxstorm/action-install-gh-release@v1.14.0
+      with:
+        repo: terraform-docs/terraform-docs
+        tag: ${{ inputs.terraform_docs_version }}
+  
+
+    - uses: terraform-linters/setup-tflint@v4
+      name: Setup TFLint
+      with:
+        tflint_version: ${{ inputs.tflint_version }}
+
+    - name: Check Tofu
+      shell: bash
+      run: task tofu:check

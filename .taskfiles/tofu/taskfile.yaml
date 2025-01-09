@@ -1,0 +1,140 @@
+---
+version: "3"
+
+vars:
+  PINNED_TOFU_VERSION: latest:^1.8
+  PINNED_TERRAGRUNT_VERSION: latest:^0.71
+  TOFU_RESOURCES_DIR: '{{.ROOT_DIR}}/.taskfiles/tofu/resources'
+  MODULES_DIR: '{{.ROOT_DIR}}/modules'
+
+tasks:
+  test:
+    desc: Runs all tofu tests.
+    cmds:
+      - for dir in {{.MODULES_DIR}}/*; do (task tofu:test-$(basename "$dir")); done
+
+  test-*:
+    desc: Runs the tofu tests for a specific module.
+    dotenv: ['{{.TOFU_RESOURCES_DIR}}/test/.env']
+    env:
+      TF_IN_AUTOMATION: true
+    vars:
+      MODULE: "{{index .MATCH 0}}"
+      PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
+    cmds:
+      - tofu -chdir={{.PATH}} init 
+      - tofu -chdir={{.PATH}} test
+    preconditions:
+      - which tofu
+      - test -f {{.TOFU_RESOURCES_DIR}}/test/.env
+      - test -d {{.PATH}}
+      
+  use:
+    silent: true
+    desc: Use the default version of Tofu and Terragrunt.
+    cmds:
+      - task: use-tofu-{{.PINNED_TOFU_VERSION}}
+      - task: use-tg-{{.PINNED_TERRAGRUNT_VERSION}}
+
+  use-tg-*:
+    silent: true
+    internal: true
+    desc: Use a specific version of Terragrunt.
+    vars:
+      TERRAGRUNT_VERSION: "{{index .MATCH 0}}"
+    cmds:
+      - tgenv install {{.TERRAGRUNT_VERSION}}
+      - tgenv use {{.TERRAGRUNT_VERSION}}
+      - terragrunt --version
+    preconditions:
+      - which tgenv
+
+  use-tofu-*:
+    silent: true
+    internal: true
+    desc: Use a specific version of Tofu.
+    vars:
+      TOFU_VERSION: "{{index .MATCH 0}}"
+    cmds:
+      - tofuenv install {{.TOFU_VERSION}}
+      - tofuenv use {{.TOFU_VERSION}}
+      - tofu version
+    preconditions:
+      - which tofuenv
+
+  check:
+    desc: Checks if the Tofu configuration files are formatted and linted.
+    cmds:
+      - task: fmt-check
+      - task: lint-check
+      - task: docs-check
+      - task: validate
+
+  fix:
+    desc: Fixes the formatting of the tofu configuration files.
+    cmds:
+      - task: fmt
+      - task: lint
+      - task: docs
+
+  lint:
+    internal: true
+    desc: Lints the tofu configuration files.
+    cmds:
+      - tflint --recursive --fix
+    preconditions:
+      - which tflint
+
+  lint-check:
+    internal: true
+    desc: Checks if the tofu configuration files are linted.
+    cmds:
+      - tflint --recursive
+    preconditions:
+      - which tflint
+
+  fmt:
+    internal: true
+    desc: Formats the tofu configuration files.
+    cmds:
+      - tofu fmt -recursive
+    preconditions:
+      - which tofu
+
+  fmt-check:
+    internal: true
+    desc: Checks if the tofu configuration files are formatted.
+    cmds:
+      - tofu fmt -recursive -check
+    preconditions:
+      - which tofu
+  
+  docs-check:
+    internal: true
+    desc: Checks if the tofu configuration files are documented.
+    cmds:
+      - find {{ .MODULES_DIR }} -type d -maxdepth 1 -mindepth 1 -exec sh -c 'cd "{}" && terraform-docs markdown --output-file README.md --output-check .' \;
+    preconditions:
+      - which terraform-docs
+      
+  docs:
+    internal: true
+    desc: Generates docs for all tofu modules.
+    cmds: 
+      - find {{ .MODULES_DIR }} -type d -maxdepth 1 -mindepth 1 -exec sh -c 'cd "{}" && terraform-docs markdown --output-file README.md .' \;
+    preconditions:
+      - which terraform-docs
+    generates:
+      - '{{ .MODULES_DIR }}/*/README.md'
+
+  validate:
+    internal: true
+    desc: Validates the tofu configuration files.
+    cmds:
+      - find {{ .MODULES_DIR }} -type d -maxdepth 1 -mindepth 1  -exec sh -c 'cd "{}" && tofu init --backend=false && tofu validate' \;
+    preconditions:
+      - which tofu
+
+
+
+    

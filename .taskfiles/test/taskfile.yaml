@@ -1,0 +1,30 @@
+---
+version: "3"
+
+tasks:
+  generate-ipxe-menu:
+    desc: Generates the iPXE menu for the PXE boot server.
+    vars:
+      OUTPUT_DIR: 
+        sh: mktemp -d
+      SCHEMATICS_DIR: modules/pxe-pi/resources/schematics 
+      SCRIPT_PATH: modules/pxe-pi/resources/scripts/generate_ipxe_menu.sh
+      TALOS_FACTORY_URL: https://factory.talos.dev
+    cmds:
+      - defer: rm -Rf {{ .OUTPUT_DIR}}
+      - "{{ .SCRIPT_PATH }} {{ .SCHEMATICS_DIR }} {{ .OUTPUT_DIR}} {{ .TALOS_FACTORY_URL }}"
+      - cat "{{ .OUTPUT_DIR }}/config.ipxe"
+
+  talos-cluster-single-node:
+    desc: Tests creating a single node talos cluster.
+    cmds:
+      - (cd tests && go test -v -timeout 10m -run TestTalosClusterSingleNode)
+    preconditions:
+      - which go
+
+  talos-cluster-ha-cp:
+    desc: Tests creating a high availability control plane talos cluster.
+    cmds:
+      - (cd tests && go test -v -timeout 10m -run TestTalosClusterHACP)
+    preconditions:
+      - which go

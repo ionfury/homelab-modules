@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "EditorConfig.EditorConfig",
+    "hashicorp.terraform",
+    "redhat.vscode-yaml",
+    "golang.go"
+  ]
+}

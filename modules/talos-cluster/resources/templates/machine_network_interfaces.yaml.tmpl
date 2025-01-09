@@ -1,0 +1,29 @@
+machine:
+  network:
+    interfaces:
+%{ for interface in interfaces ~}
+      - deviceSelector:
+          hardwareAddr: ${interface.hardwareAddr}
+          physical: true
+        mtu: 1500
+        vip:
+          ip: ${cluster_vip}
+        addresses:
+%{ for ip in interface.addresses ~}
+          - ${ip}/24
+%{ endfor ~}
+        dhcp: true
+        dhcpOptions:
+          routeMetric: ${interface.dhcp_routeMetric}
+        vlans:
+%{ for vlan in interface.vlans ~}
+          - vlanId: ${vlan.vlanId}
+            addresses:
+%{ for ip in vlan.addresses ~}
+              - ${ip}
+%{ endfor ~}
+            dhcp: true
+            dhcpOptions:
+              routeMetric: ${vlan.dhcp_routeMetric}
+%{ endfor ~}
+%{ endfor ~}

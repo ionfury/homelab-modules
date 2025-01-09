@@ -1,0 +1,63 @@
+- hosts: all
+  become: true
+  tasks:
+    - name: Install jq
+      apt:
+        name: jq
+        state: present
+        update_cache: no
+
+    - name: Download HTTPS enabled ipxe
+      get_url:
+        url: https://github.com/pojntfx/ipxe-binaries/releases/download/release-main/ipxe.tar.gz
+        dest: /tmp/ipxe.tar.gz
+
+    - name: Extract ipxe.tar.gz
+      unarchive:
+        src: /tmp/ipxe.tar.gz
+        dest: /tmp
+        remote_src: yes
+
+    - name: Move ipxe-i386.kpxe to TFTP directory
+      copy:
+        remote_src: yes
+        src: /tmp/ipxe-i386.kpxe
+        dest: /srv/tftp/ipxe-i386.kpxe
+        owner: tftp
+        group: tftp
+        mode: '0644'
+        
+    - name: Create configuration directory
+      file:
+        path: /etc/talospxe
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Copy schematics to configuration directory
+      copy:
+        src: "{{ schematics_dir }}"
+        dest: /etc/talospxe
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Copy Menu Generation script to configuration directory
+      copy:
+        src: "{{ scripts_dir }}/generate_ipxe_menu.sh"
+        dest: /etc/talospxe
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Execute generate_ipxe_menu script
+      command: /etc/talospxe/generate_ipxe_menu.sh /etc/talospxe/schematics /srv/tftp https://factory.talos.dev
+      
+    - name: Create a cron job to run the generate_ipxe_menu script once per week
+      cron:
+        name: "Generate iPXE Menu"
+        minute: "0"
+        hour: "0"
+        day: "*/7"
+        job: "/etc/talospxe/generate_ipxe_menu.sh /etc/talospxe/schematics /srv/tftp https://factory.talos.dev"

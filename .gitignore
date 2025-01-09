@@ -1,3 +1,53 @@
+Brewfile.lock.json
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+
+# Terraform variables and secrets
+*.tfvars
+*.tfvars.json
+!example.tfvars # Allow example variable files for documentation purposes
+
+# Terraform plan files
+*.tfplan
+
+# Crash logs
+crash.log
+
+# Provider plugin downloads
+.terraform/
+.terraform.lock.hcl
+
+# Directory and file metadata
+.terraform.tfstate.d/
+*.backup
+
+# Terraform generated files for modules
+*.module
+
+# Sensitive OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+*.swp
+
+# Logs and debug files
+*.log
+
+# OS-specific files
+*.bak
+*.tmp
+
+# Ignore any private keys
+*.pem
+*.key
+
+# Ignore generated documentation
+docs/generated/
+
 # Local .terraform directories
 **/.terraform/*
 
@@ -35,3 +85,9 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Ignore Task checksum files
+.task
+
+# Ignore .env files, should be used for local configuration
+**/.env

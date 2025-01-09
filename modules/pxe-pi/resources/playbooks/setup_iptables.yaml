@@ -1,0 +1,59 @@
+- hosts: all
+  become: true
+  tasks:
+    - name: Install iptables and iptables-persistent
+      apt:
+        name:
+          - iptables
+          - iptables-persistent
+        state: present
+
+    - name: Flush all existing iptables rules
+      ansible.builtin.command: iptables -F
+
+    - name: Allow traffic from 192.168.10.* on port 69
+      ansible.builtin.iptables:
+        table: filter
+        chain: INPUT
+        protocol: udp
+        destination_port: 69
+        source: 192.168.10.0/24
+        jump: ACCEPT
+
+    - name: Allow traffic from 192.168.5.* on port 69
+      ansible.builtin.iptables:
+        table: filter
+        chain: INPUT
+        protocol: udp
+        destination_port: 69
+        source: 192.168.5.0/24
+        jump: ACCEPT
+
+    - name: Block all other traffic on port 69
+      ansible.builtin.iptables:
+        table: filter
+        chain: INPUT
+        protocol: udp
+        destination_port: 69
+        jump: DROP
+
+    - name: Save iptables rules
+      community.general.iptables_state:
+        state: saved
+        path: /etc/iptables/rules.v4
+
+    - name: Ensure iptables-persistent is configured to save rules
+      debconf:
+        name: iptables-persistent
+        question: "{{ item.question }}"
+        value: "{{ item.value }}"
+        vtype: boolean
+      loop:
+        - { question: "iptables-persistent/autosave_v4", value: "true" }
+        - { question: "iptables-persistent/autosave_v6", value: "true" }
+
+    - name: Apply iptables rules on boot
+      ansible.builtin.service:
+        name: netfilter-persistent
+        enabled: true
+        state: started

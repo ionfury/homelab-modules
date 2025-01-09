@@ -1,0 +1,8 @@
+version: "3"
+
+tasks:
+  pull-request:
+    desc: Runs the github pull request workflow locally.
+    cmds:
+      - act pull_request
+

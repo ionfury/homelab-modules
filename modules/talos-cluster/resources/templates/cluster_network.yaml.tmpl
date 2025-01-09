@@ -1,0 +1,8 @@
+cluster:
+  network:
+    cni:
+      name: none
+    podSubnets:
+      - ${cluster_pod_subnet}
+    serviceSubnets:
+      - ${cluster_service_subnet}
