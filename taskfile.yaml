@@ -6,10 +6,9 @@ vars:
   MODULES_DIR: "{{ .PROJECT_DIR }}/modules"
 
 includes:
-  tofu: .taskfiles/tofu
-  github: .taskfiles/github
-  test: .taskfiles/test
-  workstation: .taskfiles/workstation
+  tf: .taskfiles/tofu
+  gh: .taskfiles/github
+  ws: .taskfiles/workstation
   
 tasks:
   default:
