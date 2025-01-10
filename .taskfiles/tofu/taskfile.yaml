@@ -130,6 +130,8 @@ tasks:
   validate:
     internal: true
     desc: Validates the tofu configuration files.
+    env:
+      TF_IN_AUTOMATION: true
     cmds:
       - find {{ .MODULES_DIR }} -type d -maxdepth 1 -mindepth 1  -exec sh -c 'cd "{}" && tofu init --backend=false && tofu validate' \;
     preconditions:
