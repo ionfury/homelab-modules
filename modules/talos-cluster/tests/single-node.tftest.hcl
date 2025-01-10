@@ -25,8 +25,6 @@ run "setup" {
       }
     }
   }
-
-  // Assert setup completes successfully
 }
 
 run "kubernetes" {
