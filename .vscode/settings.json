@@ -1,4 +1,7 @@
 {
   "editor.formatOnSave": true,
-  "yaml.schemaStore.enable": true
+  "yaml.schemaStore.enable": true,
+  "files.associations": {
+    "*.yaml.tftpl": "yaml"
+  },
 }
