@@ -1,0 +1,13 @@
+# Add extra manifests to the cluster
+# https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.cluster
+---
+cluster:
+ extraManifests:
+    # Gateway API
+    - https://github.com/kubernetes-sigs/gateway-api/releases/download/${gateway_api_version}/standard-install.yaml
+
+    # Prometheus CRDS
+    - https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-${prometheus_crd_version}/charts/kube-prometheus-stack/charts/crds/crds/crd-podmonitors.yaml
+    - https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-${prometheus_crd_version}/charts/kube-prometheus-stack/charts/crds/crds/crd-servicemonitors.yaml
+    - https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-${prometheus_crd_version}/charts/kube-prometheus-stack/charts/crds/crds/crd-probes.yaml
+    - https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-${prometheus_crd_version}/charts/kube-prometheus-stack/charts/crds/crds/crd-prometheusrules.yaml

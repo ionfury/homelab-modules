@@ -24,7 +24,7 @@ variable "cluster_endpoint" {
 variable "cluster_vip" {
   description = "The VIP to use for the Talos cluster. Applied to the first interface of control plane hosts."
   type        = string
-  default     = "192.168.10.5"
+  default     = ""
 }
 
 variable "cluster_node_subnet" {
@@ -46,9 +46,15 @@ variable "cluster_service_subnet" {
 }
 
 variable "talos_config_path" {
-  description = "The path to the Talos configuration file.  "
+  description = "The path to output the Talos configuration file."
   type        = string
-  default     = null
+  default     = "~/.talos"
+}
+
+variable "kube_config_path" {
+  description = "The path to output the Kubernetes configuration file."
+  type        = string
+  default     = "~/.kube"
 }
 
 variable "kubernetes_version" {
@@ -81,6 +87,12 @@ variable "spegal_version" {
   default     = "v0.0.28"
 }
 
+variable "gateway_api_version" {
+  description = "The version of the Gateway API to use."
+  type        = string
+  default     = "v1.2.1"
+}
+
 variable "nameservers" {
   description = "A list of nameservers to use for the Talos cluster."
   type        = list(string)
@@ -91,30 +103,6 @@ variable "ntp_servers" {
   description = "A list of NTP servers to use for the Talos cluster."
   type        = list(string)
   default     = ["0.pool.ntp.org", "1.pool.ntp.org"]
-}
-
-variable "allow_scheduling_on_controlplane" {
-  description = "Whether to allow scheduling on the controlplane."
-  type        = bool
-  default     = true
-}
-
-variable "host_dns_enabled" {
-  description = "Whether to enable host DNS."
-  type        = bool
-  default     = true
-}
-
-variable "host_dns_resolveMemberNames" {
-  description = "Whether to resolve member names."
-  type        = bool
-  default     = true
-}
-
-variable "host_dns_forwardKubeDNSToHost" {
-  description = "Whether to forward kube DNS to the host."
-  type        = bool
-  default     = true
 }
 
 variable "gracefully_destroy_nodes" {
@@ -134,7 +122,7 @@ variable "hosts" {
   type = map(object({
     role = string
     install = object({
-      diskSelector    = list(string) # https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.machine.install.diskSelector
+      diskSelectors   = list(string) # https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.machine.install.diskSelector
       extraKernelArgs = optional(list(string), [])
       extensions      = optional(list(string), [])
       secureboot      = optional(bool, false)
@@ -154,7 +142,16 @@ variable "hosts" {
       }))
     }))
   }))
-  default = {}
+
+  validation {
+    condition     = length(var.hosts) > 0
+    error_message = "At least one host must be provided."
+  }
+
+  validation {
+    condition     = alltrue([for host in var.hosts : length(host.interfaces) > 0])
+    error_message = "At least one interface must be provided for each host."
+  }
 
   validation {
     condition     = alltrue([for host in var.hosts : host.role == "worker" || host.role == "controlplane"])

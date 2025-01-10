@@ -1,15 +1,25 @@
-output "talosconfig_raw" {
-  sensitive = true
-  value     = data.talos_client_configuration.this.talos_config
+resource "local_sensitive_file" "machineconf" {
+  for_each        = data.talos_machine_configuration.this
+  content         = each.value.machine_configuration
+  filename        = pathexpand("${var.talos_config_path}/machine_configuration-${each.key}.yaml")
+  file_permission = "0600"
 }
 
-output "kubeconfig_raw" {
-  sensitive = true
-  value     = talos_cluster_kubeconfig.this.kubeconfig_raw
+resource "local_sensitive_file" "talosconfig" {
+  content         = data.talos_client_configuration.this.talos_config
+  filename        = pathexpand("${var.talos_config_path}/${var.cluster_name}.yaml")
+  file_permission = "0600"
+}
+
+resource "local_sensitive_file" "kubeconfig" {
+  content         = talos_cluster_kubeconfig.this.kubeconfig_raw
+  filename        = pathexpand("${var.kube_config_path}/${var.cluster_name}.yaml")
+  file_permission = "0600"
 }
 
 output "kubeconfig_host" {
-  value = talos_cluster_kubeconfig.this.kubernetes_client_configuration.host
+  sensitive = true
+  value     = talos_cluster_kubeconfig.this.kubernetes_client_configuration.host
 }
 
 output "kubeconfig_client_certificate" {

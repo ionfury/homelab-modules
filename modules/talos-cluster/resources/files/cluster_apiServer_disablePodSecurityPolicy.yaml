@@ -1,3 +1,0 @@
-cluster:
-  apiServer:
-    disablePodSecurityPolicy: true

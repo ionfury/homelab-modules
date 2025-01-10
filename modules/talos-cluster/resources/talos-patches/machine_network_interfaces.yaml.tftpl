@@ -1,3 +1,6 @@
+# Configures the machine network interfaces.
+# https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.machine.network.interfaces.
+---
 machine:
   network:
     interfaces:
@@ -6,8 +9,10 @@ machine:
           hardwareAddr: ${interface.hardwareAddr}
           physical: true
         mtu: 1500
+%{ if cluster_vip != "" }
         vip:
           ip: ${cluster_vip}
+%{ endif}
         addresses:
 %{ for ip in interface.addresses ~}
           - ${ip}/24

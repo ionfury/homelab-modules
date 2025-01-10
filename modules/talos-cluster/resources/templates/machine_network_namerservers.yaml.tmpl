@@ -1,7 +1,0 @@
-machine:
-  network:
-    nameservers:
-%{ for server in nameservers ~}
-      - ${server}
-%{ endfor ~}
- 

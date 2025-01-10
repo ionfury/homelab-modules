@@ -1,3 +1,6 @@
+# Configures the machine to support Spegal
+# https://spegel.dev/docs/getting-started/#talos
+---
 machine:
   files:
     - path: /etc/cri/conf.d/20-customization.part

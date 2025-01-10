@@ -1,3 +1,6 @@
+# Configure machine kubelet extraMounts to support Longhorn
+# https://longhorn.io/docs/1.7.2/advanced-resources/os-distro-specific/talos-linux-support/#data-path-mounts
+---
 machine:
   kubelet:
     extraMounts:
