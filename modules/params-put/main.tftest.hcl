@@ -21,6 +21,7 @@ variables {
 }
 
 run "test" {
+  command = plan
   assert {
     condition     = aws_ssm_parameter.this["param1"].value == "Hello, world!"
     error_message = "Parameter value does not match expected value."
