@@ -19,10 +19,10 @@ variable "talos_config_path" {
 }
 
 data "external" "talos_version" {
-  program = ["bash", "${path.module}/resources/get_version.sh"]
+  program = ["bash", pathexpand("${path.module}/resources/get_version.sh")]
 
   query = {
-    talos_config_path = var.talos_config_path
+    talos_config_path = pathexpand(var.talos_config_path)
     node              = var.node
   }
 }

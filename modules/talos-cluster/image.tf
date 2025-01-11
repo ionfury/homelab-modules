@@ -38,7 +38,7 @@ data "talos_image_factory_urls" "host_image_url" {
 
 # Hack: https://github.com/siderolabs/terraform-provider-talos/issues/140
 resource "null_resource" "talos_upgrade_trigger" {
-  depends_on = [talos_machine_configuration_apply.hosts]
+  depends_on = [data.talos_cluster_health.this]
   for_each   = var.hosts
 
   triggers = {

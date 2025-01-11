@@ -5,8 +5,9 @@ run "random" {
 }
 
 variables {
-  cluster_name     = run.random.resource_name
-  cluster_endpoint = "https://192.168.10.246:6443"
+  cluster_name      = run.random.resource_name
+  cluster_endpoint  = "https://192.168.10.246:6443"
+  talos_config_path = "~/.talos"
   hosts = {
     node46 = {
       role = "controlplane"
@@ -27,9 +28,27 @@ variables {
 run "setup" {
   variables {
     talos_version     = "v1.8.3"
-    run_talos_upgrade = false
+    run_talos_upgrade = true
   }
 }
+
+
+run "talos_check" {
+  module {
+    source = "./tests/harness/talos"
+  }
+
+  variables {
+    talos_config_path = "~/.talos/${run.random.resource_name}.yaml"
+    node              = "node46"
+  }
+
+  assert {
+    condition     = data.external.talos_version.result.talos_version == "v1.8.3"
+    error_message = "Incorrect talos version: ${data.external.talos_version.result.talos_version}"
+  }
+}
+
 
 run "upgrade" {
   variables {
@@ -48,18 +67,18 @@ run "wait" {
   }
 }
 
-run "talos" {
+run "talos_upgrade_check" {
   module {
     source = "./tests/harness/talos"
   }
 
   variables {
-    talos_config_path = run.upgrade.local_sensitive_file.talosconfig.filename
+    talos_config_path = "~/.talos/${run.random.resource_name}.yaml"
     node              = "node46"
   }
 
   assert {
-    condition     = data.external.talos_version.this.result.talos_version == "v1.8.4"
-    error_message = "Incorrect talos version: ${data.external.talos_version.this.result.talos_version}"
+    condition     = data.external.talos_version.result.talos_version == "v1.8.4"
+    error_message = "Incorrect talos version: ${data.external.talos_version.result.talos_version}"
   }
 }
