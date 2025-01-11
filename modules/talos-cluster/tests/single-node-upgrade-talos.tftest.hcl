@@ -6,7 +6,7 @@ run "random" {
 
 variables {
   cluster_name     = run.random.resource_name
-  cluster_endpoint = "https://192.168.10.218:6443"
+  cluster_endpoint = "https://192.168.10.246:6443"
   hosts = {
     node44 = {
       role = "controlplane"
@@ -15,8 +15,8 @@ variables {
       }
       interfaces = [
         {
-          hardwareAddr = "ac:1f:6b:2d:ba:1e"
-          addresses    = ["192.168.10.218"]
+          hardwareAddr = "ac:1f:6b:2d:c0:22"
+          addresses    = ["192.168.10.246"]
           vlans        = []
         }
       ]
