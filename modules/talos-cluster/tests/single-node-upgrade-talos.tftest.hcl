@@ -8,7 +8,7 @@ variables {
   cluster_name     = run.random.resource_name
   cluster_endpoint = "https://192.168.10.246:6443"
   hosts = {
-    node44 = {
+    node46 = {
       role = "controlplane"
       install = {
         diskSelectors = ["type: 'ssd'"]
@@ -44,24 +44,22 @@ run "wait" {
   }
 
   variables {
-    duration = "120s"
+    duration = "120s" // No idea how long this should be, does it even need to wait?
   }
 }
 
-run "kubernetes" {
+run "talos" {
   module {
-    source = "./tests/harness/kubernetes"
+    source = "./tests/harness/talos"
   }
 
   variables {
-    kubeconfig_host                   = run.upgrade.kubeconfig_host
-    kubeconfig_client_certificate     = run.upgrade.kubeconfig_client_certificate
-    kubeconfig_client_key             = run.upgrade.kubeconfig_client_key
-    kubeconfig_cluster_ca_certificate = run.upgrade.kubeconfig_cluster_ca_certificate
+    talos_config_path = run.upgrade.local_sensitive_file.talosconfig.filename
+    node              = "node46"
   }
 
   assert {
-    condition     = data.kubernetes_server_version.this.version == "1.30.1"
-    error_message = "Incorrect kubernetes server version: ${data.kubernetes_server_version.this.version}"
+    condition     = data.external.talos_version.this.result.talos_version == "v1.8.4"
+    error_message = "Incorrect talos version: ${data.external.talos_version.this.result.talos_version}"
   }
 }
