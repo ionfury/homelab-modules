@@ -1,7 +1,7 @@
 resource "local_sensitive_file" "machineconf" {
   for_each        = data.talos_machine_configuration.this
   content         = each.value.machine_configuration
-  filename        = pathexpand("${var.talos_config_path}/machine_configuration-${each.key}.yaml")
+  filename        = pathexpand("${var.talos_config_path}/${var.cluster_name}-${each.key}-machine_configuration.yaml")
   file_permission = "0600"
 }
 

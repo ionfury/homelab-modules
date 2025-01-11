@@ -34,3 +34,26 @@ data "talos_image_factory_urls" "host_image_url" {
   platform      = each.value.install.platform
   architecture  = each.value.install.architecture
 }
+
+
+# Hack: https://github.com/siderolabs/terraform-provider-talos/issues/140
+resource "null_resource" "talos_upgrade_trigger" {
+  depends_on = [talos_machine_configuration_apply.hosts]
+  for_each   = var.hosts
+
+  triggers = {
+    image        = data.talos_image_factory_urls.host_image_url[each.key].urls.installer
+    state_marker = var.run_talos_upgrade
+  }
+
+  provisioner "local-exec" {
+    command = <<EOT
+if [ "${self.triggers.state_marker}" == "true" ]; then
+  echo "Running talosctl upgrade on ${each.key} with image ${self.triggers.image}..."
+  talosctl --talosconfig ${local_sensitive_file.talosconfig.filename} -n ${each.key} upgrade --image ${self.triggers.image}
+else
+  echo "Skipping upgrade for initial creation on ${each.key}..."
+fi
+EOT
+  }
+}

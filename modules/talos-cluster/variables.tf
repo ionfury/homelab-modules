@@ -129,7 +129,6 @@ variable "hosts" {
       wipe            = optional(bool, false)
       architecture    = optional(string, "amd64")
       platform        = optional(string, "metal")
-
     })
     interfaces = list(object({
       hardwareAddr     = string
@@ -157,4 +156,10 @@ variable "hosts" {
     condition     = alltrue([for host in var.hosts : host.role == "worker" || host.role == "controlplane"])
     error_message = "The host role must be either 'worker', 'controlplane'."
   }
+}
+
+variable "run_talos_upgrade" {
+  description = "Weather or not to run `talosctl upgrade`.  This should be set to true only after the cluster has been created."
+  type        = bool
+  default     = false
 }
