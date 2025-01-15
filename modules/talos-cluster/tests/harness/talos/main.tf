@@ -26,3 +26,7 @@ data "external" "talos_info" {
     node              = var.node
   }
 }
+
+output "talos_info" {
+  value = data.external.talos_info.result
+}

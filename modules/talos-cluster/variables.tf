@@ -9,12 +9,6 @@ variable "cluster_name" {
   }
 }
 
-variable "cluster_id" {
-  description = "An ID to provide for the Talos cluster."
-  type        = number
-  default     = 1
-}
-
 variable "cluster_endpoint" {
   description = "The endpoint for the Talos cluster."
   type        = string
@@ -47,12 +41,6 @@ variable "cluster_service_subnet" {
 
 variable "cluster_allowSchedulingOnControlPlanes" {
   description = "Whether to allow scheduling on control plane nodes."
-  type        = bool
-  default     = true
-}
-
-variable "cluster_apiServer_disablePodSecurityPolicy" {
-  description = "Whether to disable the PodSecurityPolicy admission controller."
   type        = bool
   default     = true
 }
