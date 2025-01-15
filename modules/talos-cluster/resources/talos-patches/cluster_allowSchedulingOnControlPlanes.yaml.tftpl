@@ -1,5 +1,7 @@
 # Always allow scheduling on control planes
 # https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.cluster
 ---
+%{ if type == "controlplane" }
 cluster:
-  allowSchedulingOnControlPlanes: true
+  allowSchedulingOnControlPlanes: ${cluster_allowSchedulingOnControlPlanes}
+%{ endif }

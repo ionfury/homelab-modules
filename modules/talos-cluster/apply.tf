@@ -1,10 +1,10 @@
 locals {
-  bootstrap_node     = [for host_key, host in var.hosts : host_key if host.role == "controlplane"][0]
-  bootstrap_endpoint = [for host_key, host in var.hosts : host.interfaces[0].addresses[0] if host.role == "controlplane"][0]
+  bootstrap_node     = [for machine_key, machine in var.machines : machine_key if machine.type == "controlplane"][0]
+  bootstrap_endpoint = [for machine_key, machine in var.machines : machine.interfaces[0].addresses[0] if machine.type == "controlplane"][0]
 }
 
-resource "talos_machine_configuration_apply" "hosts" {
-  for_each = var.hosts
+resource "talos_machine_configuration_apply" "machines" {
+  for_each = var.machines
 
   client_configuration        = talos_machine_secrets.this.client_configuration
   machine_configuration_input = data.talos_machine_configuration.this[each.key].machine_configuration
@@ -19,7 +19,7 @@ resource "talos_machine_configuration_apply" "hosts" {
 }
 
 resource "talos_machine_bootstrap" "this" {
-  depends_on = [talos_machine_configuration_apply.hosts]
+  depends_on = [talos_machine_configuration_apply.machines]
 
   client_configuration = talos_machine_secrets.this.client_configuration
   node                 = local.bootstrap_node

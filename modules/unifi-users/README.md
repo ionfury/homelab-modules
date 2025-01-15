@@ -42,7 +42,7 @@ No outputs.
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.6.6 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.8.8 |
 | <a name="requirement_unifi"></a> [unifi](#requirement\_unifi) | 0.41.0 |
 
 ## Providers

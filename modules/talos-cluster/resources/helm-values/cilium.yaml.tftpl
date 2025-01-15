@@ -1,9 +1,8 @@
----
 # https://docs.cilium.io/en/stable/helm-reference/
 # https://docs.cilium.io/en/stable/network/kubernetes/configuration/#configmap-options
-
+---
 autoDirectNodeRoutes: true
-ipv4NativeRoutingCIDR: ${cluster_pod_subnet}
+ipv4NativeRoutingCIDR: 172.16.0.0/16
 bandwidthManager:
   bbr: true
   enabled: true
@@ -18,8 +17,8 @@ cgroup:
 cni:
   exclusive: false # to run multus
 cluster:
-  id: ${cluster_id}
-  name: ${cluster_name}
+  id: 1
+  name: awaited-dolphin
 kubeProxyReplacement: true
 enableIPv4BIGTCP: true
 endpointRoutes:
@@ -38,19 +37,6 @@ loadBalancer:
   mode: dsr
 operator:
   rollOutPods: true
-  prometheus:
-    enabled: true
-    serviceMonitor:
-      enabled: true
-  dashboards:
-    enabled: true
-    annotations:
-      grafana_folder: Network
-prometheus:
-  enabled: true
-  serviceMonitor:
-    enabled: true
-    trustCRDsExist: true
 k8sServiceHost: 127.0.0.1
 k8sServicePort: 7445
 rollOutCiliumPods: true

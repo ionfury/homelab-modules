@@ -4,7 +4,7 @@
 machine:
   time:
     servers:
-%{ for server in ntp_servers ~}
+%{ for server in machine_time_servers ~}
       - ${server}
 %{ endfor ~}
  

@@ -4,10 +4,12 @@
 machine:
   kubelet:
     extraMounts:
-      - destination: /var/lib/longhorn
-        type: bind
-        source: /var/lib/longhorn
+%{ for mount in machine_kubelet_extraMounts }
+      - destination: ${mount.destination}
+        type: ${mount.type}
+        source: ${mount.source}
         options:
-          - bind
-          - rshared
-          - rw
+%{ for option in mount.options }
+          - ${option}
+%{ endfor }
+%{ endfor }

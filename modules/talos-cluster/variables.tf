@@ -18,11 +18,11 @@ variable "cluster_id" {
 variable "cluster_endpoint" {
   description = "The endpoint for the Talos cluster."
   type        = string
-  default     = "https://10.10.10.10:6443"
+  default     = "10.10.10.10"
 }
 
 variable "cluster_vip" {
-  description = "The VIP to use for the Talos cluster. Applied to the first interface of control plane hosts."
+  description = "The VIP to use for the Talos cluster. Applied to the first interface of control plane machines."
   type        = string
   default     = ""
 }
@@ -45,6 +45,85 @@ variable "cluster_service_subnet" {
   default     = "172.17.0.0/16"
 }
 
+variable "cluster_allowSchedulingOnControlPlanes" {
+  description = "Whether to allow scheduling on control plane nodes."
+  type        = bool
+  default     = true
+}
+
+variable "cluster_apiServer_disablePodSecurityPolicy" {
+  description = "Whether to disable the PodSecurityPolicy admission controller."
+  type        = bool
+  default     = true
+}
+
+variable "cluster_coreDNS_disabled" {
+  description = "Whether to disable CoreDNS."
+  type        = bool
+  default     = false
+}
+
+variable "cluster_proxy_disabled" {
+  description = "Whether to disable the kube-proxy."
+  type        = bool
+  default     = true
+}
+
+variable "cluster_extraManifests" {
+  description = "A list of extra manifests to apply to the Talos cluster.  The following Prometheus CRDs are autoamtically included: [podmonitors, servicemonitors, probes, prometheusrules]."
+  type        = list(string)
+  default     = []
+}
+
+variable "cluster_inlineManifests" {
+  description = "A list of inline manifests to apply to the Talos cluster."
+  type = list(object({
+    name     = string
+    contents = string
+  }))
+  default = []
+}
+
+variable "machine_files" {
+  description = "A list of files to add to all machines in the cluster. See: https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.machine.files."
+  type = list(object({
+    content     = string
+    permissions = string
+    path        = string
+    op          = string
+  }))
+  default = []
+
+  validation {
+    condition     = alltrue([for file in var.machine_files : file.op == "create" || file.op == "append" || file.op == "overwrite"])
+    error_message = "The 'op' field in machine_files must be one of 'create', 'append', or 'overwrite'."
+  }
+}
+
+variable "machine_kubelet_extraMounts" {
+  description = "A list of extra mounts to add to the kubelet."
+  type = list(object({
+    destination = string
+    type        = string
+    source      = string
+    options     = list(string)
+  }))
+  default = []
+}
+
+variable "machine_network_nameservers" {
+  description = "A list of nameservers to use for the Talos cluster."
+  type        = list(string)
+  default     = ["1.1.1.1", "1.0.0.1"]
+}
+
+variable "machine_time_servers" {
+  description = "A list of NTP servers to use for the Talos cluster."
+  type        = list(string)
+  default     = ["0.pool.ntp.org", "1.pool.ntp.org"]
+}
+
+
 variable "talos_config_path" {
   description = "The path to output the Talos configuration file."
   type        = string
@@ -66,7 +145,7 @@ variable "kubernetes_version" {
 variable "talos_version" {
   description = "The version of Talos to use."
   type        = string
-  default     = "v1.8.3"
+  default     = "v1.9.0"
 }
 
 variable "cilium_version" {
@@ -75,34 +154,44 @@ variable "cilium_version" {
   default     = "1.16.5"
 }
 
-variable "prometheus_crd_version" {
-  description = "The version of the Prometheus CRD to use."
+variable "cilium_helm_values" {
+  description = <<EOT
+The values to use for the Cilium Helm chart.
+  See: https://github.com/cilium/cilium/blob/main/install/kubernetes/cilium/values.yaml\n
+  And: https://www.talos.dev/v1.9/kubernetes-guides/network/deploying-cilium/#without-kube-proxy
+EOT
   type        = string
-  default     = "17.0.2"
-}
-
-variable "spegal_version" {
-  description = "The version of Spegal to use."
-  type        = string
-  default     = "v0.0.28"
-}
-
-variable "gateway_api_version" {
-  description = "The version of the Gateway API to use."
-  type        = string
-  default     = "v1.2.1"
-}
-
-variable "nameservers" {
-  description = "A list of nameservers to use for the Talos cluster."
-  type        = list(string)
-  default     = ["1.1.1.1", "1.0.0.1"]
-}
-
-variable "ntp_servers" {
-  description = "A list of NTP servers to use for the Talos cluster."
-  type        = list(string)
-  default     = ["0.pool.ntp.org", "1.pool.ntp.org"]
+  default     = <<EOT
+ipam:
+  mode: kubernetes
+kubeProxyReplacement: true
+cgroup:
+  autoMount:
+    enabled: false
+  hostRoot: /sys/fs/cgroup
+k8sServiceHost: 127.0.0.1
+k8sServicePort: 7445
+securityContext:
+  capabilities:
+    ciliumAgent:
+      - CHOWN
+      - KILL
+      - NET_ADMIN
+      - NET_RAW
+      - IPC_LOCK
+      - SYS_ADMIN
+      - SYS_RESOURCE
+      - PERFMON
+      - BPF
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETGID
+      - SETUID
+    cleanCiliumState:
+      - NET_ADMIN
+      - SYS_ADMIN
+      - SYS_RESOURCE
+EOT
 }
 
 variable "gracefully_destroy_nodes" {
@@ -117,10 +206,10 @@ variable "timeout" {
   default     = "10m"
 }
 
-variable "hosts" {
-  description = "A map of current hosts from which to build the Talos cluster."
+variable "machines" {
+  description = "A list of machines to create the talos cluster from."
   type = map(object({
-    role = string
+    type = string
     install = object({
       diskSelectors   = list(string) # https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.machine.install.diskSelector
       extraKernelArgs = optional(list(string), [])
@@ -130,31 +219,37 @@ variable "hosts" {
       architecture    = optional(string, "amd64")
       platform        = optional(string, "metal")
     })
+    files = optional(list(object({
+      content     = string
+      permissions = string
+      path        = string
+      op          = string
+    })), [])
     interfaces = list(object({
       hardwareAddr     = string
       addresses        = list(string)
       dhcp_routeMetric = optional(number, 100)
-      vlans = list(object({
+      vlans = optional(list(object({
         vlanId           = number
         addresses        = list(string)
         dhcp_routeMetric = optional(number, 100)
-      }))
+      })), [])
     }))
   }))
 
   validation {
-    condition     = length(var.hosts) > 0
-    error_message = "At least one host must be provided."
+    condition     = length(var.machines) > 0
+    error_message = "At least one machine must be provided."
   }
 
   validation {
-    condition     = alltrue([for host in var.hosts : length(host.interfaces) > 0])
-    error_message = "At least one interface must be provided for each host."
+    condition     = alltrue([for machine in var.machines : length(machine.interfaces) > 0])
+    error_message = "At least one interface must be provided for each machine."
   }
 
   validation {
-    condition     = alltrue([for host in var.hosts : host.role == "worker" || host.role == "controlplane"])
-    error_message = "The host role must be either 'worker', 'controlplane'."
+    condition     = alltrue([for machine in var.machines : machine.type == "worker" || machine.type == "controlplane"])
+    error_message = "The machine type must be either 'worker', 'controlplane'."
   }
 }
 

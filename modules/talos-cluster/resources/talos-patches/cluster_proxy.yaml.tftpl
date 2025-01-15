@@ -1,0 +1,8 @@
+# Disable kube proxy
+# https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.cluster.proxy
+---
+%{ if type == "controlplane" }
+cluster:
+  proxy:
+    disabled: ${cluster_proxy_disabled}
+%{ endif }

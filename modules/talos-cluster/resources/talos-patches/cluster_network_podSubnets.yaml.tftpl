@@ -1,7 +1,9 @@
 # Set the podSubnets CIDR for the cluster
 # https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.cluster.network
 ---
+%{ if type == "controlplane" }
 cluster:
   network:
     podSubnets:
       - ${cluster_pod_subnet}
+%{ endif }
