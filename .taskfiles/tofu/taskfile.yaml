@@ -11,7 +11,22 @@ tasks:
   test:
     desc: Runs all tofu tests.
     cmds:
-      - for dir in {{.MODULES_DIR}}/*; do (task tofu:test-$(basename "$dir")); done
+      - for dir in {{.MODULES_DIR}}/*; do (task tf:test-$(basename "$dir")); done
+
+  testTalos-*:
+    desc: Runs a specific test on the talos cluster module. Expects ["plan", "single-node-apply", etc]
+    dotenv: ['{{.TOFU_RESOURCES_DIR}}/test/.env']
+    vars:
+      TEST: tests/{{index .MATCH 0}}.tftest.hcl
+      PATH: "{{.MODULES_DIR}}/talos-cluster"
+    cmds:
+      - tofu -chdir={{.PATH}} init 
+      - tofu -chdir={{.PATH}} test -filter={{.TEST}}
+    preconditions:
+      - which tofu
+      - test -f {{.TOFU_RESOURCES_DIR}}/test/.env
+      - test -d {{.PATH}}
+      - test -f {{.PATH}}/{{.TEST}}
 
   test-*:
     desc: Runs the tofu tests for a specific module.

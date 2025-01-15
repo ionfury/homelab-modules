@@ -53,7 +53,7 @@ No modules.
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.6.6 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.8.8 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | 5.80.0 |
 | <a name="requirement_flux"></a> [flux](#requirement\_flux) | 1.4.0 |
 | <a name="requirement_github"></a> [github](#requirement\_github) | 6.4.0 |

@@ -4,13 +4,44 @@ run "random" {
   }
 }
 
+
 variables {
   run_talos_upgrade = true
 
-  cluster_name     = run.random.resource_name
-  cluster_endpoint = "192.168.10.246"
+  cluster_name                           = run.random.resource_name
+  cluster_endpoint                       = "dev.k8s.tomnowak.work"
+  cluster_allowSchedulingOnControlPlanes = true
+
+  kubernetes_version          = "1.30.2"
+  talos_config_path           = "~/.talos"
+  machine_network_nameservers = ["192.168.10.1"]
+  machine_time_servers        = ["0.pool.ntp.org", "1.pool.ntp.org"]
 
   machines = {
+    node44 = {
+      type = "controlplane"
+      install = {
+        diskSelectors = ["type: 'ssd'"]
+      }
+      interfaces = [
+        {
+          hardwareAddr = "ac:1f:6b:2d:ba:1e"
+          addresses    = ["192.168.10.218"]
+        }
+      ]
+    }
+    node45 = {
+      type = "controlplane"
+      install = {
+        diskSelectors = ["type: 'ssd'"]
+      }
+      interfaces = [
+        {
+          hardwareAddr = "ac:1f:6b:2d:bf:ce"
+          addresses    = ["192.168.10.222"]
+        }
+      ]
+    }
     node46 = {
       type = "controlplane"
       install = {
@@ -20,7 +51,6 @@ variables {
         {
           hardwareAddr = "ac:1f:6b:2d:c0:22"
           addresses    = ["192.168.10.246"]
-          vlans        = []
         }
       ]
     }
@@ -33,8 +63,13 @@ run "setup" {
   }
 }
 
+run "wait_setup" {
+  module {
+    source = "./tests/harness/wait"
+  }
+}
 
-run "talos_version_check" {
+run "setup_talos_version_check" {
   module {
     source = "./tests/harness/talos"
   }
@@ -54,6 +89,11 @@ run "talos_version_check" {
 run "upgrade" {
   variables {
     talos_version = "v1.9.1"
+  }
+}
+run "wait_upgrade" {
+  module {
+    source = "./tests/harness/wait"
   }
 }
 

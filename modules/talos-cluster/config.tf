@@ -1,6 +1,6 @@
 locals {
-  nodes            = [for host_key, host in var.hosts : host_key]
-  controlplane_ips = [for host_key, host in var.hosts : host.interfaces[0].addresses[0] if host.role == "controlplane"]
+  nodes            = [for machine_key, machine in var.machines : machine_key]
+  controlplane_ips = [for machine_key, machine in var.machines : machine.interfaces[0].addresses[0] if machine.type == "controlplane"]
 }
 
 resource "talos_machine_secrets" "this" {
@@ -8,34 +8,40 @@ resource "talos_machine_secrets" "this" {
 }
 
 data "talos_machine_configuration" "this" {
-  for_each = var.hosts
+  for_each = var.machines
 
   cluster_name       = var.cluster_name
-  cluster_endpoint   = var.cluster_endpoint
-  machine_type       = each.value.role
+  cluster_endpoint   = "https://${var.cluster_endpoint}:6443"
+  machine_type       = each.value.type
   machine_secrets    = talos_machine_secrets.this.machine_secrets
   kubernetes_version = var.kubernetes_version
   talos_version      = var.talos_version
 
   config_patches = [for patch in fileset("${path.module}/resources/talos-patches", "**") :
     templatefile("${path.module}/resources/talos-patches/${patch}", {
-      role = each.value.role
+      type = each.value.type
 
-      hostname   = each.key
-      install    = each.value.install
-      interfaces = each.value.interfaces
-      disk_image = each.value.install.secureboot ? data.talos_image_factory_urls.host_image_url[each.key].urls.installer_secureboot : data.talos_image_factory_urls.host_image_url[each.key].urls.installer
+      machine_network_hostname    = each.key
+      machine_network_interfaces  = each.value.interfaces
+      machine_install             = each.value.install
+      machine_install_disk_image  = each.value.install.secureboot ? data.talos_image_factory_urls.machine_image_url[each.key].urls.installer_secureboot : data.talos_image_factory_urls.machine_image_url[each.key].urls.installer
+      machine_install_files       = concat(each.value.files, var.machine_files)
+      machine_network_nameservers = var.machine_network_nameservers
+      machine_time_servers        = var.machine_time_servers
+      machine_kubelet_extraMounts = var.machine_kubelet_extraMounts
 
-      cluster_name           = var.cluster_name
-      cluster_vip            = var.cluster_vip
-      cluster_pod_subnet     = var.cluster_pod_subnet
-      cluster_service_subnet = var.cluster_service_subnet
-      cluster_node_subnet    = var.cluster_node_subnet
+      cluster_name                           = var.cluster_name
+      cluster_vip                            = var.cluster_vip
+      cluster_pod_subnet                     = var.cluster_pod_subnet
+      cluster_service_subnet                 = var.cluster_service_subnet
+      cluster_node_subnet                    = var.cluster_node_subnet
+      cluster_proxy_disabled                 = var.cluster_proxy_disabled
+      cluster_allowSchedulingOnControlPlanes = var.cluster_allowSchedulingOnControlPlanes
+      cluster_coreDNS_disabled               = var.cluster_coreDNS_disabled
+      cluster_extraManifests                 = var.cluster_extraManifests
+      cluster_inlineManifests                = var.cluster_inlineManifests
 
-      nameservers            = var.nameservers
-      ntp_servers            = var.ntp_servers
-      gateway_api_version    = var.gateway_api_version
-      prometheus_crd_version = var.prometheus_crd_version
+      cilium_manifest = data.helm_template.cilium.manifest
     })
   ]
 }

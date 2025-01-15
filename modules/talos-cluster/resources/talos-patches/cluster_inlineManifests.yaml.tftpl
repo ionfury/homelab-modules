@@ -1,0 +1,15 @@
+# Add inline manifests to the cluster.  Used for cilium.
+# https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.cluster.inlineManifests.
+---
+%{ if type == "controlplane" }
+cluster:
+  inlineManifests:
+    - name: cilium-manifest
+      contents: |-
+        ${indent(8,cilium_manifest)}
+%{ for manifest in cluster_inlineManifests ~}
+    - name: ${manifest.name}
+      contents: |-
+        ${indent(8,manifest.contents)}
+%{ endfor ~}
+%{ endif }

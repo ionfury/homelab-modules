@@ -2,19 +2,19 @@ resource "local_sensitive_file" "machineconf" {
   for_each        = data.talos_machine_configuration.this
   content         = each.value.machine_configuration
   filename        = pathexpand("${var.talos_config_path}/${var.cluster_name}-${each.key}-machine_configuration.yaml")
-  file_permission = "0600"
+  file_permission = "0644"
 }
 
 resource "local_sensitive_file" "talosconfig" {
   content         = data.talos_client_configuration.this.talos_config
   filename        = pathexpand("${var.talos_config_path}/${var.cluster_name}.yaml")
-  file_permission = "0600"
+  file_permission = "0644"
 }
 
 resource "local_sensitive_file" "kubeconfig" {
   content         = talos_cluster_kubeconfig.this.kubeconfig_raw
   filename        = pathexpand("${var.kube_config_path}/${var.cluster_name}.yaml")
-  file_permission = "0600"
+  file_permission = "0644"
 }
 
 output "kubeconfig_host" {

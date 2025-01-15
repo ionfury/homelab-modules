@@ -1,7 +1,9 @@
 # Disable default CNI to avoid conflicts with Calico
 # https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.cluster.network.cni
 ---
+%{ if type == "controlplane" }
 cluster:
   network:
     cni:
       name: none
+%{ endif }

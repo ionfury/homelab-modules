@@ -4,7 +4,7 @@
 machine:
   network:
     interfaces:
-%{ for interface in interfaces ~}
+%{ for interface in machine_network_interfaces ~}
       - deviceSelector:
           hardwareAddr: ${interface.hardwareAddr}
           physical: true

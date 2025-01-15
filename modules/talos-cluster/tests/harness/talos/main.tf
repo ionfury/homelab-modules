@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.6.6"
+  required_version = ">= 1.8.8"
   required_providers {
     external = {
       source  = "hashicorp/external"
@@ -18,8 +18,8 @@ variable "talos_config_path" {
   type        = string
 }
 
-data "external" "talos_version" {
-  program = ["bash", pathexpand("${path.module}/resources/get_version.sh")]
+data "external" "talos_info" {
+  program = ["bash", pathexpand("${path.module}/resources/scripts/get_info.sh")]
 
   query = {
     talos_config_path = pathexpand(var.talos_config_path)
@@ -27,6 +27,6 @@ data "external" "talos_version" {
   }
 }
 
-output "talos_version" {
-  value = data.external.talos_version.result.talos_version
+output "talos_info" {
+  value = data.external.talos_info.result
 }

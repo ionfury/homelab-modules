@@ -16,7 +16,7 @@ run "test" {
   command = plan
 
   assert {
-    condition     = unifi_user.user["a"].ip == "192.168.169.42"
+    condition     = unifi_user.user["a"].fixed_ip == "192.168.169.42"
     error_message = "User IP does not match expected IP."
   }
 }
