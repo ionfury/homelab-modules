@@ -24,6 +24,12 @@ variable "github_repository" {
   type        = string
 }
 
+variable "github_repository_path" {
+  description = "Path in the Github repository to the cluster configuration"
+  type        = string
+  default     = "clusters"
+}
+
 variable "github_token" {
   description = "Github token"
   type        = string
