@@ -1,5 +1,5 @@
 data "github_repository" "this" {
-  full_name = "${var.github.org}/${var.github.repository}"
+  full_name = "${var.github_org}/${var.github_repository}"
 }
 
 resource "flux_bootstrap_git" "this" {

@@ -99,6 +99,8 @@ tasks:
       - tflint --recursive --fix
     preconditions:
       - which tflint
+    sources:
+      - '{{ .MODULES_DIR }}/**/*.tf'
 
   lint-check:
     internal: true
@@ -107,6 +109,8 @@ tasks:
       - tflint --recursive
     preconditions:
       - which tflint
+    sources:
+      - '{{ .MODULES_DIR }}/**/*.tf'
 
   fmt:
     internal: true
@@ -115,6 +119,8 @@ tasks:
       - tofu fmt -recursive
     preconditions:
       - which tofu
+    sources:
+      - '{{ .MODULES_DIR }}/**/*.tf'
 
   fmt-check:
     internal: true
@@ -123,6 +129,8 @@ tasks:
       - tofu fmt -recursive -check
     preconditions:
       - which tofu
+    sources:
+      - '{{ .MODULES_DIR }}/**/*.tf'
   
   docs-check:
     internal: true
@@ -131,6 +139,9 @@ tasks:
       - find {{ .MODULES_DIR }} -type d -maxdepth 1 -mindepth 1 -exec sh -c 'cd "{}" && terraform-docs markdown --output-file README.md --output-check .' \;
     preconditions:
       - which terraform-docs
+    sources:
+      - '{{.MODULES_DIR}}/**/*.tf'
+    
       
   docs:
     internal: true
@@ -139,6 +150,8 @@ tasks:
       - find {{ .MODULES_DIR }} -type d -maxdepth 1 -mindepth 1 -exec sh -c 'cd "{}" && terraform-docs markdown --output-file README.md .' \;
     preconditions:
       - which terraform-docs
+    sources:
+      - '{{.MODULES_DIR}}/**/*.tf'
     generates:
       - '{{ .MODULES_DIR }}/*/README.md'
 
@@ -151,6 +164,8 @@ tasks:
       - find {{ .MODULES_DIR }} -type d -maxdepth 1 -mindepth 1  -exec sh -c 'cd "{}" && tofu init --backend=false && tofu validate' \;
     preconditions:
       - which tofu
+    sources:
+      - '{{.MODULES_DIR}}/**/*.tf'
 
 
 
