@@ -14,22 +14,21 @@ variable "kubernetes_config_file_path" {
   type        = string
 }
 
-variable "github" {
-  description = "Github account information."
-  type = object({
-    org         = string
-    repository  = string
-    token_store = string
-  })
+variable "github_org" {
+  description = "Github organization"
+  type        = string
 }
 
-variable "aws" {
-  description = "AWS account information."
-  type = object({
-    region  = string
-    profile = string
-  })
+variable "github_repository" {
+  description = "Github repository"
+  type        = string
 }
+
+variable "github_token" {
+  description = "Github token"
+  type        = string
+}
+
 /*
 variable "external_secrets_access_key_id" {
   description = "AWS access key ID for external-secrets."
