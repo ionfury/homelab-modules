@@ -27,7 +27,7 @@ data "helm_template" "cilium" {
       cilium_version           = var.cilium_version
       gracefully_destroy_nodes = var.gracefully_destroy_nodes
       timeout                  = var.timeout
-      run_talos_upgrade        = var.run_talos_upgrade
+      stage_talos_upgrade      = var.stage_talos_upgrade
     })
   ]
 }

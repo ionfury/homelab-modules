@@ -6,7 +6,7 @@ run "random" {
 
 
 variables {
-  run_talos_upgrade = true
+  stage_talos_upgrade = true
 
   cluster_name                           = run.random.resource_name
   cluster_endpoint                       = "dev.k8s.tomnowak.work"

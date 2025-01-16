@@ -132,7 +132,7 @@ run "test" {
         ]
       }
     }
-    run_talos_upgrade = true
+    stage_talos_upgrade = true
   }
 
   # talos_machine_secrets.this
