@@ -5,22 +5,19 @@ run "random" {
 }
 
 variables {
-  run_talos_upgrade = true
-
   cluster_name     = run.random.resource_name
-  cluster_endpoint = "192.168.10.246"
+  cluster_endpoint = "192.168.10.218"
 
   machines = {
-    node46 = {
+    node44 = {
       type = "controlplane"
       install = {
         diskSelectors = ["type: 'ssd'"]
       }
       interfaces = [
         {
-          hardwareAddr = "ac:1f:6b:2d:c0:22"
-          addresses    = ["192.168.10.246"]
-          vlans        = []
+          hardwareAddr = "ac:1f:6b:2d:ba:1e"
+          addresses    = ["192.168.10.218"]
         }
       ]
     }
@@ -33,7 +30,6 @@ run "setup" {
   }
 }
 
-
 run "talos_version_check" {
   module {
     source = "./tests/harness/talos"
@@ -41,7 +37,7 @@ run "talos_version_check" {
 
   variables {
     talos_config_path = "~/.talos/${run.random.resource_name}.yaml"
-    node              = "node46"
+    node              = "node44"
   }
 
   assert {
@@ -49,7 +45,6 @@ run "talos_version_check" {
     error_message = "Incorrect talos version: ${data.external.talos_info.result["talos_version"]}"
   }
 }
-
 
 run "upgrade" {
   variables {
@@ -64,7 +59,7 @@ run "talos_upgrade_check" {
 
   variables {
     talos_config_path = "~/.talos/${run.random.resource_name}.yaml"
-    node              = "node46"
+    node              = "node44"
   }
 
   assert {

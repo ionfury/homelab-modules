@@ -86,7 +86,7 @@ No modules.
 | <a name="input_github_repository"></a> [github\_repository](#input\_github\_repository) | Github repository | `string` | n/a | yes |
 | <a name="input_github_repository_path"></a> [github\_repository\_path](#input\_github\_repository\_path) | Path in the Github repository to the cluster configuration | `string` | `"clusters"` | no |
 | <a name="input_github_token"></a> [github\_token](#input\_github\_token) | Github token | `string` | n/a | yes |
-| <a name="input_kubernetes_config_file_path"></a> [kubernetes\_config\_file\_path](#input\_kubernetes\_config\_file\_path) | Path to the kubeconfig file | `string` | n/a | yes |
+| <a name="input_kubernetes_config_path"></a> [kubernetes\_config\_path](#input\_kubernetes\_config\_path) | Path to the kubeconfig file | `string` | n/a | yes |
 
 ## Outputs
 

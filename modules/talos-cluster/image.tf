@@ -35,25 +35,32 @@ data "talos_image_factory_urls" "machine_image_url" {
   architecture  = each.value.install.architecture
 }
 
+output "script_path" {
+  value = pathexpand("${path.module}/resources/scripts/upgrade-node.sh")
+}
+
 # Hack: https://github.com/siderolabs/terraform-provider-talos/issues/140
 resource "null_resource" "talos_upgrade_trigger" {
   depends_on = [data.talos_cluster_health.this]
   for_each   = var.machines
 
   triggers = {
-    image        = data.talos_image_factory_urls.machine_image_url[each.key].urls.installer
-    schematic_id = talos_image_factory_schematic.machine_schematic[each.key].id
-    state_marker = var.run_talos_upgrade
+    desired_talos_tag    = data.talos_image_factory_urls.machine_image_url[each.key].talos_version
+    desired_schematic_id = data.talos_image_factory_urls.machine_image_url[each.key].schematic_id
+    stage_talos_upgrade  = var.stage_talos_upgrade
   }
+
   # Should only upgrade if there's a schematic mismatch
   provisioner "local-exec" {
-    command = <<EOT
-if [ "${self.triggers.state_marker}" == "true" ]; then
-  echo "Running talosctl upgrade on ${each.key} with image ${self.triggers.image}..."
-  talosctl --talosconfig ${local_sensitive_file.talosconfig.filename} -n ${each.key} upgrade --image ${self.triggers.image}
-else
-  echo "Skipping upgrade for initial creation on ${each.key}..."
-fi
-EOT
+    command = pathexpand("${path.module}/resources/scripts/upgrade-node.sh")
+
+    environment = {
+      DESIRED_TALOS_TAG       = self.triggers.desired_talos_tag
+      DESIRED_TALOS_SCHEMATIC = self.triggers.desired_schematic_id
+      TALOS_CONFIG_PATH       = local_sensitive_file.talosconfig.filename
+      TALOS_NODE              = each.key
+      STAGE                   = self.triggers.stage_talos_upgrade
+      TIMEOUT                 = "10m"
+    }
   }
 }

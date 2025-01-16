@@ -241,8 +241,8 @@ variable "machines" {
   }
 }
 
-variable "run_talos_upgrade" {
-  description = "Weather or not to run `talosctl upgrade`.  This should be set to true only after the cluster has been created."
+variable "stage_talos_upgrade" {
+  description = "Weather or not to stage talos upgrades.  If this is set to false, the upgrade will be applied immediately and node will reboot."
   type        = bool
   default     = false
 }

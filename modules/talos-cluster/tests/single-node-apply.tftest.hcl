@@ -6,10 +6,8 @@ run "random" {
 
 run "setup" {
   variables {
-    run_talos_upgrade = true
-
     cluster_name                           = run.random.resource_name
-    cluster_endpoint                       = "192.168.10.246"
+    cluster_endpoint                       = "192.168.10.218"
     cluster_allowSchedulingOnControlPlanes = true
 
     kubernetes_version          = "1.30.2"
@@ -19,15 +17,15 @@ run "setup" {
     machine_time_servers        = ["0.pool.ntp.org", "1.pool.ntp.org"]
 
     machines = {
-      node46 = {
+      node44 = {
         type = "controlplane"
         install = {
           diskSelectors = ["type: 'ssd'"]
         }
         interfaces = [
           {
-            hardwareAddr = "ac:1f:6b:2d:c0:22"
-            addresses    = ["192.168.10.246"]
+            hardwareAddr = "ac:1f:6b:2d:ba:1e"
+            addresses    = ["192.168.10.218"]
           }
         ]
       }
@@ -53,12 +51,12 @@ run "kubernetes" {
   }
 
   assert {
-    condition     = data.kubernetes_nodes.this.nodes[0].metadata[0].name == "node46"
+    condition     = data.kubernetes_nodes.this.nodes[0].metadata[0].name == "node44"
     error_message = "Incorrect node name: ${data.kubernetes_nodes.this.nodes[0].metadata[0].name}"
   }
 
   assert {
-    condition     = data.kubernetes_nodes.this.nodes[0].status[0].addresses[0].address == "192.168.10.246"
+    condition     = data.kubernetes_nodes.this.nodes[0].status[0].addresses[0].address == "192.168.10.218"
     error_message = "Incorrect node address: ${data.kubernetes_nodes.this.nodes[0].status[0].addresses[0].address}"
   }
 
@@ -80,7 +78,7 @@ run "talos" {
 
   variables {
     talos_config_path = "~/.talos/${run.random.resource_name}.yaml"
-    node              = "node46"
+    node              = "node44"
   }
 
   assert {
@@ -94,7 +92,7 @@ run "talos" {
   }
 
   assert {
-    condition     = data.external.talos_info.result["interfaces"] == "{\"hardwareAddr\":\"ac:1f:6b:2d:c0:22\",\"addresses\":[\"192.168.10.246/24\"]}"
+    condition     = data.external.talos_info.result["interfaces"] == "{\"hardwareAddr\":\"ac:1f:6b:2d:ba:1e\",\"addresses\":[\"192.168.10.218/24\"]}"
     error_message = "Incorrect interfaces: ${data.external.talos_info.result["interfaces"]}"
   }
 
@@ -118,4 +116,3 @@ run "talos" {
     error_message = "Incorrect machine type: ${data.external.talos_info.result["machine_type"]}"
   }
 }
-
