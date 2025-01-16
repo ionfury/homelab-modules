@@ -9,7 +9,7 @@ variable "flux_version" {
   default     = "v2.4.0"
 }
 
-variable "kubernetes_config_file_path" {
+variable "kubernetes_config_path" {
   description = "Path to the kubeconfig file"
   type        = string
 }
