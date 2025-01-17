@@ -91,3 +91,5 @@ terraform.rc
 
 # Ignore .env files, should be used for local configuration
 **/.env
+
+**/.upgrade-node.lock
