@@ -17,6 +17,7 @@ tasks:
 
   test-*:
     desc: Runs all the tofu tests for a specific module.
+    label: test-{{.MODULE}}
     vars:
       MODULE: "{{index .MATCH 0}}"
       PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
@@ -28,6 +29,7 @@ tasks:
   
   test_*_*:
     desc: Runs a specific test for a specific module.  Follows the format test_<module>_<test>
+    label: test_{{.MODULE}}_{{.TEST}}
     dotenv: ['{{.TOFU_RESOURCES_DIR}}/test/.env']
     env:
       TF_IN_AUTOMATION: true
@@ -87,6 +89,7 @@ tasks:
 
   lint-*:
     internal: true
+    label: lint-{{.MODULE}}
     desc: Lints the tofu configuration files.
     vars:
       MODULE: "{{index .MATCH 0}}"
@@ -101,6 +104,7 @@ tasks:
   format-*:
     internal: true
     desc: Formats the tofu configuration files.
+    label: format-{{.MODULE}}
     vars:
       MODULE: "{{index .MATCH 0}}"
       MODULE_PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
@@ -114,6 +118,7 @@ tasks:
   docs-*:
     internal: true
     desc: Generates docs for tofu modules.
+    label: docs-{{.MODULE}}
     vars:
       MODULE: "{{index .MATCH 0}}"
       MODULE_PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
@@ -129,6 +134,7 @@ tasks:
   validate-*:
     internal: true
     desc: Validates the tofu configuration files for a specific module.
+    label: validate-{{.MODULE}}
     vars:
       MODULE: "{{index .MATCH 0}}"
     cmds:
