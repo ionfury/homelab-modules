@@ -2,171 +2,138 @@
 version: "3"
 
 vars:
-  PINNED_TOFU_VERSION: latest:^1.8
-  PINNED_TERRAGRUNT_VERSION: latest:^0.71
   TOFU_RESOURCES_DIR: '{{.ROOT_DIR}}/.taskfiles/tofu/resources'
   MODULES_DIR: '{{.ROOT_DIR}}/modules'
 
 tasks:
   test:
     desc: Runs all tofu tests.
-    cmds:
-      - for dir in {{.MODULES_DIR}}/*; do (task tf:test-$(basename "$dir")); done
-
-  testTalos-*:
-    desc: Runs a specific test on the talos cluster module. Expects ["plan", "single-node-apply", etc]
-    dotenv: ['{{.TOFU_RESOURCES_DIR}}/test/.env']
     vars:
-      TEST: tests/{{index .MATCH 0}}.tftest.hcl
-      PATH: "{{.MODULES_DIR}}/talos-cluster"
+      MODULES:
+        sh: 'ls {{.MODULES_DIR}}'
     cmds:
-      - tofu -chdir={{.PATH}} init 
-      - tofu -chdir={{.PATH}} test -filter={{.TEST}}
-    preconditions:
-      - which tofu
-      - test -f {{.TOFU_RESOURCES_DIR}}/test/.env
-      - test -d {{.PATH}}
-      - test -f {{.PATH}}/{{.TEST}}
+      - for: { var: MODULES }
+        task: test-{{.ITEM}}
 
   test-*:
-    desc: Runs the tofu tests for a specific module.
+    desc: Runs all the tofu tests for a specific module.
+    vars:
+      MODULE: "{{index .MATCH 0}}"
+      PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
+      TESTS:
+        sh: find {{.PATH}} -type f -name '*.tftest.hcl' | xargs -n1 basename | sed 's/.tftest.hcl//'
+    cmds:
+      - for: { var: TESTS }
+        task: test_{{.MODULE}}_{{.ITEM}}
+  
+  test_*_*:
+    desc: Runs a specific test for a specific module.  Follows the format test_<module>_<test>
     dotenv: ['{{.TOFU_RESOURCES_DIR}}/test/.env']
     env:
       TF_IN_AUTOMATION: true
     vars:
       MODULE: "{{index .MATCH 0}}"
-      PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
+      MODULE_PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
+      TEST: "{{index .MATCH 1}}"
+      TEST_FILE: "{{.TEST}}.tftest.hcl"
+      TEST_PATH:
+        sh: dirname $(find {{.MODULES_DIR}}/{{.MODULE}} -type f -name '{{.TEST_FILE}}')
+      MODULE_RELATIVE_TEST_PATH: 
+        sh: echo {{.TEST_PATH}} | sed 's|{{.MODULE_PATH}}||' | sed 's|^/\(.*\)$|\1/|'
     cmds:
-      - tofu -chdir={{.PATH}} init 
-      - tofu -chdir={{.PATH}} test
+      - task: use-pinned-version
+      - task: lint-{{.MODULE}}
+      - task: format-{{.MODULE}}
+      - task: docs-{{.MODULE}}
+      - task: validate-{{.MODULE}}
+      - tofu -chdir={{.MODULE_PATH}} init -upgrade
+      - tofu -chdir={{.MODULE_PATH}} test -filter={{.MODULE_RELATIVE_TEST_PATH}}{{.TEST_FILE}}
     preconditions:
       - which tofu
       - test -f {{.TOFU_RESOURCES_DIR}}/test/.env
-      - test -d {{.PATH}}
-      
-  use:
-    silent: true
-    desc: Use the default version of Tofu and Terragrunt.
-    cmds:
-      - task: use-tofu-{{.PINNED_TOFU_VERSION}}
-      - task: use-tg-{{.PINNED_TERRAGRUNT_VERSION}}
+      - test -d {{.TEST_PATH}}
+      - test -f {{.TEST_PATH}}/{{.TEST_FILE}}
+    sources:
+      - '{{.MODULES_DIR}}/{{.MODULE}}/**/*.tf'
+      - '{{.MODULES_DIR}}/{{.MODULE}}/{{.TEST_PATH}}'
 
-  use-tg-*:
-    silent: true
-    internal: true
-    desc: Use a specific version of Terragrunt.
+  use-pinned-version:
+    desc: Use the pinned version of Open Tofu.
     vars:
-      TERRAGRUNT_VERSION: "{{index .MATCH 0}}"
-    cmds:
-      - tgenv install {{.TERRAGRUNT_VERSION}}
-      - tgenv use {{.TERRAGRUNT_VERSION}}
-      - terragrunt --version
-    preconditions:
-      - which tgenv
-
-  use-tofu-*:
-    silent: true
-    internal: true
-    desc: Use a specific version of Tofu.
-    vars:
-      TOFU_VERSION: "{{index .MATCH 0}}"
+      TOFU_PIN_FILE: '{{.TOFU_RESOURCES_DIR}}/.opentofu-version'
+      TOFU_VERSION:
+        sh: cat {{.TOFU_PIN_FILE}}
     cmds:
       - tofuenv install {{.TOFU_VERSION}}
       - tofuenv use {{.TOFU_VERSION}}
-      - tofu version
     preconditions:
       - which tofuenv
-
-  check:
-    desc: Checks if the Tofu configuration files are formatted and linted.
-    cmds:
-      - task: fmt-check
-      - task: lint-check
-      - task: docs-check
-      - task: validate
+      - test -f {{.TOFU_PIN_FILE}}
+    sources:
+      - '{{.TOFU_PIN_FILE}}'
 
   fix:
-    desc: Fixes the formatting of the tofu configuration files.
+    desc: Runs formatting, linting, and doc generation on all tofu modules.
+    vars:
+      MODULES:
+        sh: 'ls {{.MODULES_DIR}}'
     cmds:
-      - task: fmt
-      - task: lint
-      - task: docs
+      - for: { var: MODULES }
+        task: lint-{{.ITEM}}
+      - for: { var: MODULES }
+        task: format-{{.ITEM}}
+      - for: { var: MODULES }
+        task: docs-{{.ITEM}}
 
-  lint:
+  lint-*:
     internal: true
     desc: Lints the tofu configuration files.
+    vars:
+      MODULE: "{{index .MATCH 0}}"
+      MODULE_PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
     cmds:
-      - tflint --recursive --fix
+      - tflint --chdir={{.MODULE_PATH}} --recursive --fix
     preconditions:
       - which tflint
     sources:
-      - '{{ .MODULES_DIR }}/**/*.tf'
+      - '{{.MODULE_PATH}}/**/*.tf'
 
-  lint-check:
-    internal: true
-    desc: Checks if the tofu configuration files are linted.
-    cmds:
-      - tflint --recursive
-    preconditions:
-      - which tflint
-    sources:
-      - '{{ .MODULES_DIR }}/**/*.tf'
-
-  fmt:
+  format-*:
     internal: true
     desc: Formats the tofu configuration files.
+    vars:
+      MODULE: "{{index .MATCH 0}}"
+      MODULE_PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
     cmds:
-      - tofu fmt -recursive
+      - tofu fmt  -recursive {{.MODULE_PATH}}
     preconditions:
       - which tofu
     sources:
-      - '{{ .MODULES_DIR }}/**/*.tf'
-
-  fmt-check:
-    internal: true
-    desc: Checks if the tofu configuration files are formatted.
-    cmds:
-      - tofu fmt -recursive -check
-    preconditions:
-      - which tofu
-    sources:
-      - '{{ .MODULES_DIR }}/**/*.tf'
-  
-  docs-check:
-    internal: true
-    desc: Checks if the tofu configuration files are documented.
-    cmds:
-      - find {{ .MODULES_DIR }} -type d -maxdepth 1 -mindepth 1 -exec sh -c 'cd "{}" && terraform-docs markdown --output-file README.md --output-check .' \;
-    preconditions:
-      - which terraform-docs
-    sources:
-      - '{{.MODULES_DIR}}/**/*.tf'
+      - '{{.MODULE_PATH}}/**/*.tf'
     
-      
-  docs:
+  docs-*:
     internal: true
-    desc: Generates docs for all tofu modules.
+    desc: Generates docs for tofu modules.
+    vars:
+      MODULE: "{{index .MATCH 0}}"
+      MODULE_PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
     cmds: 
-      - find {{ .MODULES_DIR }} -type d -maxdepth 1 -mindepth 1 -exec sh -c 'cd "{}" && terraform-docs markdown --output-file README.md .' \;
+      - terraform-docs markdown --output-file {{.MODULE_PATH}}/README.md {{.MODULE_PATH}}
     preconditions:
       - which terraform-docs
     sources:
-      - '{{.MODULES_DIR}}/**/*.tf'
+      - '{{.MODULE_PATH}}/**/*.tf'
     generates:
-      - '{{ .MODULES_DIR }}/*/README.md'
+      - '{{.MODULE_PATH}}/README.md'
 
-  validate:
+  validate-*:
     internal: true
-    desc: Validates the tofu configuration files.
-    env:
-      TF_IN_AUTOMATION: true
+    desc: Validates the tofu configuration files for a specific module.
+    vars:
+      MODULE: "{{index .MATCH 0}}"
     cmds:
-      - find {{ .MODULES_DIR }} -type d -maxdepth 1 -mindepth 1  -exec sh -c 'cd "{}" && tofu init --backend=false && tofu validate' \;
+      - tofu -chdir={{.MODULES_DIR}}/{{.MODULE}} validate
     preconditions:
       - which tofu
     sources:
-      - '{{.MODULES_DIR}}/**/*.tf'
-
-
-
-    
+      - '{{.MODULES_DIR}}/{{.MODULE}}/**/*.tf'

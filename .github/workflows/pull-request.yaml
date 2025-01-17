@@ -1,12 +1,12 @@
 ---
 name: Pull Request CI Checks
 
-on:
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'modules/**'
+#on:
+#  pull_request:
+#    branches:
+#      - main
+#    paths:
+#      - 'modules/**'
 
 env:
   tofu_version: '1.8.8'
