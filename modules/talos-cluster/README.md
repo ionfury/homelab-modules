@@ -85,5 +85,4 @@ No modules.
 | <a name="output_kubeconfig_client_key"></a> [kubeconfig\_client\_key](#output\_kubeconfig\_client\_key) | n/a |
 | <a name="output_kubeconfig_cluster_ca_certificate"></a> [kubeconfig\_cluster\_ca\_certificate](#output\_kubeconfig\_cluster\_ca\_certificate) | n/a |
 | <a name="output_kubeconfig_host"></a> [kubeconfig\_host](#output\_kubeconfig\_host) | n/a |
-| <a name="output_script_path"></a> [script\_path](#output\_script\_path) | n/a |
 <!-- END_TF_DOCS -->

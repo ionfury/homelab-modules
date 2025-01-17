@@ -35,10 +35,6 @@ data "talos_image_factory_urls" "machine_image_url" {
   architecture  = each.value.install.architecture
 }
 
-output "script_path" {
-  value = pathexpand("${path.module}/resources/scripts/upgrade-node.sh")
-}
-
 # Hack: https://github.com/siderolabs/terraform-provider-talos/issues/140
 resource "null_resource" "talos_upgrade_trigger" {
   depends_on = [data.talos_cluster_health.this]
@@ -52,9 +48,11 @@ resource "null_resource" "talos_upgrade_trigger" {
 
   # Should only upgrade if there's a schematic mismatch
   provisioner "local-exec" {
-    command = pathexpand("${path.module}/resources/scripts/upgrade-node.sh")
+    command = "flock $LOCK_FILE --command ${path.module}/resources/scripts/upgrade-node.sh"
 
     environment = {
+      LOCK_FILE = "${path.module}/resources/.upgrade-node.lock"
+
       DESIRED_TALOS_TAG       = self.triggers.desired_talos_tag
       DESIRED_TALOS_SCHEMATIC = self.triggers.desired_schematic_id
       TALOS_CONFIG_PATH       = local_sensitive_file.talosconfig.filename

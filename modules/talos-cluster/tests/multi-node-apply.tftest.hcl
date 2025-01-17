@@ -6,8 +6,6 @@ run "random" {
 
 run "setup" {
   variables {
-    stage_talos_upgrade = true
-
     cluster_name                           = run.random.resource_name
     cluster_endpoint                       = "dev.k8s.tomnowak.work"
     cluster_allowSchedulingOnControlPlanes = true

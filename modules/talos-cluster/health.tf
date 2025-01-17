@@ -38,10 +38,3 @@ data "talos_cluster_health" "upgrade" {
     read = var.timeout
   }
 }
-
-# The above can be unreliable...  Use this to kick off helm deployments in that case.
-# tflint-ignore: terraform_unused_declarations
-#resource "time_sleep" "wait" {
-#  depends_on      = [talos_cluster_kubeconfig.this]
-#  create_duration = "120s"
-#}
