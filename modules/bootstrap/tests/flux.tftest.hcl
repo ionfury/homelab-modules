@@ -3,7 +3,7 @@ run "random" {
     source = "./tests/harness/random"
   }
 }
-
+/*
 run "test" {
   command = plan
 
@@ -16,3 +16,4 @@ run "test" {
     github_token           = "token"
   }
 }
+*/

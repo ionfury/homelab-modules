@@ -1,14 +1,9 @@
 version: "3"
 
-vars:
-  PROJECT_DIR:
-    sh: "git rev-parse --show-toplevel"
-  MODULES_DIR: "{{ .PROJECT_DIR }}/modules"
-
 includes:
-  tf: .taskfiles/tofu
-  gh: .taskfiles/github
-  ws: .taskfiles/workstation
+  tofu: .taskfiles/tofu
+  github: .taskfiles/github
+  workstation: .taskfiles/workstation
   
 tasks:
   default:
