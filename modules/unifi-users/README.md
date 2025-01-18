@@ -69,7 +69,7 @@ No modules.
 | <a name="input_unifi_password"></a> [unifi\_password](#input\_unifi\_password) | The password to use for the Unifi controller. | `string` | `null` | no |
 | <a name="input_unifi_site"></a> [unifi\_site](#input\_unifi\_site) | The site to use for the Unifi controller. | `string` | `"default"` | no |
 | <a name="input_unifi_username"></a> [unifi\_username](#input\_unifi\_username) | The username to use for the Unifi controller. | `string` | `null` | no |
-| <a name="input_unifi_users"></a> [unifi\_users](#input\_unifi\_users) | List of users to add to the Unifi controller. | <pre>map(object({<br/>    ip  = string<br/>    mac = string<br/>  }))</pre> | n/a | yes |
+| <a name="input_unifi_users"></a> [unifi\_users](#input\_unifi\_users) | List of users to add to the Unifi controller. | <pre>map(object({<br/>    mac = string<br/>    ip  = string<br/><br/>    allow_existing         = optional(bool, true)<br/>    blocked                = optional(bool, null)<br/>    local_dns_record       = optional(bool, null)<br/>    network_id             = optional(string, null)<br/>    skip_forget_on_destroy = optional(bool, false)<br/>  }))</pre> | n/a | yes |
 
 ## Outputs
 
