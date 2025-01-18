@@ -1,0 +1,82 @@
+{
+    "metadata": {
+        "created": "2025-01-18T04:14:08Z",
+        "id": 0,
+        "namespace": "runtime",
+        "owner": "runtime.ExtensionStatusController",
+        "phase": "running",
+        "type": "ExtensionStatuses.runtime.talos.dev",
+        "updated": "2025-01-18T04:14:08Z",
+        "version": 1
+    },
+    "node": "node44",
+    "spec": {
+        "image": "0.sqsh",
+        "metadata": {
+            "author": "Sidero Labs",
+            "compatibility": {
+                "talos": {
+                    "version": "\u003e= v1.1.0"
+                }
+            },
+            "description": "This system extension provides iscsi-tools.\n",
+            "name": "iscsi-tools",
+            "version": "v0.1.6"
+        }
+    }
+}
+{
+    "metadata": {
+        "created": "2025-01-18T04:14:08Z",
+        "id": 1,
+        "namespace": "runtime",
+        "owner": "runtime.ExtensionStatusController",
+        "phase": "running",
+        "type": "ExtensionStatuses.runtime.talos.dev",
+        "updated": "2025-01-18T04:14:08Z",
+        "version": 1
+    },
+    "node": "node44",
+    "spec": {
+        "image": "1.sqsh",
+        "metadata": {
+            "author": "Sidero Labs",
+            "compatibility": {
+                "talos": {
+                    "version": "\u003e= v1.0.0"
+                }
+            },
+            "description": "This system extension provides a minimal util-linux package.\n",
+            "name": "util-linux-tools",
+            "version": "2.40.2"
+        }
+    }
+}
+{
+    "metadata": {
+        "created": "2025-01-18T04:14:08Z",
+        "id": 2,
+        "namespace": "runtime",
+        "owner": "runtime.ExtensionStatusController",
+        "phase": "running",
+        "type": "ExtensionStatuses.runtime.talos.dev",
+        "updated": "2025-01-18T04:14:08Z",
+        "version": 1
+    },
+    "node": "node44",
+    "spec": {
+        "image": "2.sqsh",
+        "metadata": {
+            "author": "Image Factory",
+            "compatibility": {
+                "talos": {
+                    "version": "\u003e= 1.0.0"
+                }
+            },
+            "description": "Virtual extension which specifies the schematic of the image built with Image Factory.",
+            "extraInfo": "customization:\n    extraKernelArgs:\n        - init_on_alloc=0\n        - apparmor=0\n    systemExtensions:\n        officialExtensions:\n            - siderolabs/iscsi-tools\n            - siderolabs/util-linux-tools\n",
+            "name": "schematic",
+            "version": "2b4700528da81c8b8c68e9909ac73269b5a00b1554d9bbe032becdf6675129c7"
+        }
+    }
+}

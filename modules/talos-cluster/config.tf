@@ -29,6 +29,8 @@ data "talos_machine_configuration" "this" {
       machine_network_nameservers = var.machine_network_nameservers
       machine_time_servers        = var.machine_time_servers
       machine_kubelet_extraMounts = var.machine_kubelet_extraMounts
+      machine_extra_kernel_args   = var.machine_extra_kernel_args
+      machine_extensions          = var.machine_extensions
 
       cluster_name                           = var.cluster_name
       cluster_vip                            = var.cluster_vip

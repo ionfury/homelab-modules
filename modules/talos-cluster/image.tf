@@ -4,7 +4,7 @@ data "talos_image_factory_extensions_versions" "machine_version" {
   talos_version = var.talos_version
 
   filters = {
-    names = each.value.install.extensions
+    names = concat(each.value.install.extensions, var.machine_extensions)
   }
 }
 
@@ -17,7 +17,7 @@ resource "talos_image_factory_schematic" "machine_schematic" {
         systemExtensions = {
           officialExtensions = try(data.talos_image_factory_extensions_versions.machine_version[each.key].extensions_info[*].name, [])
         }
-        extraKernelArgs = each.value.install.extraKernelArgs
+        extraKernelArgs = concat(each.value.install.extraKernelArgs, var.machine_extra_kernel_args)
         secureboot = {
           enabled = each.value.install.secureboot
         }
