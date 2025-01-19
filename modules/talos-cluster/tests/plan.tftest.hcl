@@ -27,6 +27,8 @@ run "test" {
       path        = "machine_files_path"
       op          = "create"
     }]
+    machine_extensions        = ["machine_extensions1", "machine_extensions2"]
+    machine_extra_kernel_args = ["machine_extra_kernel_args1", "machine_extra_kernel_args2"]
     machine_kubelet_extraMounts = [{
       destination = "machine_kubelet_extraMounts_destination",
       type        = "machine_kubelet_extraMounts_type",
@@ -267,10 +269,15 @@ run "test" {
   #  error_message = "data.talos_image_factory_extensions_versions.machine_version extensions_info names do not contain expected values"
   #}
 
-  # assert {
-  #   condition     = alltrue([for k, v in data.talos_image_factory_extensions_versions.filters : contains(["machine1_extensions1", "machine1_extensions2"], v.names[0])])
-  #   error_message = "data.talos_image_factory_extensions_versions.filters names is not as expected"
-  # }
+  assert {
+    condition     = length(data.talos_image_factory_extensions_versions.machine_version["machine1"].filters.names) == 4
+    error_message = "data.talos_image_factory_extensions_versions.filters names is not as expected."
+  }
+
+  #assert {
+  #  condition     = alltrue([for k, v in data.talos_image_factory_extensions_versions.machine_version["machine1"].filters : contains(["machine1_extensions1", "machine1_extensions2"], v.names)])
+  #  error_message = "data.talos_image_factory_extensions_versions.filters names is not as expected"
+  #}
 
   # talos_image_factory_schematic.machine_schematic
   assert {

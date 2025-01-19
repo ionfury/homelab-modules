@@ -14,12 +14,16 @@ variables {
   talos_config_path           = "~/.talos"
   machine_network_nameservers = ["1.1.1.1", "1.0.0.1"]
   machine_time_servers        = ["0.pool.ntp.org", "1.pool.ntp.org"]
+  machine_extra_kernel_args   = ["apparmor=0"]
+  machine_extensions          = ["iscsi-tools"]
 
   machines = {
     node44 = {
       type = "controlplane"
       install = {
-        diskSelectors = ["type: 'ssd'"]
+        diskSelectors   = ["type: 'ssd'"]
+        extraKernelArgs = ["init_on_alloc=0"]
+        extensions      = ["util-linux-tools"]
       }
       interfaces = [
         {
@@ -91,7 +95,7 @@ run "setup_talos_test" {
   }
 
   assert {
-    condition     = data.external.talos_info.result["schematic_version"] == "376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba"
+    condition     = data.external.talos_info.result["schematic_version"] == "2b4700528da81c8b8c68e9909ac73269b5a00b1554d9bbe032becdf6675129c7"
     error_message = "Incorrect schematic version: ${data.external.talos_info.result["schematic_version"]}"
   }
 

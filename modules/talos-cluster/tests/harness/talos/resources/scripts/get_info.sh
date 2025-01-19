@@ -17,12 +17,15 @@ safe_talosctl() {
 
 # Execute talosctl commands with error handling
 VERSION=$(safe_talosctl "talosctl --talosconfig \"$TALOS_CONFIG_PATH\" --nodes \"$NODE\" version --short | grep 'Tag:' | awk '{print \$2}'" "")
-SCHEMATIC_VERSION=$(safe_talosctl "talosctl --talosconfig \"$TALOS_CONFIG_PATH\" --nodes \"$NODE\" get extensions 0 -o json | jq -r '.spec.metadata.version'" "")
+SCHEMATIC_VERSION=$(safe_talosctl "talosctl --talosconfig \"$TALOS_CONFIG_PATH\" --nodes \"$NODE\" get extensions -o json | jq -s '.[] | select(.spec.metadata.name == \"schematic\") | .spec.metadata.version'" "") 
 INTERFACES=$(safe_talosctl "talosctl --talosconfig \"$TALOS_CONFIG_PATH\" --nodes \"$NODE\" get deviceconfigspec -o json | jq '{hardwareAddr: .spec.device.deviceSelector.hardwareAddr, addresses: .spec.device.addresses}'" "{}")
 NAMESERVERS=$(safe_talosctl "talosctl --talosconfig \"$TALOS_CONFIG_PATH\" --nodes \"$NODE\" get dnsupstreams -o json | jq -sc '[.[] | .spec.addr]'" "[]")
 TIMESERVERS=$(safe_talosctl "talosctl --talosconfig \"$TALOS_CONFIG_PATH\" --nodes \"$NODE\" get timeservers -o json | jq -r '.spec.timeServers'" "[]")
 CONTROLPLANE_SCHEDULABLE=$(safe_talosctl "talosctl --talosconfig \"$TALOS_CONFIG_PATH\" --nodes \"$NODE\" get nodestatus -o json | jq -r '.spec.unschedulable | not'" "false")
 MACHINE_TYPE=$(safe_talosctl "talosctl --talosconfig \"$TALOS_CONFIG_PATH\" --nodes \"$NODE\" get machinetype -o json | jq -r '.spec'" "")
+
+# Trim double quotes from the SCHEMATIC_VERSION
+SCHEMATIC_VERSION="$(echo "$SCHEMATIC_VERSION" | tr -d '"')"
 
 jq -n \
   --arg talos_version "$VERSION" \

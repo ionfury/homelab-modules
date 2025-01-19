@@ -50,6 +50,7 @@ tasks:
       - task: validate-{{.MODULE}}
       - tofu -chdir={{.MODULE_PATH}} init -upgrade
       - tofu -chdir={{.MODULE_PATH}} test -filter={{.MODULE_RELATIVE_TEST_PATH}}{{.TEST_FILE}}
+      - echo {{.MODULES_DIR}} {{.MODULE}} {{.TEST_PATH}}
     preconditions:
       - which tofu
       - test -f {{.TOFU_RESOURCES_DIR}}/test/.env
@@ -57,7 +58,7 @@ tasks:
       - test -f {{.TEST_PATH}}/{{.TEST_FILE}}
     sources:
       - '{{.MODULES_DIR}}/{{.MODULE}}/**/*.tf'
-      - '{{.MODULES_DIR}}/{{.MODULE}}/{{.TEST_PATH}}'
+      - '{{.TEST_PATH}}/**/*.tftest.hcl'
 
   use-pinned-version:
     desc: Use the pinned version of Open Tofu.

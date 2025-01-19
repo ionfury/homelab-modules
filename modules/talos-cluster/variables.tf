@@ -88,6 +88,18 @@ variable "machine_files" {
   }
 }
 
+variable "machine_extensions" {
+  description = "A list of extensions to add to all machines in the cluster."
+  type        = list(string)
+  default     = []
+}
+
+variable "machine_extra_kernel_args" {
+  description = "A list of extra kernel arguments to add to the machines."
+  type        = list(string)
+  default     = []
+}
+
 variable "machine_kubelet_extraMounts" {
   description = "A list of extra mounts to add to the kubelet."
   type = list(object({
