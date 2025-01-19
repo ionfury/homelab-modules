@@ -5,16 +5,28 @@ resource "local_sensitive_file" "machineconf" {
   file_permission = "0644"
 }
 
+output "machineconf_filenames" {
+  value = [for f in local_sensitive_file.machineconf : f.filename]
+}
+
 resource "local_sensitive_file" "talosconfig" {
   content         = data.talos_client_configuration.this.talos_config
   filename        = pathexpand("${var.talos_config_path}/${var.cluster_name}.yaml")
   file_permission = "0644"
 }
 
+output "talosconfig_filename" {
+  value = local_sensitive_file.talosconfig.filename
+}
+
 resource "local_sensitive_file" "kubeconfig" {
   content         = talos_cluster_kubeconfig.this.kubeconfig_raw
   filename        = pathexpand("${var.kube_config_path}/${var.cluster_name}.yaml")
   file_permission = "0644"
+}
+
+output "kubeconfig_filename" {
+  value = local_sensitive_file.kubeconfig.filename
 }
 
 output "kubeconfig_host" {
