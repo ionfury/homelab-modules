@@ -209,7 +209,8 @@ variable "timeout" {
 variable "machines" {
   description = "A list of machines to create the talos cluster from."
   type = map(object({
-    type = string
+    type           = string
+    first_scale_in = optional(bool, false) # Must be set to 'true' when adding a new node to an existing cluster.  Set to 'false' once the node is in the cluster. https://github.com/siderolabs/terraform-provider-talos/issues/221
     install = object({
       diskSelectors   = list(string) # https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.machine.install.diskSelector
       extraKernelArgs = optional(list(string), [])
@@ -258,3 +259,4 @@ variable "stage_talos_upgrade" {
   type        = bool
   default     = false
 }
+

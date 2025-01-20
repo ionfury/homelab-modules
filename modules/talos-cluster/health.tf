@@ -1,40 +1,39 @@
-# This reports healthy when kube api is available.
-# tflint-ignore: terraform_unused_declarations
-data "talos_cluster_health" "k8s_api_available" {
-  client_configuration   = data.talos_client_configuration.this.client_configuration
-  endpoints              = local.controlplane_ips
-  control_plane_nodes    = local.controlplane_ips
-  skip_kubernetes_checks = true
-
-  timeouts = {
-    read = var.timeout
-  }
-}
+# data.talos_cluster_health does not work in the case of scaling-in nodes into an existing cluster.  See: https://github.com/siderolabs/terraform-provider-talos/issues/221
+# Run a null resource provisioner callout to talos_cluster_health to get the same functionality.
 
 # This prevents the module from reporting completion until the cluster is up and operational.
 # tflint-ignore: terraform_unused_declarations
-data "talos_cluster_health" "this" {
-  client_configuration   = data.talos_client_configuration.this.client_configuration
-  endpoints              = local.controlplane_ips
-  control_plane_nodes    = local.controlplane_ips
-  skip_kubernetes_checks = false
+resource "null_resource" "talos_cluster_health" {
+  triggers = {
+    always_run = timestamp()
+  }
 
-  timeouts = {
-    read = var.timeout
+  provisioner "local-exec" {
+    command = "talosctl --talosconfig $TALOSCONFIG health --nodes $NODE --wait-timeout $TIMEOUT"
+
+    environment = {
+      TALOSCONFIG = pathexpand(local_sensitive_file.talosconfig.filename)
+      NODE        = talos_machine_bootstrap.this.node
+      TIMEOUT     = var.timeout
+    }
   }
 }
 
 # This reports healthy when the cluster is upgraded.
 # tflint-ignore: terraform_unused_declarations
-data "talos_cluster_health" "upgrade" {
+resource "null_resource" "talos_cluster_health_upgrade" {
   depends_on = [null_resource.talos_upgrade_trigger]
+  triggers = {
+    always_run = timestamp()
+  }
 
-  client_configuration   = data.talos_client_configuration.this.client_configuration
-  endpoints              = local.controlplane_ips
-  control_plane_nodes    = local.controlplane_ips
-  skip_kubernetes_checks = false
+  provisioner "local-exec" {
+    command = "talosctl --talosconfig $TALOSCONFIG health --nodes $NODE --wait-timeout $TIMEOUT"
 
-  timeouts = {
-    read = var.timeout
+    environment = {
+      TALOSCONFIG = pathexpand(local_sensitive_file.talosconfig.filename)
+      NODE        = talos_machine_bootstrap.this.node
+      TIMEOUT     = var.timeout
+    }
   }
 }
