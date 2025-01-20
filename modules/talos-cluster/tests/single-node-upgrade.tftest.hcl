@@ -11,7 +11,8 @@ variables {
 
   kubernetes_version          = "1.30.2"
   talos_version               = "v1.9.0"
-  talos_config_path           = "~/.talos"
+  talos_config_path           = "~/.talos/testing"
+  kube_config_path            = "~/.kube/testing"
   machine_network_nameservers = ["1.1.1.1", "1.0.0.1"]
   machine_time_servers        = ["0.pool.ntp.org", "1.pool.ntp.org"]
   machine_extra_kernel_args   = ["apparmor=0"]

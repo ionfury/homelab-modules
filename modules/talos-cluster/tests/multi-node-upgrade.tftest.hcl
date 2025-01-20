@@ -12,7 +12,8 @@ variables {
   cluster_allowSchedulingOnControlPlanes = true
 
   kubernetes_version          = "1.30.2"
-  talos_config_path           = "~/.talos"
+  talos_config_path           = "~/.talos/testing"
+  kube_config_path            = "~/.kube/testing"
   machine_network_nameservers = ["192.168.10.1"]
   machine_time_servers        = ["0.pool.ntp.org", "1.pool.ntp.org"]
 

@@ -9,6 +9,9 @@ variables {
   cluster_endpoint                       = "192.168.10.218"
   cluster_allowSchedulingOnControlPlanes = true
 
+  talos_config_path = "~/.talos/testing"
+  kube_config_path  = "~/.kube/testing"
+
   machines = {
     node44 = {
       type = "controlplane"
@@ -63,16 +66,5 @@ run "scale_up" {
         ]
       }
     }
-  }
-}
-
-# Scale in has no health check, so we need to wait before we can destroy the machines.
-run "wait" {
-  module {
-    source = "./tests/harness/wait"
-  }
-
-  variables {
-    timeout = "3m"
   }
 }
