@@ -38,7 +38,7 @@ data "talos_image_factory_urls" "machine_image_url" {
 # Hack: https://github.com/siderolabs/terraform-provider-talos/issues/140
 resource "null_resource" "talos_upgrade_trigger" {
   depends_on = [data.talos_cluster_health.this]
-  for_each   = var.machines
+  for_each   = { for name, machine in var.machines : name => machine if machine.first_scale_in == false }
 
   triggers = {
     desired_talos_tag    = data.talos_image_factory_urls.machine_image_url[each.key].talos_version

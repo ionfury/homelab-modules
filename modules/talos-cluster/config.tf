@@ -1,6 +1,8 @@
 locals {
-  nodes            = [for machine_key, machine in var.machines : machine_key]
-  controlplane_ips = [for machine_key, machine in var.machines : machine.interfaces[0].addresses[0] if machine.type == "controlplane"]
+  nodes                         = [for machine_key, machine in var.machines : machine_key]
+  controlplane_ips              = [for machine_key, machine in var.machines : machine.interfaces[0].addresses[0] if machine.type == "controlplane"]
+  controlplane_health_check_ips = [for machine_key, machine in var.machines : machine.interfaces[0].addresses[0] if machine.type == "controlplane" && !machine.first_scale_in]
+  worker_health_check_ips       = [for machine_key, machine in var.machines : machine.interfaces[0].addresses[0] if machine.type == "worker" && !machine.first_scale_in]
 }
 
 resource "talos_machine_secrets" "this" {
