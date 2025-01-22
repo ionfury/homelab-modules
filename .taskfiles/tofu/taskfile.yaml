@@ -139,6 +139,7 @@ tasks:
     vars:
       MODULE: "{{index .MATCH 0}}"
     cmds:
+      - tofu -chdir={{.MODULES_DIR}}/{{.MODULE}} init -upgrade
       - tofu -chdir={{.MODULES_DIR}}/{{.MODULE}} validate
     preconditions:
       - which tofu
