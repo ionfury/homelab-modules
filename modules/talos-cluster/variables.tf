@@ -58,7 +58,7 @@ variable "cluster_proxy_disabled" {
 }
 
 variable "cluster_extraManifests" {
-  description = "A list of extra manifests to apply to the Talos cluster.  The following Prometheus CRDs are autoamtically included: [podmonitors, servicemonitors, probes, prometheusrules]."
+  description = "A list of extra manifests to apply to the Talos cluster."
   type        = list(string)
   default     = []
 }
