@@ -11,6 +11,10 @@ provider "flux" {
   }
 }
 
+provider "kubernetes" {
+  config_path = var.kubernetes_config_path
+}
+
 provider "github" {
   owner = var.github_org
   token = var.github_token

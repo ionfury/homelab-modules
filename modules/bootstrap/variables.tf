@@ -35,7 +35,7 @@ variable "github_token" {
   type        = string
 }
 
-/*
+
 variable "external_secrets_access_key_id" {
   description = "AWS access key ID for external-secrets."
   type        = string
@@ -45,4 +45,4 @@ variable "external_secrets_access_key_secret" {
   description = "AWS secret access key for external-secrets."
   type        = string
 }
-*/
+
