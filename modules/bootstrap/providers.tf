@@ -19,3 +19,9 @@ provider "github" {
   owner = var.github_org
   token = var.github_token
 }
+
+provider "cloudflare" {
+  email   = var.cloudflare_email
+  api_key = var.cloudflare_api_key
+}
+
