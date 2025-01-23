@@ -17,5 +17,13 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = "2.35.1"
     }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "4.51.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.6.3"
+    }
   }
 }
