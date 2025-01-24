@@ -47,6 +47,14 @@ run "test" {
     machines = {
       machine1 = {
         type = "controlplane"
+        annotations = [{
+          key   = "machine1_annotations_key"
+          value = "machine1_annotations_value"
+        }]
+        labels = [{
+          key   = "machine1_labels_key"
+          value = "machine1_labels_value"
+        }]
         install = {
           diskSelectors   = ["machine1_diskSelectors1", "machine1_diskSelectors2"]
           extraKernelArgs = ["machine1_extraKernelArgs1", "machine1_extraKernelArgs2"]
@@ -98,6 +106,14 @@ run "test" {
       }
       machine2 = {
         type = "worker"
+        annotations = [{
+          key   = "machine2_annotations_key"
+          value = "machine2_annotations_value"
+        }]
+        labels = [{
+          key   = "machine2_labels_key"
+          value = "machine2_labels_value"
+        }]
         install = {
           diskSelectors   = ["machine2_diskSelectors1", "machine2_diskSelectors2"]
           extraKernelArgs = ["machine2_extraKernelArgs1", "machine2_extraKernelArgs2"]
@@ -113,6 +129,7 @@ run "test" {
           path        = "machine2_files_path"
           op          = "create"
         }]
+        # talosctl --talosconfig ~/.talos/live.yaml -n node2 get volumeconfig /dev/sdb-1 -o yaml
         disks = [{
           device = "machine2_disks_device"
           partitions = [{

@@ -1,3 +1,6 @@
+# Configures the machine disks
+# https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.machine.disks.
+---
 machine:
   disks:
 %{ for disk in machine_disks ~}

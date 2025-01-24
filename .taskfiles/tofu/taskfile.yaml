@@ -58,6 +58,8 @@ tasks:
       - test -f {{.TEST_PATH}}/{{.TEST_FILE}}
     sources:
       - '{{.MODULES_DIR}}/{{.MODULE}}/**/*.tf'
+      - '{{.MODULES_DIR}}/{{.MODULE}}/**/*.tftpl'
+      - '{{.MODULES_DIR}}/{{.MODULE}}/**/*.yaml'
       - '{{.TEST_PATH}}/**/*.tftest.hcl'
 
   use-pinned-version:
