@@ -62,6 +62,13 @@ run "test" {
           path        = "machine1_files_path"
           op          = "create"
         }]
+        disks = [{
+          device = "machine1_disks_device"
+          partitions = [{
+            mountpoint = "machine1_disks_partitions_mountpoint"
+            size       = "machine1_disks_partitions_size"
+          }]
+        }]
         interfaces = [
           {
             hardwareAddr     = "machine1_interfaces1_hardwareAddr"
@@ -105,6 +112,13 @@ run "test" {
           permissions = "machine2_files_permissions"
           path        = "machine2_files_path"
           op          = "create"
+        }]
+        disks = [{
+          device = "machine2_disks_device"
+          partitions = [{
+            mountpoint = "machine2_disks_partitions_mountpoint"
+            size       = "machine2_disks_partitions_size"
+          }]
         }]
         interfaces = [
           {

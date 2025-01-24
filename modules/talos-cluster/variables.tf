@@ -220,6 +220,13 @@ variable "machines" {
       architecture    = optional(string, "amd64")
       platform        = optional(string, "metal")
     })
+    disks = optional(list(object({
+      device = string
+      partitions = list(object({
+        mountpoint = string
+        size       = optional(string, "")
+      }))
+    })), [])
     files = optional(list(object({
       content     = string
       permissions = string
