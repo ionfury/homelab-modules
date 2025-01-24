@@ -227,6 +227,14 @@ variable "machines" {
         size       = optional(string, "")
       }))
     })), [])
+    labels = optional(list(object({
+      key   = string
+      value = string
+    })), [])
+    annotations = optional(list(object({
+      key   = string
+      value = string
+    })), [])
     files = optional(list(object({
       content     = string
       permissions = string
