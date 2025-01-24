@@ -23,5 +23,5 @@ if [ "$DESIRED_TALOS_TAG" = "$CURRENT_TALOS_TAG" ] && [ "$DESIRED_TALOS_SCHEMATI
   echo "No Upgrade required."
 else
   echo "Upgrade required."
-  talosctl --talosconfig $TALOS_CONFIG_PATH --nodes "$TALOS_NODE" upgrade --image="factory.talos.dev/installer/$DESIRED_TALOS_SCHEMATIC:$DESIRED_TALOS_TAG" --timeout=$TIMEOUT
+  talosctl --talosconfig $TALOS_CONFIG_PATH --nodes "$TALOS_NODE" upgrade --image="factory.talos.dev/installer/$DESIRED_TALOS_SCHEMATIC:$DESIRED_TALOS_TAG" --timeout=$TIMEOUT --preserve
 fi
