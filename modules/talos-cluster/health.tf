@@ -4,6 +4,7 @@
 # This prevents the module from reporting completion until the cluster is up and operational.
 # tflint-ignore: terraform_unused_declarations
 resource "null_resource" "talos_cluster_health" {
+  depends_on = [talos_machine_bootstrap.this]
   triggers = {
     always_run = timestamp()
   }
