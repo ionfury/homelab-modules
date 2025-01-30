@@ -55,6 +55,7 @@ No modules.
 | <a name="input_cluster_allowSchedulingOnControlPlanes"></a> [cluster\_allowSchedulingOnControlPlanes](#input\_cluster\_allowSchedulingOnControlPlanes) | Whether to allow scheduling on control plane nodes. | `bool` | `true` | no |
 | <a name="input_cluster_coreDNS_disabled"></a> [cluster\_coreDNS\_disabled](#input\_cluster\_coreDNS\_disabled) | Whether to disable CoreDNS. | `bool` | `false` | no |
 | <a name="input_cluster_endpoint"></a> [cluster\_endpoint](#input\_cluster\_endpoint) | The endpoint for the Talos cluster. | `string` | `"10.10.10.10"` | no |
+| <a name="input_cluster_etcd_extraArgs"></a> [cluster\_etcd\_extraArgs](#input\_cluster\_etcd\_extraArgs) | A list of extra arguments to pass to the etcd service. | <pre>list(object({<br/>    name  = string<br/>    value = string<br/>  }))</pre> | `[]` | no |
 | <a name="input_cluster_extraManifests"></a> [cluster\_extraManifests](#input\_cluster\_extraManifests) | A list of extra manifests to apply to the Talos cluster. | `list(string)` | `[]` | no |
 | <a name="input_cluster_inlineManifests"></a> [cluster\_inlineManifests](#input\_cluster\_inlineManifests) | A list of inline manifests to apply to the Talos cluster. | <pre>list(object({<br/>    name     = string<br/>    contents = string<br/>  }))</pre> | `[]` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | A name to provide for the Talos cluster. | `string` | `"cluster"` | no |

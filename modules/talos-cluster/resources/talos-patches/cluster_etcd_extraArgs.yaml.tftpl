@@ -1,0 +1,12 @@
+# Allow passing extra args to etcd
+# https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.cluster.etcd
+---
+%{ if type == "controlplane" }
+cluster:
+  etcd:
+    extraArgs:
+%{ for arg in cluster_etcd_extraArgs ~}
+      - name: ${arg.name}
+        value: ${arg.value}
+%{ endfor ~}
+%{ endif }
