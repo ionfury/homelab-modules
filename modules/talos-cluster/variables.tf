@@ -72,6 +72,15 @@ variable "cluster_inlineManifests" {
   default = []
 }
 
+variable "cluster_etcd_extraArgs" {
+  description = "A list of extra arguments to pass to the etcd service."
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  default = []
+}
+
 variable "machine_files" {
   description = "A list of files to add to all machines in the cluster. See: https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.machine.files."
   type = list(object({
