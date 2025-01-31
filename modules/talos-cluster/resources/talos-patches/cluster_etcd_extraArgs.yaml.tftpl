@@ -6,7 +6,6 @@ cluster:
   etcd:
     extraArgs:
 %{ for arg in cluster_etcd_extraArgs ~}
-      - name: ${arg.name}
-        value: ${arg.value}
+      "${arg.name}": "${arg.value}"
 %{ endfor ~}
 %{ endif }
