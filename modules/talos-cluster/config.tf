@@ -46,6 +46,8 @@ data "talos_machine_configuration" "this" {
       cluster_extraManifests                 = var.cluster_extraManifests
       cluster_inlineManifests                = var.cluster_inlineManifests
       cluster_etcd_extraArgs                 = var.cluster_etcd_extraArgs
+      cluster_controllerManager_extraArgs    = var.cluster_controllerManager_extraArgs
+      cluster_scheduler_extraArgs            = var.cluster_scheduler_extraArgs
 
       cilium_manifest = data.helm_template.cilium.manifest
     })

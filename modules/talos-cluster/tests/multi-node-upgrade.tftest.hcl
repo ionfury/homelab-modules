@@ -107,7 +107,7 @@ run "setup_talos_test_node44" {
   }
 
   variables {
-    talos_config_path = "~/.talos/${run.random.resource_name}.yaml"
+    talos_config_path = "~/.talos/testing/${run.random.resource_name}.yaml"
     node              = "node44"
   }
 
@@ -153,7 +153,7 @@ run "setup_talos_test_node45" {
   }
 
   variables {
-    talos_config_path = "~/.talos/${run.random.resource_name}.yaml"
+    talos_config_path = "~/.talos/testing/${run.random.resource_name}.yaml"
     node              = "node45"
   }
 
@@ -199,7 +199,7 @@ run "setup_talos_testnode46" {
   }
 
   variables {
-    talos_config_path = "~/.talos/${run.random.resource_name}.yaml"
+    talos_config_path = "~/.talos/testing/${run.random.resource_name}.yaml"
     node              = "node46"
   }
 
@@ -251,7 +251,7 @@ run "upgrade_talos_test_node44" {
   }
 
   variables {
-    talos_config_path = "~/.talos/${run.random.resource_name}.yaml"
+    talos_config_path = "~/.talos/testing/${run.random.resource_name}.yaml"
     node              = "node44"
   }
 
@@ -267,7 +267,7 @@ run "upgrade_talos_test_node45" {
   }
 
   variables {
-    talos_config_path = "~/.talos/${run.random.resource_name}.yaml"
+    talos_config_path = "~/.talos/testing/${run.random.resource_name}.yaml"
     node              = "node45"
   }
 
@@ -283,7 +283,7 @@ run "upgrade_talos_test_node46" {
   }
 
   variables {
-    talos_config_path = "~/.talos/${run.random.resource_name}.yaml"
+    talos_config_path = "~/.talos/testing/${run.random.resource_name}.yaml"
     node              = "node46"
   }
 

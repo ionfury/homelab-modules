@@ -18,6 +18,18 @@ run "test" {
       name     = "cluster_inlineManifests_name"
       contents = "cluster_inlineManifests_contents"
     }]
+    cluster_etcd_extraArgs = [{
+      name  = "cluster_etcd_extraArgs_name"
+      value = "cluster_etcd_extraArgs_value"
+    }]
+    cluster_controllerManager_extraArgs = [{
+      name  = "cluster_controllerManager_extraArgs_name"
+      value = "cluster_controllerManager_extraArgs_value"
+    }]
+    cluster_scheduler_extraArgs = [{
+      name  = "cluster_scheduler_extraArgs_name"
+      value = "cluster_scheduler_extraArgs_value"
+    }]
 
     machine_network_nameservers = ["nameservers1", "nameservers2"]
     machine_time_servers        = ["cluster_machine_time_servers1", "cluster_machine_time_servers2"]
@@ -39,7 +51,7 @@ run "test" {
     talos_config_path  = "talos_config_path"
     kube_config_path   = "kube_config_path"
     kubernetes_version = "1.30.0"
-    talos_version      = "v1.8.1"
+    talos_version      = "v1.9.2"
     cilium_version     = "1.16.5"
     #cilium_values use default values for valid cilium config
     gracefully_destroy_nodes = true
@@ -170,7 +182,7 @@ run "test" {
 
   # talos_machine_secrets.this
   assert {
-    condition     = talos_machine_secrets.this.talos_version == "v1.8.1"
+    condition     = talos_machine_secrets.this.talos_version == "v1.9.2"
     error_message = "data.talos_machine_secrets.this talos_version is not as expected"
   }
 
@@ -201,7 +213,7 @@ run "test" {
   }
 
   assert {
-    condition     = alltrue([for k, v in data.talos_machine_configuration.this : v.talos_version == "v1.8.1"])
+    condition     = alltrue([for k, v in data.talos_machine_configuration.this : v.talos_version == "v1.9.2"])
     error_message = "data.talos_machine_configuration.this talos_version is not as expected"
   }
 
@@ -291,7 +303,7 @@ run "test" {
   }
 
   assert {
-    condition     = alltrue([for k, v in data.talos_image_factory_extensions_versions.machine_version : v.talos_version == "v1.8.1"])
+    condition     = alltrue([for k, v in data.talos_image_factory_extensions_versions.machine_version : v.talos_version == "v1.9.2"])
     error_message = "data.talos_image_factory_extensions_versions.machine_version talos_version is not as expected"
   }
 
@@ -322,3 +334,4 @@ run "test" {
   # }
 
 }
+

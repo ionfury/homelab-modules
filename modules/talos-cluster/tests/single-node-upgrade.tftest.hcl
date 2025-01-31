@@ -80,13 +80,23 @@ run "kubernetes" {
   }
 }
 
+run "wait" {
+  module {
+    source = "./tests/harness/wait"
+  }
+
+  variables {
+    duration = "30s"
+  }
+}
+
 run "setup_talos_test" {
   module {
     source = "./tests/harness/talos"
   }
 
   variables {
-    talos_config_path = "~/.talos/${run.random.resource_name}.yaml"
+    talos_config_path = "~/.talos/testing/${run.random.resource_name}.yaml"
     node              = "node44"
   }
 
@@ -132,13 +142,24 @@ run "upgrade" {
   }
 }
 
+run "wait" {
+  module {
+    source = "./tests/harness/wait"
+  }
+
+  variables {
+    duration = "30s"
+  }
+}
+
+
 run "upgrade_talos_test" {
   module {
     source = "./tests/harness/talos"
   }
 
   variables {
-    talos_config_path = "~/.talos/${run.random.resource_name}.yaml"
+    talos_config_path = "~/.talos/testing/${run.random.resource_name}.yaml"
     node              = "node44"
   }
 
