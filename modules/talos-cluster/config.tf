@@ -45,6 +45,7 @@ data "talos_machine_configuration" "this" {
       cluster_coreDNS_disabled               = var.cluster_coreDNS_disabled
       cluster_extraManifests                 = var.cluster_extraManifests
       cluster_inlineManifests                = var.cluster_inlineManifests
+      cluster_etcd_extraArgs                 = var.cluster_etcd_extraArgs
 
       cilium_manifest = data.helm_template.cilium.manifest
     })
