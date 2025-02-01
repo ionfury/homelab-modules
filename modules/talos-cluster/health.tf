@@ -4,7 +4,9 @@
 # This prevents the module from reporting completion until the cluster is up and operational.
 # tflint-ignore: terraform_unused_declarations
 resource "null_resource" "talos_cluster_health" {
-  depends_on = [talos_machine_bootstrap.this]
+  depends_on = [talos_machine_bootstrap.this, talos_machine_configuration_apply.machines]
+  for_each   = { for name, machine in var.machines : name => machine if machine.type == "controlplane" }
+
   triggers = {
     always_run = timestamp()
   }
@@ -14,7 +16,7 @@ resource "null_resource" "talos_cluster_health" {
 
     environment = {
       TALOSCONFIG = pathexpand(local_sensitive_file.talosconfig.filename)
-      NODE        = talos_machine_bootstrap.this.node
+      NODE        = each.key
       TIMEOUT     = var.timeout
     }
   }
@@ -24,6 +26,8 @@ resource "null_resource" "talos_cluster_health" {
 # tflint-ignore: terraform_unused_declarations
 resource "null_resource" "talos_cluster_health_upgrade" {
   depends_on = [null_resource.talos_upgrade_trigger]
+  for_each   = { for name, machine in var.machines : name => machine if machine.type == "controlplane" }
+
   triggers = {
     always_run = timestamp()
   }
@@ -33,7 +37,7 @@ resource "null_resource" "talos_cluster_health_upgrade" {
 
     environment = {
       TALOSCONFIG = pathexpand(local_sensitive_file.talosconfig.filename)
-      NODE        = talos_machine_bootstrap.this.node
+      NODE        = each.key
       TIMEOUT     = var.timeout
     }
   }

@@ -25,5 +25,9 @@ terraform {
       source  = "hashicorp/random"
       version = "3.6.3"
     }
+    healthchecksio = {
+      source  = "kristofferahl/healthchecksio"
+      version = "2.0.0"
+    }
   }
 }

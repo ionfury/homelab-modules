@@ -10,6 +10,7 @@ variables {
   github_token                       = "github_token"
   external_secrets_access_key_id     = "external_secrets_access_key_id"
   external_secrets_access_key_secret = "external_secrets_access_key_secret"
+  healthchecksio_api_key             = "healthchecksio_api_key"
 }
 
 run "get_secret" {
