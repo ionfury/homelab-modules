@@ -66,6 +66,17 @@ variable "tld" {
   type        = string
 }
 
+variable "healthchecksio_api_key" {
+  description = "The API key for healthchecks.io"
+  type        = string
+}
+
+variable "healthchecksio_replication_allowed_namespaces" {
+  description = "Namespaces to allow replication for healthchecks.io.  See: https://github.com/mittwald/kubernetes-replicator?tab=readme-ov-file#pull-based-replication"
+  type        = string
+  default     = "monitoring"
+}
+
 variable "cloudflare_tunnel_secret_annotations" {
   description = "Annotations to add to the secret for the Cloudflare Tunnel. For https://github.com/mittwald/kubernetes-replicator?tab=readme-ov-file#pull-based-replication"
   type        = map(string)

@@ -25,3 +25,6 @@ provider "cloudflare" {
   api_key = var.cloudflare_api_key
 }
 
+provider "healthchecksio" {
+  api_key = var.healthchecksio_api_key
+}

@@ -8,6 +8,7 @@
 | <a name="requirement_cloudflare"></a> [cloudflare](#requirement\_cloudflare) | 4.51.0 |
 | <a name="requirement_flux"></a> [flux](#requirement\_flux) | 1.4.0 |
 | <a name="requirement_github"></a> [github](#requirement\_github) | 6.4.0 |
+| <a name="requirement_healthchecksio"></a> [healthchecksio](#requirement\_healthchecksio) | 2.0.0 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | 2.35.1 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | 3.6.3 |
 
@@ -18,6 +19,7 @@
 | <a name="provider_cloudflare"></a> [cloudflare](#provider\_cloudflare) | 4.51.0 |
 | <a name="provider_flux"></a> [flux](#provider\_flux) | 1.4.0 |
 | <a name="provider_github"></a> [github](#provider\_github) | 6.4.0 |
+| <a name="provider_healthchecksio"></a> [healthchecksio](#provider\_healthchecksio) | 2.0.0 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.35.1 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.6.3 |
 
@@ -32,12 +34,15 @@ No modules.
 | [cloudflare_record.this](https://registry.terraform.io/providers/cloudflare/cloudflare/4.51.0/docs/resources/record) | resource |
 | [cloudflare_tunnel.this](https://registry.terraform.io/providers/cloudflare/cloudflare/4.51.0/docs/resources/tunnel) | resource |
 | [flux_bootstrap_git.this](https://registry.terraform.io/providers/fluxcd/flux/1.4.0/docs/resources/bootstrap_git) | resource |
+| [healthchecksio_check.this](https://registry.terraform.io/providers/kristofferahl/healthchecksio/2.0.0/docs/resources/check) | resource |
 | [kubernetes_secret.cloudflare_tunnel_secret](https://registry.terraform.io/providers/hashicorp/kubernetes/2.35.1/docs/resources/secret) | resource |
 | [kubernetes_secret.external_secrets_access_key](https://registry.terraform.io/providers/hashicorp/kubernetes/2.35.1/docs/resources/secret) | resource |
+| [kubernetes_secret.healthchecksio_pingurl](https://registry.terraform.io/providers/hashicorp/kubernetes/2.35.1/docs/resources/secret) | resource |
 | [random_password.this](https://registry.terraform.io/providers/hashicorp/random/3.6.3/docs/resources/password) | resource |
 | [cloudflare_accounts.this](https://registry.terraform.io/providers/cloudflare/cloudflare/4.51.0/docs/data-sources/accounts) | data source |
 | [cloudflare_zone.this](https://registry.terraform.io/providers/cloudflare/cloudflare/4.51.0/docs/data-sources/zone) | data source |
 | [github_repository.this](https://registry.terraform.io/providers/integrations/github/6.4.0/docs/data-sources/repository) | data source |
+| [healthchecksio_channel.this](https://registry.terraform.io/providers/kristofferahl/healthchecksio/2.0.0/docs/data-sources/channel) | data source |
 
 ## Inputs
 
@@ -55,6 +60,8 @@ No modules.
 | <a name="input_github_repository"></a> [github\_repository](#input\_github\_repository) | Github repository | `string` | n/a | yes |
 | <a name="input_github_repository_path"></a> [github\_repository\_path](#input\_github\_repository\_path) | Path in the Github repository to the cluster configuration | `string` | `"clusters"` | no |
 | <a name="input_github_token"></a> [github\_token](#input\_github\_token) | Github token | `string` | n/a | yes |
+| <a name="input_healthchecksio_api_key"></a> [healthchecksio\_api\_key](#input\_healthchecksio\_api\_key) | The API key for healthchecks.io | `string` | n/a | yes |
+| <a name="input_healthchecksio_replication_allowed_namespaces"></a> [healthchecksio\_replication\_allowed\_namespaces](#input\_healthchecksio\_replication\_allowed\_namespaces) | Namespaces to allow replication for healthchecks.io.  See: https://github.com/mittwald/kubernetes-replicator?tab=readme-ov-file#pull-based-replication | `string` | `"monitoring"` | no |
 | <a name="input_kubernetes_config_path"></a> [kubernetes\_config\_path](#input\_kubernetes\_config\_path) | Path to the kubeconfig file | `string` | `"~/.kube/testing/config.yaml"` | no |
 | <a name="input_tld"></a> [tld](#input\_tld) | The top-level domain to use for the Cloudflare Tunnel | `string` | n/a | yes |
 
