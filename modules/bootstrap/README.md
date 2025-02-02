@@ -1,3 +1,17 @@
+# bootstrap
+
+This module provides an opinionated hook into a gitops platform on top of a kubernetes cluster, most likely provisioned via the `talos-cluster` module also in this repository.  The primary goal is to transfer stewardship over cluster resources from management by terraform to flux.  Additionally, the module creates external resources desierable by a homelab cluster (`cloudflare tunnel`, `healthcheck`), and installs nessecary secrets to operate external resources (`external-secrets`). 
+
+## Overview
+
+Does the following:
+
+* Creates a `cloudflare-tunnel` and deposits the following secret in [`kubernetes-environment`](https://github.com/ionfury/homelab-modules/blob/ffe4c1da91a61a7ec090411b5f374a52dd32d0fd/modules/bootstrap/cloudflare-tunnel.tf#L29)
+* Deposits a [`secret`](https://github.com/ionfury/homelab-modules/blob/ffe4c1da91a61a7ec090411b5f374a52dd32d0fd/modules/bootstrap/external-secrets.tf#L1) to be used by the [`external-secrets` operator](https://github.com/external-secrets/external-secrets).  I currently use this to retrieve secrets in-cluster from an AWS parameter store.
+* Bootstraps [`fluxcd.io`](https://fluxcd.io/) operator into the cluster, and attaches it to a git repository and directory.
+* Creates a [`healthchecks.io`](https://healthchecks.io/) check, and deposits the secret, and provides [hooks](https://github.com/ionfury/homelab-modules/blob/ffe4c1da91a61a7ec090411b5f374a52dd32d0fd/modules/bootstrap/healthcheck.tf#L32) to manage the secret with [secret replicator](https://github.com/mittwald/kubernetes-replicator).
+
+  
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
