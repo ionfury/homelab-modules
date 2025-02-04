@@ -33,6 +33,7 @@ data "talos_image_factory_urls" "machine_image_url" {
   schematic_id  = talos_image_factory_schematic.machine_schematic[each.key].id
   platform      = each.value.install.platform
   architecture  = each.value.install.architecture
+  sbc           = each.value.install.sbc
 }
 
 # Hack: https://github.com/siderolabs/terraform-provider-talos/issues/140

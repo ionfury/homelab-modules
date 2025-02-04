@@ -75,6 +75,7 @@ run "test" {
           wipe            = true
           architecture    = "machine1_architecture"
           platform        = "machine1_platform"
+          sbc             = "machine1_sbc"
         }
         files = [{
           content     = "machine1_files_content"

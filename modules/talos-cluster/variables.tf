@@ -248,6 +248,7 @@ variable "machines" {
       wipe            = optional(bool, false)
       architecture    = optional(string, "amd64")
       platform        = optional(string, "metal")
+      sbc             = optional(string, null)
     })
     disks = optional(list(object({
       device = string
