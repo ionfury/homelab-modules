@@ -248,7 +248,7 @@ variable "machines" {
       wipe            = optional(bool, false)
       architecture    = optional(string, "amd64")
       platform        = optional(string, "metal")
-      sbc             = optional(string, null)
+      sbc             = optional(string, "")
     })
     disks = optional(list(object({
       device = string
@@ -297,6 +297,11 @@ variable "machines" {
     condition     = alltrue([for machine in var.machines : machine.type == "worker" || machine.type == "controlplane"])
     error_message = "The machine type must be either 'worker', 'controlplane'."
   }
+
+  validation {
+    condition     = alltrue([for machine in var.machines : (machine.install.sbc != "") != (machine.install.platform != "")])
+    error_message = "For each machine, exactly one of install.sbc or install.platform must be set.  The other must be an empty string \"\"."
+  }
 }
 
 variable "stage_talos_upgrade" {
@@ -304,4 +309,3 @@ variable "stage_talos_upgrade" {
   type        = bool
   default     = false
 }
-

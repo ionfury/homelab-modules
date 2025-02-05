@@ -1,3 +1,33 @@
+locals {
+  machine_schematic_id = {
+    for k in keys(var.machines) : k => try(
+      data.talos_image_factory_urls.machine_image_url_sbc[k].schematic_id,
+      data.talos_image_factory_urls.machine_image_url_metal[k].schematic_id
+    )
+  }
+
+  machine_talos_version = {
+    for k in keys(var.machines) : k => try(
+      data.talos_image_factory_urls.machine_image_url_sbc[k].talos_version,
+      data.talos_image_factory_urls.machine_image_url_metal[k].talos_version
+    )
+  }
+
+  machine_installer = {
+    for k in keys(var.machines) : k => try(
+      data.talos_image_factory_urls.machine_image_url_sbc[k].urls.installer,
+      data.talos_image_factory_urls.machine_image_url_metal[k].urls.installer
+    )
+  }
+
+  machine_installer_secureboot = {
+    for k in keys(var.machines) : k => try(
+      data.talos_image_factory_urls.machine_image_url_sbc[k].urls.installer_secureboot,
+      data.talos_image_factory_urls.machine_image_url_metal[k].urls.installer_secureboot
+    )
+  }
+}
+
 data "talos_image_factory_extensions_versions" "machine_version" {
   for_each = var.machines
 
@@ -26,12 +56,20 @@ resource "talos_image_factory_schematic" "machine_schematic" {
   )
 }
 
-data "talos_image_factory_urls" "machine_image_url" {
-  for_each = var.machines
+data "talos_image_factory_urls" "machine_image_url_metal" {
+  for_each = { for k, v in var.machines : k => v if v.install.platform != "" }
 
   talos_version = var.talos_version
   schematic_id  = talos_image_factory_schematic.machine_schematic[each.key].id
   platform      = each.value.install.platform
+  architecture  = each.value.install.architecture
+}
+
+data "talos_image_factory_urls" "machine_image_url_sbc" {
+  for_each = { for k, v in var.machines : k => v if v.install.sbc != "" }
+
+  talos_version = var.talos_version
+  schematic_id  = talos_image_factory_schematic.machine_schematic[each.key].id
   architecture  = each.value.install.architecture
   sbc           = each.value.install.sbc
 }
@@ -42,8 +80,8 @@ resource "null_resource" "talos_upgrade_trigger" {
   for_each   = var.machines
 
   triggers = {
-    desired_talos_tag    = data.talos_image_factory_urls.machine_image_url[each.key].talos_version
-    desired_schematic_id = data.talos_image_factory_urls.machine_image_url[each.key].schematic_id
+    desired_talos_tag    = local.machine_talos_version[each.key]
+    desired_schematic_id = local.machine_schematic_id[each.key]
     stage_talos_upgrade  = var.stage_talos_upgrade
   }
 

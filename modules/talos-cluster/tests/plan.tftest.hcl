@@ -74,7 +74,7 @@ run "test" {
           secureboot      = true
           wipe            = true
           architecture    = "machine1_architecture"
-          platform        = "machine1_platform"
+          platform        = ""
           sbc             = "machine1_sbc"
         }
         files = [{
@@ -135,6 +135,7 @@ run "test" {
           wipe            = true
           architecture    = "machine2_architecture"
           platform        = "machine2_platform"
+          sbc             = ""
         }
         files = [{
           content     = "machine2_files_content"
