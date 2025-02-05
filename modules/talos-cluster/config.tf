@@ -24,7 +24,7 @@ data "talos_machine_configuration" "this" {
       machine_network_hostname    = each.key
       machine_network_interfaces  = each.value.interfaces
       machine_install             = each.value.install
-      machine_install_disk_image  = each.value.install.secureboot ? data.talos_image_factory_urls.machine_image_url[each.key].urls.installer_secureboot : data.talos_image_factory_urls.machine_image_url[each.key].urls.installer
+      machine_install_disk_image  = each.value.install.secureboot ? local.machine_installer_secureboot[each.key] : local.machine_installer[each.key]
       machine_install_files       = concat(each.value.files, var.machine_files)
       machine_disks               = each.value.disks
       machine_network_nameservers = var.machine_network_nameservers
