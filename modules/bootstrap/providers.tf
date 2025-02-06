@@ -1,6 +1,9 @@
 provider "flux" {
   kubernetes = {
-    config_path = var.kubernetes_config_path
+    host                   = var.kubernetes_config_host
+    client_certificate     = var.kubernetes_config_client_certificate
+    client_key             = var.kubernetes_config_client_key
+    cluster_ca_certificate = var.kubernetes_config_cluster_ca_certificate
   }
   git = {
     url = "https://github.com/${var.github_org}/${var.github_repository}.git"
@@ -12,7 +15,10 @@ provider "flux" {
 }
 
 provider "kubernetes" {
-  config_path = var.kubernetes_config_path
+  host                   = var.kubernetes_config_host
+  client_certificate     = var.kubernetes_config_client_certificate
+  client_key             = var.kubernetes_config_client_key
+  cluster_ca_certificate = var.kubernetes_config_cluster_ca_certificate
 }
 
 provider "github" {

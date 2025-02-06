@@ -4,9 +4,9 @@ variables {
   cloudflare_email        = "ionfury@gmail.com"
   tld                     = "tomnowak.work"
 
-  github_org                         = "github_org"
-  github_repository                  = "github_repository"
-  github_repository_path             = "github_repository_path"
+  github_org                         = "ionfury"
+  github_repository                  = "homelab"
+  github_repository_path             = ".archive"
   github_token                       = "github_token"
   external_secrets_access_key_id     = "external_secrets_access_key_id"
   external_secrets_access_key_secret = "external_secrets_access_key_secret"

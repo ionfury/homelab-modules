@@ -34,6 +34,7 @@ No modules.
 | [cloudflare_record.this](https://registry.terraform.io/providers/cloudflare/cloudflare/4.51.0/docs/resources/record) | resource |
 | [cloudflare_tunnel.this](https://registry.terraform.io/providers/cloudflare/cloudflare/4.51.0/docs/resources/tunnel) | resource |
 | [flux_bootstrap_git.this](https://registry.terraform.io/providers/fluxcd/flux/1.4.0/docs/resources/bootstrap_git) | resource |
+| [github_repository_file.this](https://registry.terraform.io/providers/integrations/github/6.4.0/docs/resources/repository_file) | resource |
 | [healthchecksio_check.this](https://registry.terraform.io/providers/kristofferahl/healthchecksio/2.0.0/docs/resources/check) | resource |
 | [kubernetes_secret.cloudflare_tunnel_secret](https://registry.terraform.io/providers/hashicorp/kubernetes/2.35.1/docs/resources/secret) | resource |
 | [kubernetes_secret.external_secrets_access_key](https://registry.terraform.io/providers/hashicorp/kubernetes/2.35.1/docs/resources/secret) | resource |
@@ -52,6 +53,7 @@ No modules.
 | <a name="input_cloudflare_api_key"></a> [cloudflare\_api\_key](#input\_cloudflare\_api\_key) | The API key associated with the Cloudflare account | `string` | n/a | yes |
 | <a name="input_cloudflare_email"></a> [cloudflare\_email](#input\_cloudflare\_email) | The email address associated with the Cloudflare account | `string` | n/a | yes |
 | <a name="input_cloudflare_tunnel_secret_annotations"></a> [cloudflare\_tunnel\_secret\_annotations](#input\_cloudflare\_tunnel\_secret\_annotations) | Annotations to add to the secret for the Cloudflare Tunnel. For https://github.com/mittwald/kubernetes-replicator?tab=readme-ov-file#pull-based-replication | `map(string)` | <pre>{<br/>  "replicator.v1.mittwald.de/replication-allowed": "true",<br/>  "replicator.v1.mittwald.de/replication-allowed-namespaces": "network"<br/>}</pre> | no |
+| <a name="input_cluster_env_vars"></a> [cluster\_env\_vars](#input\_cluster\_env\_vars) | Environment variables to add to the cluster git repository root directory, to be consumed by flux. See: https://fluxcd.io/flux/components/kustomize/kustomizations/#post-build-variable-substitution | <pre>list(object({<br/>    name  = string<br/>    value = string<br/>  }))</pre> | `[]` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the cluster | `string` | n/a | yes |
 | <a name="input_external_secrets_access_key_id"></a> [external\_secrets\_access\_key\_id](#input\_external\_secrets\_access\_key\_id) | AWS access key ID for external-secrets. | `string` | n/a | yes |
 | <a name="input_external_secrets_access_key_secret"></a> [external\_secrets\_access\_key\_secret](#input\_external\_secrets\_access\_key\_secret) | AWS secret access key for external-secrets. | `string` | n/a | yes |

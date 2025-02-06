@@ -19,6 +19,11 @@ output "talosconfig_filename" {
   value = local_sensitive_file.talosconfig.filename
 }
 
+output "talosconfig_raw" {
+  sensitive = true
+  value     = data.talos_client_configuration.this.talos_config
+}
+
 resource "local_sensitive_file" "kubeconfig" {
   content         = talos_cluster_kubeconfig.this.kubeconfig_raw
   filename        = pathexpand("${var.kube_config_path}/${var.cluster_name}.yaml")
@@ -29,9 +34,17 @@ output "kubeconfig_filename" {
   value = local_sensitive_file.kubeconfig.filename
 }
 
-output "kubeconfig_host" {
+output "kubeconfig_raw" {
   sensitive = true
-  value     = talos_cluster_kubeconfig.this.kubernetes_client_configuration.host
+  value     = talos_cluster_kubeconfig.this.kubeconfig_raw
+}
+
+output "kubeconfig_host" {
+  # Ensure the kubeconfig is written after the cluster is healthy.
+  # Implicit dependencies will attempt to use the kubeconfig file before the cluster is healthy.
+  depends_on = [null_resource.talos_cluster_health_upgrade]
+  sensitive  = true
+  value      = talos_cluster_kubeconfig.this.kubernetes_client_configuration.host
 }
 
 output "kubeconfig_client_certificate" {

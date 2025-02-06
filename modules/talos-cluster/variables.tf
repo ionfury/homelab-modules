@@ -90,7 +90,6 @@ variable "cluster_scheduler_extraArgs" {
   default = []
 }
 
-
 variable "cluster_controllerManager_extraArgs" {
   description = "A list of extra arguments to pass to the kube controller manager service."
   type = list(object({
@@ -100,6 +99,23 @@ variable "cluster_controllerManager_extraArgs" {
   default = []
 }
 
+variable "machine_labels" {
+  description = "A list of labels to add to all machines in the cluster."
+  type = list(object({
+    key   = string
+    value = string
+  }))
+  default = []
+}
+
+variable "machine_annotations" {
+  description = "A list of annotations to add to all machines in the cluster."
+  type = list(object({
+    key   = string
+    value = string
+  }))
+  default = []
+}
 
 variable "machine_files" {
   description = "A list of files to add to all machines in the cluster. See: https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.machine.files."
@@ -151,7 +167,6 @@ variable "machine_time_servers" {
   type        = list(string)
   default     = ["0.pool.ntp.org", "1.pool.ntp.org"]
 }
-
 
 variable "talos_config_path" {
   description = "The path to output the Talos configuration file."
@@ -238,8 +253,7 @@ variable "timeout" {
 variable "machines" {
   description = "A list of machines to create the talos cluster from."
   type = map(object({
-    type           = string
-    first_scale_in = optional(bool, false) # Must be set to 'true' when adding a new node to an existing cluster.  Set to 'false' once the node is in the cluster. https://github.com/siderolabs/terraform-provider-talos/issues/221
+    type = string
     install = object({
       diskSelectors   = list(string) # https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.machine.install.diskSelector
       extraKernelArgs = optional(list(string), [])
