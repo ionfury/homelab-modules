@@ -8,11 +8,31 @@ variable "flux_version" {
   type        = string
   default     = "v2.4.0"
 }
-
+/*
 variable "kubernetes_config_path" {
   description = "Path to the kubeconfig file"
   type        = string
   default     = "~/.kube/testing/config.yaml"
+}*/
+
+variable "kubernetes_config_host" {
+  description = "Kubernetes API server host"
+  type        = string
+}
+
+variable "kubernetes_config_client_certificate" {
+  description = "Kubernetes client certificate"
+  type        = string
+}
+
+variable "kubernetes_config_client_key" {
+  description = "Kubernetes client key"
+  type        = string
+}
+
+variable "kubernetes_config_cluster_ca_certificate" {
+  description = "Kubernetes cluster CA certificate"
+  type        = string
 }
 
 variable "github_org" {
@@ -84,4 +104,13 @@ variable "cloudflare_tunnel_secret_annotations" {
     "replicator.v1.mittwald.de/replication-allowed"            = "true"
     "replicator.v1.mittwald.de/replication-allowed-namespaces" = "network"
   }
+}
+
+variable "cluster_env_vars" {
+  description = "Environment variables to add to the cluster git repository root directory, to be consumed by flux. See: https://fluxcd.io/flux/components/kustomize/kustomizations/#post-build-variable-substitution"
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  default = []
 }
