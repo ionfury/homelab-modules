@@ -109,7 +109,7 @@ locals {
 
   defaultDiskConfigAnnotation = var.prepare_longhorn && !var.longhorn_mount_disk2 ? [{
     key   = "node.longhorn.io/default-disks-config"
-    value = "'${jsonencode([{ "name" : "disk1", "path" : "/var/lib/longhorn", "allowScheduling" : true, "tags" : ["fast", "ssd"] }])}'"
+    value = "'${jsonencode([{ "name" : "disk1", "path" : "/var/lib/longhorn", "allowScheduling" : true, "tags" : ["fast", "ssd", "slow", "hdd"] }])}'"
   }] : []
 
   defaultNodeTagsAnnotation = var.prepare_longhorn ? [{
