@@ -7,13 +7,13 @@ run "random" {
 run "test" {
   variables {
     cluster_name     = run.random.resource_name
-    cluster_endpoint = "192.168.10.201"
+    cluster_endpoint = "192.168.10.218"
     tld              = "tomnowak.work"
 
     cluster_vip            = "192.168.10.6"
     cluster_node_subnet    = "192.168.10.0/24"
-    cluster_pod_subnet     = "172.18.0.0/16"
-    cluster_service_subnet = "172.19.0.0/16"
+    cluster_pod_subnet     = "172.30.0.0/16"
+    cluster_service_subnet = "172.31.0.0/16"
 
     cilium_helm_values = <<EOT
 ipam:
@@ -65,17 +65,13 @@ EOT
     timeout           = "10m"
 
     machines = {
-      node43 = {
-        type = "controlplane"
-        install = {
-          diskSelectors = ["type: 'ssd'"]
-        }
-        interfaces = [
-          {
-            hardwareAddr = "ac:1f:6b:2d:bb:c8"
-            addresses    = ["192.168.10.201"]
-          }
-        ]
+      node44 = {
+        type    = "controlplane"
+        install = { diskSelectors = ["type: 'ssd'"] }
+        interfaces = [{
+          hardwareAddr = "ac:1f:6b:2d:ba:1e"
+          addresses    = ["192.168.10.218"]
+        }]
       }
     }
 

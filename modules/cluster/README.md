@@ -1,3 +1,18 @@
+# Cluster Module
+
+This is a highly opinionated implementation of the other modules in this repository.  It's primary purpose is to template deploying kubernetes clusters into my homelab environment, and expose only the levers and knobs which I need access to.  This allows me to make the other modules more generic.
+
+## Overview
+
+In brief, the `cluster` module does the following:
+
+1. Pulls secrets from AWS parameter store via the `params-get` module.
+1. ~~Creates Unifi dns entries for all machines~~
+1. ~~Creates Unifi user records (DHCP Reservations) for all machines~~
+1. Creates a talos cluster from the machines via the `talos-cluster`.
+1. Bootstraps the talos cluster into my [homelab gitops repository](https://github.com/ionfury/homelab/tree/main/kubernetes/clusters) for further management via flux via the `bootstrap` module.
+1. Stores the cluster `kubeconfig` and `talosconfig` secrets in my AWS parameter store.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
