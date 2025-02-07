@@ -27,6 +27,7 @@ locals {
     cilium_version         = var.cilium_version
     flux_version           = var.flux_version
     prometheus_version     = var.prometheus_version
+    default_replica_count  = min(3, length(var.machines))
   }
 
   cluster_env_vars = merge(var.cluster_env_vars, local.generated_cluster_env_vars)
