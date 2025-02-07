@@ -102,9 +102,14 @@ locals {
   }] : []
 
   # HACK: This is too much effort to decompose right now.
-  defaultDiskConfigAnnotation = var.prepare_longhorn && var.longhorn_mount_disk2 ? [{
+  defaultDiskConfigAnnotationDisk2 = var.prepare_longhorn && var.longhorn_mount_disk2 ? [{
     key   = "node.longhorn.io/default-disks-config"
     value = "'${jsonencode([{ "name" : "disk1", "path" : "/var/lib/longhorn", "allowScheduling" : true, "tags" : ["fast", "ssd"] }, { "name" : "disk2", "path" : "/var/mnt/disk2", "storageReserved" : 0, "allowScheduling" : true, "tags" : ["slow", "hdd"] }])}'"
+  }] : []
+
+  defaultDiskConfigAnnotation = var.prepare_longhorn && !var.longhorn_mount_disk2 ? [{
+    key   = "node.longhorn.io/default-disks-config"
+    value = "'${jsonencode([{ "name" : "disk1", "path" : "/var/lib/longhorn", "allowScheduling" : true, "tags" : ["fast", "ssd"] }])}'"
   }] : []
 
   defaultNodeTagsAnnotation = var.prepare_longhorn ? [{
@@ -113,7 +118,7 @@ locals {
   }] : []
 
   machine_labels      = local.createDefaultDiskLabel
-  machine_annotations = concat(local.defaultDiskConfigAnnotation, local.defaultNodeTagsAnnotation)
+  machine_annotations = concat(local.defaultDiskConfigAnnotation, local.defaultNodeTagsAnnotation, local.defaultDiskConfigAnnotationDisk2)
 }
 
 module "params_get" {
