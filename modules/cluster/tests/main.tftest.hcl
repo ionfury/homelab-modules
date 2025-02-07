@@ -14,6 +14,9 @@ run "test" {
     cluster_node_subnet    = "192.168.10.0/24"
     cluster_pod_subnet     = "172.30.0.0/16"
     cluster_service_subnet = "172.31.0.0/16"
+    cluster_env_vars = {
+      test = "best"
+    }
 
     cilium_helm_values = <<EOT
 ipam:
@@ -82,8 +85,8 @@ EOT
 
     unifi = {
       address        = "https://192.168.1.1"
-      username_store = "/homelab/unifi/terraform/username" # /homelab/infrastructure/unifi/username
-      password_store = "/homelab/unifi/terraform/password" # /homelab/infrastructure/unifi/password
+      username_store = "/homelab/infrastructure/accounts/unifi/username"
+      password_store = "/homelab/infrastructure/accounts/unifi/password"
       site           = "default"
     }
 
@@ -91,22 +94,22 @@ EOT
       org             = "ionfury"
       repository      = "homelab"
       repository_path = "kubernetes/clusters"
-      token_store     = "/homelab/github/ionfury/homelab-flux-dev-token" # /homelab/infrastructure/github/token
+      token_store     = "/homelab/infrastructure/accounts/github/token"
     }
 
     cloudflare = {
       account       = "homelab"
       email         = "ionfury@gmail.com"
-      api_key_store = "/homelab/cloudflare/api-key" # /homelab/infrastructure/cloudflare/api-key
+      api_key_store = "/homelab/infrastructure/accounts/cloudflare/api-key"
     }
 
     external_secrets = {
-      id_store     = "/homelab/kubernetes/live/external-secrets/id"     # /homelab/infrastructure/external-secrets/id
-      secret_store = "/homelab/kubernetes/live/external-secrets/secret" # /homelab/infrastructure/external-secrets/secret
+      id_store     = "/homelab/infrastructure/accounts/external-secrets/id"
+      secret_store = "/homelab/infrastructure/accounts/external-secrets/secret"
     }
 
     healthchecksio = {
-      api_key_store = "/homelab/healthchecksio/api-key" # /homelab/infrastructure/healthchecksio/api-key
+      api_key_store = "/homelab/infrastructure/accounts/healthchecksio/api-key"
     }
   }
 }

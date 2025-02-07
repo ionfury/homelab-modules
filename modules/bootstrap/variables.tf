@@ -108,9 +108,6 @@ variable "cloudflare_tunnel_secret_annotations" {
 
 variable "cluster_env_vars" {
   description = "Environment variables to add to the cluster git repository root directory, to be consumed by flux. See: https://fluxcd.io/flux/components/kustomize/kustomizations/#post-build-variable-substitution"
-  type = list(object({
-    name  = string
-    value = string
-  }))
-  default = []
+  type        = map(string)
+  default     = {}
 }
