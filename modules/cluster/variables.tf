@@ -38,6 +38,11 @@ variable "cilium_version" {
   type        = string
 }
 
+variable "cluster_env_vars" {
+  description = "Arbitrary map of values to pass to cluster via the generated-cluster-vars.env."
+  type        = map(string)
+}
+
 variable "kubernetes_version" {
   description = "The version of Kubernetes to use."
   type        = string

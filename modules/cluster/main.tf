@@ -15,48 +15,21 @@ locals {
     }
   })
 
-  cluster_env_vars = [
-    {
-      name  = "cluster_name"
-      value = var.cluster_name
-    },
-    {
-      name  = "cluster_endpoint"
-      value = var.cluster_endpoint
-    },
-    {
-      name  = "cluster_vip"
-      value = var.cluster_vip
-    },
-    {
-      name  = "cluster_node_subnet"
-      value = var.cluster_node_subnet
-    },
-    {
-      name  = "cluster_pod_subnet"
-      value = var.cluster_pod_subnet
-    },
-    {
-      name  = "cluster_service_subnet"
-      value = var.cluster_service_subnet
-    },
-    {
-      name  = "talos_version"
-      value = var.talos_version
-    },
-    {
-      name  = "cilium_version"
-      value = var.cilium_version
-    },
-    {
-      name  = "flux_version"
-      value = var.flux_version
-    },
-    {
-      name  = "prometheus_version"
-      value = var.prometheus_version
-    }
-  ]
+  generated_cluster_env_vars = {
+    cluster_name           = var.cluster_name
+    cluster_endpoint       = var.cluster_endpoint
+    cluster_vip            = var.cluster_vip
+    cluster_node_subnet    = var.cluster_node_subnet
+    cluster_pod_subnet     = var.cluster_pod_subnet
+    cluster_service_subnet = var.cluster_service_subnet
+    cluster_path           = "${var.github.repository_path}/${var.cluster_name}"
+    talos_version          = var.talos_version
+    cilium_version         = var.cilium_version
+    flux_version           = var.flux_version
+    prometheus_version     = var.prometheus_version
+  }
+
+  cluster_env_vars = merge(var.cluster_env_vars, local.generated_cluster_env_vars)
 
   cluster_extraManifests = [
     # Prometheus CRDs
