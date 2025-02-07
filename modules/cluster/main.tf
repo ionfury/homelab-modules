@@ -268,14 +268,14 @@ module "params_put" {
   aws = var.aws
   parameters = {
     kubeconfig = {
-      name        = "/homelab/infrastructure/${var.cluster_name}/kubeconfig"
-      description = "Managed by Terraform."
+      name        = "/homelab/infrastructure/clusters/${var.cluster_name}/kubeconfig"
+      description = "Kubeconfig for cluster '${var.cluster_name}'."
       type        = "SecureString"
       value       = module.talos_cluster.kubeconfig_raw
     }
     talosconfig = {
-      name        = "/homelab/infrastructure/${var.cluster_name}/talosconfig"
-      description = "Managed by Terraform."
+      name        = "/homelab/infrastructure/clusters/${var.cluster_name}/talosconfig"
+      description = "Talosconfig for cluster '${var.cluster_name}'."
       type        = "SecureString"
       value       = module.talos_cluster.talosconfig_raw
     }
