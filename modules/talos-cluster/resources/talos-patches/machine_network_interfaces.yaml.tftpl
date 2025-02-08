@@ -9,10 +9,12 @@ machine:
           hardwareAddr: ${interface.hardwareAddr}
           physical: true
         mtu: 1500
+%{ if type == "controlplane" }
 %{ if cluster_vip != "" }
         vip:
           ip: ${cluster_vip}
-%{ endif}
+%{ endif }
+%{ endif }
         addresses:
 %{ for ip in interface.addresses ~}
           - ${ip}/24
