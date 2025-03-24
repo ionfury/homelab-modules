@@ -2,8 +2,8 @@ locals {
   # tflint-ignore: terraform_unused_declarations
   unifi_dns_records = tomap({
     for machine, details in var.machines : machine => {
-      name  = var.cluster_endpoint
-      value = details.interfaces[0].addresses[0]
+      name   = var.cluster_endpoint
+      record = details.interfaces[0].addresses[0]
     }
   })
 
@@ -126,8 +126,7 @@ module "params_get" {
 
   aws = var.aws
   parameters = [
-    var.unifi.username_store,
-    var.unifi.password_store,
+    var.unifi.api_key_store,
     var.github.token_store,
     var.external_secrets.id_store,
     var.external_secrets.secret_store,
@@ -135,45 +134,23 @@ module "params_get" {
     var.healthchecksio.api_key_store
   ]
 }
-/*
-This unifi provider is unreliable, getting random errors like the following:
-│ Error: invalid character '<' looking for beginning of value
-│ 
-│   with module.unifi_dns.unifi_dns_record.record["node43"],
-│   on ../unifi-dns/main.tf line 1, in resource "unifi_dns_record" "record":
-│    1: resource "unifi_dns_record" "record" {
-│ 
-Look at the following issues to add support into the mainline provider:
-https://github.com/paultyng/terraform-provider-unifi/issues/460
-https://github.com/paultyng/terraform-provider-unifi/issues/461
 module "unifi_dns" {
   source = "../unifi-dns"
 
   unifi_address     = var.unifi.address
   unifi_site        = var.unifi.site
-  unifi_username    = module.params_get.values[var.unifi.username_store]
-  unifi_password    = module.params_get.values[var.unifi.password_store]
+  unifi_api_key     = module.params_get.values[var.unifi.api_key_store]
   unifi_dns_records = local.unifi_dns_records
 }
-*/
-/*
-╷
-│ Error: not found
-│ 
-│   with module.unifi_users.unifi_user.user["node43"],
-│   on ../unifi-users/main.tf line 5, in resource "unifi_user" "user":
-│    5: resource "unifi_user" "user" {
-│ 
-╵
 module "unifi_users" {
   source = "../unifi-users"
 
-  unifi_address  = var.unifi.address
-  unifi_site     = var.unifi.site
-  unifi_username = module.params_get.values[var.unifi.username_store]
-  unifi_password = module.params_get.values[var.unifi.password_store]
-  unifi_users    = local.unifi_users
-}*/
+  unifi_address = var.unifi.address
+  unifi_site    = var.unifi.site
+  unifi_api_key = module.params_get.values[var.unifi.api_key_store]
+  unifi_users   = local.unifi_users
+}
+
 module "talos_cluster" {
   source = "../talos-cluster"
 

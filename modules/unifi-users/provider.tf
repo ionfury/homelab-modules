@@ -1,7 +1,8 @@
 provider "unifi" {
   api_url        = var.unifi_address
-  username       = var.unifi_username
-  password       = var.unifi_password
+  api_key        = var.unifi_api_key
+  username       = ""
+  password       = ""
   allow_insecure = true
   site           = var.unifi_site
 }
