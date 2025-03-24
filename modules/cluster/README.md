@@ -32,6 +32,8 @@ No providers.
 | <a name="module_params_get"></a> [params\_get](#module\_params\_get) | ../params-get | n/a |
 | <a name="module_params_put"></a> [params\_put](#module\_params\_put) | ../params-put | n/a |
 | <a name="module_talos_cluster"></a> [talos\_cluster](#module\_talos\_cluster) | ../talos-cluster | n/a |
+| <a name="module_unifi_dns"></a> [unifi\_dns](#module\_unifi\_dns) | ../unifi-dns | n/a |
+| <a name="module_unifi_users"></a> [unifi\_users](#module\_unifi\_users) | ../unifi-users | n/a |
 
 ## Resources
 
@@ -71,7 +73,7 @@ No resources.
 | <a name="input_timeout"></a> [timeout](#input\_timeout) | The timeout to use for the cluster. | `string` | n/a | yes |
 | <a name="input_timeservers"></a> [timeservers](#input\_timeservers) | The timeservers to use for the cluster. | `list(string)` | n/a | yes |
 | <a name="input_tld"></a> [tld](#input\_tld) | The top-level domain to use. | `string` | n/a | yes |
-| <a name="input_unifi"></a> [unifi](#input\_unifi) | The Unifi controller to use. | <pre>object({<br/>    address        = string<br/>    site           = string<br/>    username_store = string<br/>    password_store = string<br/>  })</pre> | n/a | yes |
+| <a name="input_unifi"></a> [unifi](#input\_unifi) | The Unifi controller to use. | <pre>object({<br/>    address       = string<br/>    site          = string<br/>    api_key_store = string<br/>  })</pre> | n/a | yes |
 
 ## Outputs
 

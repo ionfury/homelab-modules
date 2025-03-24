@@ -1,3 +1,8 @@
+variable "unifi_api_key" {
+  description = "The API key to use for the Unifi controller."
+  type        = string
+}
+
 variable "unifi_address" {
   description = "The address of the Unifi controller."
   type        = string
@@ -7,18 +12,6 @@ variable "unifi_site" {
   description = "The site to use for the Unifi controller."
   type        = string
   default     = "default"
-}
-
-variable "unifi_username" {
-  description = "The username to use for the Unifi controller."
-  type        = string
-  default     = null
-}
-
-variable "unifi_password" {
-  description = "The password to use for the Unifi controller."
-  type        = string
-  default     = null
 }
 
 variable "unifi_users" {

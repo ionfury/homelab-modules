@@ -1,8 +1,6 @@
 variables {
-  unifi_address  = "plan"
-  unifi_site     = "plan"
-  unifi_username = "plan"
-  unifi_password = "plan"
+  unifi_address = "https://192.168.1.1"
+  unifi_api_key = "plan"
 
   unifi_users = {
     a = {
@@ -12,8 +10,14 @@ variables {
   }
 }
 
-run "test" {
-  command = plan
+mock_provider "unifi" {
+  alias = "mock"
+}
+
+run "mock" {
+  providers = {
+    unifi = unifi.mock
+  }
 
   assert {
     condition     = unifi_user.user["a"].fixed_ip == "192.168.169.42"

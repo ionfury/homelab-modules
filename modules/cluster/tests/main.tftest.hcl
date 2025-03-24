@@ -7,7 +7,7 @@ run "random" {
 run "test" {
   variables {
     cluster_name     = run.random.resource_name
-    cluster_endpoint = "192.168.10.218"
+    cluster_endpoint = "${run.random.resource_name}.tomnowak.work"
     tld              = "tomnowak.work"
 
     cluster_vip            = "192.168.10.6"
@@ -84,10 +84,9 @@ EOT
     }
 
     unifi = {
-      address        = "https://192.168.1.1"
-      username_store = "/homelab/infrastructure/accounts/unifi/username"
-      password_store = "/homelab/infrastructure/accounts/unifi/password"
-      site           = "default"
+      address       = "https://192.168.1.1"
+      api_key_store = "/homelab/infrastructure/accounts/unifi/api-key"
+      site          = "default"
     }
 
     github = {
