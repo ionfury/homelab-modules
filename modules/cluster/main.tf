@@ -1,10 +1,12 @@
 locals {
   # tflint-ignore: terraform_unused_declarations
   unifi_dns_records = tomap({
-    for machine, details in var.machines : machine => {
+    for machine, details in var.machines :
+    machine => {
       name   = var.cluster_endpoint
       record = details.interfaces[0].addresses[0]
     }
+    if details.type == "controlplane"
   })
 
   # tflint-ignore: terraform_unused_declarations
