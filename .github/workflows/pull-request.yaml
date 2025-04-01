@@ -1,13 +1,12 @@
 ---
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
-name: Pull Request CI Checks
+name: Pull Request CI
 
-#on:
-#  pull_request:
-#    branches:
-#      - main
-#    paths:
-#      - 'modules/**'
+on:
+  pull_request:
+    paths:
+      - 'modules/**/*.tf'
+      - 'modules/**/*.hcl'
 
 env:
   tofu_version: '1.8.8'
