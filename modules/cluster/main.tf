@@ -46,8 +46,7 @@ locals {
     name  = "listen-metrics-urls"
     value = "http://0.0.0.0:2381"
   }] : []
-  cluster_scheduler_extraArgs 
-  = var.prepare_kube_prometheus_metrics ? [{
+  cluster_scheduler_extraArgs = var.prepare_kube_prometheus_metrics ? [{
     name  = "bind-address"
     value = "0.0.0.0"
   }] : []
@@ -240,3 +239,4 @@ module "params_put" {
     }
   }
 }
+
