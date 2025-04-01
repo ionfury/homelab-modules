@@ -10,7 +10,7 @@ on:
 
 env:
   tofu_version: '1.8.8'
-  terraform_docs_version: 'v0.18.0'
+  terraform_docs_version: 'v0.19.0'
   tflint_version: 'v0.54.0'
 
 jobs:
