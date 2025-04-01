@@ -1,0 +1,13 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [
+    "config:recommended",
+    ":dependencyDashboard",
+    ":timezone(America/New_York)",
+  ],
+  dependencyDashboardTitle: "Dependency Dashboard",
+  terraform: {    
+    fileMatch: ["(^|/)modules/.+\\.tf$"],
+    registryUrls: ["https://registry.opentofu.org"]
+  }
+}
