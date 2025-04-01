@@ -12,7 +12,7 @@ locals {
   # tflint-ignore: terraform_unused_declarations
   unifi_users = tomap({
     for machine, details in var.machines : machine => {
-      mac =asdf details.interfaces[0].hardwareAddr
+      mac = details.interfaces[0].hardwareAddr
       ip  = details.interfaces[0].addresses[0]
     }
   })

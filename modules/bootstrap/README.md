@@ -53,7 +53,7 @@ No modules.
 | <a name="input_cloudflare_api_key"></a> [cloudflare\_api\_key](#input\_cloudflare\_api\_key) | The API key associated with the Cloudflare account | `string` | n/a | yes |
 | <a name="input_cloudflare_email"></a> [cloudflare\_email](#input\_cloudflare\_email) | The email address associated with the Cloudflare account | `string` | n/a | yes |
 | <a name="input_cloudflare_tunnel_secret_annotations"></a> [cloudflare\_tunnel\_secret\_annotations](#input\_cloudflare\_tunnel\_secret\_annotations) | Annotations to add to the secret for the Cloudflare Tunnel. For https://github.com/mittwald/kubernetes-replicator?tab=readme-ov-file#pull-based-replication | `map(string)` | <pre>{<br/>  "replicator.v1.mittwald.de/replication-allowed": "true",<br/>  "replicator.v1.mittwald.de/replication-allowed-namespaces": "network"<br/>}</pre> | no |
-| <a name="input_cluster_env_vars"></a> [cluster\_env\_vars](#input\_cluster\_env\_vars) | Environment variables to add to the cluster git repository root directory, to be consumed by flux. See: https://fluxcd.io/flux/components/kustomize/kustomizations/#post-build-variable-substitution | <pre>list(object({<br/>    name  = string<br/>    value = string<br/>  }))</pre> | `[]` | no |
+| <a name="input_cluster_env_vars"></a> [cluster\_env\_vars](#input\_cluster\_env\_vars) | Environment variables to add to the cluster git repository root directory, to be consumed by flux. See: https://fluxcd.io/flux/components/kustomize/kustomizations/#post-build-variable-substitution | `map(string)` | `{}` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the cluster | `string` | n/a | yes |
 | <a name="input_external_secrets_access_key_id"></a> [external\_secrets\_access\_key\_id](#input\_external\_secrets\_access\_key\_id) | AWS access key ID for external-secrets. | `string` | n/a | yes |
 | <a name="input_external_secrets_access_key_secret"></a> [external\_secrets\_access\_key\_secret](#input\_external\_secrets\_access\_key\_secret) | AWS secret access key for external-secrets. | `string` | n/a | yes |
@@ -64,7 +64,10 @@ No modules.
 | <a name="input_github_token"></a> [github\_token](#input\_github\_token) | Github token | `string` | n/a | yes |
 | <a name="input_healthchecksio_api_key"></a> [healthchecksio\_api\_key](#input\_healthchecksio\_api\_key) | The API key for healthchecks.io | `string` | n/a | yes |
 | <a name="input_healthchecksio_replication_allowed_namespaces"></a> [healthchecksio\_replication\_allowed\_namespaces](#input\_healthchecksio\_replication\_allowed\_namespaces) | Namespaces to allow replication for healthchecks.io.  See: https://github.com/mittwald/kubernetes-replicator?tab=readme-ov-file#pull-based-replication | `string` | `"monitoring"` | no |
-| <a name="input_kubernetes_config_path"></a> [kubernetes\_config\_path](#input\_kubernetes\_config\_path) | Path to the kubeconfig file | `string` | `"~/.kube/testing/config.yaml"` | no |
+| <a name="input_kubernetes_config_client_certificate"></a> [kubernetes\_config\_client\_certificate](#input\_kubernetes\_config\_client\_certificate) | Kubernetes client certificate | `string` | n/a | yes |
+| <a name="input_kubernetes_config_client_key"></a> [kubernetes\_config\_client\_key](#input\_kubernetes\_config\_client\_key) | Kubernetes client key | `string` | n/a | yes |
+| <a name="input_kubernetes_config_cluster_ca_certificate"></a> [kubernetes\_config\_cluster\_ca\_certificate](#input\_kubernetes\_config\_cluster\_ca\_certificate) | Kubernetes cluster CA certificate | `string` | n/a | yes |
+| <a name="input_kubernetes_config_host"></a> [kubernetes\_config\_host](#input\_kubernetes\_config\_host) | Kubernetes API server host | `string` | n/a | yes |
 | <a name="input_tld"></a> [tld](#input\_tld) | The top-level domain to use for the Cloudflare Tunnel | `string` | n/a | yes |
 
 ## Outputs

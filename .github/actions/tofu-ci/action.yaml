@@ -34,4 +34,4 @@ runs:
         tflint_version: ${{ inputs.tflint_version }}
     - name: Check Tofu
       shell: bash
-      run: task tf:check
+      run: task tofu:check
