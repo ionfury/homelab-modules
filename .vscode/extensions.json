@@ -1,5 +1,6 @@
 {
   "recommendations": [
+    "blueglassblock.better-json5",
     "EditorConfig.EditorConfig",
     "hashicorp.terraform",
     "redhat.vscode-yaml",
