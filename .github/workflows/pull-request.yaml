@@ -14,7 +14,7 @@ env:
   tflint_version: 'v0.54.0'
 
 jobs:
-  tofu-ci:
+  tofu-lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,3 +26,8 @@ jobs:
           tofu_version: ${{ env.tofu_version }}
           terraform_docs_version: ${{ env.terraform_docs_version }}
           tflint_version: ${{ env.tflint_version }}
+
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        id: auto-commit-action
+        with:
+          commit_message: Apply fixes from Tofu CI

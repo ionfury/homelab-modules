@@ -32,6 +32,6 @@ runs:
       name: Setup TFLint
       with:
         tflint_version: ${{ inputs.tflint_version }}
-    - name: Check Tofu
+    - name: Fix Tofu
       shell: bash
-      run: task tofu:check
+      run: task tofu:fix
