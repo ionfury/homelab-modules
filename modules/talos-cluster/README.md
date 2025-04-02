@@ -10,7 +10,7 @@
 | <a name="requirement_local"></a> [local](#requirement\_local) | 2.5 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | 3.2.3 |
 | <a name="requirement_talos"></a> [talos](#requirement\_talos) | 0.7.0 |
-| <a name="requirement_time"></a> [time](#requirement\_time) | 0.12.1 |
+| <a name="requirement_time"></a> [time](#requirement\_time) | 0.13.0 |
 
 ## Providers
 
