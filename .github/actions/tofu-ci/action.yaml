@@ -13,7 +13,7 @@ inputs:
   tflint_version:
     description: 'The version of TFLint to use'
     required: true
-    default: 'v0.47.0'
+    default: 'v0.54.0'
 runs:
   using: 'composite'
   steps:
@@ -32,6 +32,6 @@ runs:
       name: Setup TFLint
       with:
         tflint_version: ${{ inputs.tflint_version }}
-    - name: Check Tofu
+    - name: Fix Tofu
       shell: bash
-      run: task tf:check
+      run: task tofu:fix

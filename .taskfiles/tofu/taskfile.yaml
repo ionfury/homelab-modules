@@ -103,6 +103,25 @@ tasks:
       - for: { var: MODULES }
         task: docs-{{.ITEM}}
 
+  check:
+    desc: Runs all the checks for all modules.
+    vars:
+      MODULES:
+        sh: 'ls {{.MODULES_DIR}}'
+    cmds:
+      - for: { var: MODULES }
+        task: lint-{{.ITEM}}
+        vars:
+          FIX: "false"
+      - for: { var: MODULES }
+        task: format-{{.ITEM}}
+        vars:
+          FIX: "false"
+      - for: { var: MODULES }
+        task: docs-{{.ITEM}}
+        vars:
+          FIX: "false"
+
   lint-*:
     internal: true
     label: lint-{{.MODULE}}
@@ -110,13 +129,14 @@ tasks:
     vars:
       MODULE: "{{index .MATCH 0}}"
       MODULE_PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
+      FIX: '{{.FIX | default "true"}}'
     cmds:
-      - tflint --chdir={{.MODULE_PATH}} --recursive --fix
+      - tflint --chdir={{.MODULE_PATH}} --recursive {{if eq .FIX "true"}}--fix{{end}}
     preconditions:
       - which tflint
     sources:
       - '{{.MODULE_PATH}}/**/*.tf'
-
+  
   format-*:
     internal: true
     desc: Formats the tofu configuration files.
@@ -124,8 +144,9 @@ tasks:
     vars:
       MODULE: "{{index .MATCH 0}}"
       MODULE_PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
+      FIX: '{{.FIX | default "true"}}'
     cmds:
-      - tofu fmt  -recursive {{.MODULE_PATH}}
+      - tofu fmt {{if eq .FIX "false"}}-check{{end}} -recursive {{.MODULE_PATH}}   
     preconditions:
       - which tofu
     sources:
@@ -139,7 +160,7 @@ tasks:
       MODULE: "{{index .MATCH 0}}"
       MODULE_PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
     cmds: 
-      - terraform-docs markdown --output-file {{.MODULE_PATH}}/README.md {{.MODULE_PATH}}
+      - terraform-docs markdown --output-file {{.MODULE_PATH}}/README.md {{if eq .FIX "false"}}--output-check{{end}} {{.MODULE_PATH}}
     preconditions:
       - which terraform-docs
     sources:
