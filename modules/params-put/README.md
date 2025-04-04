@@ -4,13 +4,13 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.8.8 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 5.80.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 5.94.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.80.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.94.1 |
 
 ## Modules
 
@@ -20,7 +20,7 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [aws_ssm_parameter.this](https://registry.terraform.io/providers/hashicorp/aws/5.80.0/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.this](https://registry.terraform.io/providers/hashicorp/aws/5.94.1/docs/resources/ssm_parameter) | resource |
 
 ## Inputs
 
