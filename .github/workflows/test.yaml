@@ -7,6 +7,12 @@ jobs:
   talosctl-maintenance:
     runs-on: homelab-modules-runner-app
     steps:
+      - name: Install talosctl
+        run: |
+          curl -sL https://github.com/siderolabs/talos/releases/latest/download/talosctl-$(uname | tr '[:upper:]' '[:lower:]')-amd64 -o /usr/local/bin/talosctl
+          chmod +x /usr/local/bin/talosctl
+          talosctl version
+          
       - name: Test Talos node in maintenance mode (insecure)
         run: |
           talosctl \
