@@ -1,0 +1,14 @@
+name: Talos Maintenance Mode Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  talosctl-maintenance:
+    runs-on: homelab-modules-runner-app
+    steps:
+      - name: Test Talos node in maintenance mode (insecure)
+        run: |
+          talosctl \
+            -n talos-cp01-service.default.svc.cluster.local \
+            get disks --insecure
