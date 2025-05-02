@@ -13,7 +13,7 @@ resource "flux_bootstrap_git" "this" {
   path                   = local.github_repository_cluster_directory
   kustomization_override = file("${path.module}/resources/kustomization.yaml")
 }
-
+asdf
 resource "github_repository_file" "this" {
   repository = data.github_repository.this.name
   file       = "${local.github_repository_cluster_directory}/generated-cluster-vars.env"
