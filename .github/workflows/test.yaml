@@ -9,12 +9,13 @@ jobs:
     steps:
       - name: Install talosctl
         run: |
-          curl -sL https://github.com/siderolabs/talos/releases/latest/download/talosctl-$(uname | tr '[:upper:]' '[:lower:]')-amd64 -o /usr/local/bin/talosctl
-          chmod +x /usr/local/bin/talosctl
-          talosctl version
-          
+          mkdir -p /home/runner/_work/tools
+          curl -sL https://github.com/siderolabs/talos/releases/latest/download/talosctl-linux-amd64 \
+            -o /home/runner/_work/tools/talosctl
+          chmod +x /home/runner/_work/tools/talosctl
+
       - name: Test Talos node in maintenance mode (insecure)
         run: |
-          talosctl \
+          /home/runner/_work/tools/talosctl \
             -n talos-cp01-service.default.svc.cluster.local \
             get disks --insecure
