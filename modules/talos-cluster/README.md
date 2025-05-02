@@ -17,7 +17,7 @@
 | Name | Version |
 |------|---------|
 | <a name="provider_helm"></a> [helm](#provider\_helm) | 2.17.0 |
-| <a name="provider_local"></a> [local](#provider\_local) | 2.5 |
+| <a name="provider_local"></a> [local](#provider\_local) | 2.5.0 |
 | <a name="provider_null"></a> [null](#provider\_null) | 3.2.3 |
 | <a name="provider_talos"></a> [talos](#provider\_talos) | 0.7.0 |
 
