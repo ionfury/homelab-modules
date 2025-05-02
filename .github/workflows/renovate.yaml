@@ -30,7 +30,7 @@ on:
         
 jobs:
   renovate:
-    runs-on: homelab-modules-runner-app
+    runs-on: ubuntu-latest
     steps:
       - name: Get Token
         uses: actions/create-github-app-token@v1.12.0
