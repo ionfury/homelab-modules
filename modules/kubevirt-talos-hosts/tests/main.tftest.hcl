@@ -1,12 +1,6 @@
-run "random" {
-  module {
-    source = "./tests/harness/random"
-  }
-}
-
 run "test" {
   variables {
-    name                    = run.random.resource_name
+    name                    = "homelab-modules-"
     vm_count                = 2
     data_root_storage_class = "fast"
     data_disk_storage_class = "fast"
