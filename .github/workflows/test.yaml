@@ -7,6 +7,11 @@ jobs:
   talosctl-maintenance:
     runs-on: homelab-modules-runner-app
     steps:
+      - name: Debug tofu binary1
+        run: |
+          echo "Tofu path: $(which tofu)"
+          head -n 1 $(which tofu)
+          file $(which tofu)
       - name: Checkout current branch
         uses: actions/checkout@v4
       - name: Setup Taskfile
@@ -16,6 +21,11 @@ jobs:
         uses: opentofu/setup-opentofu@v1
         with:
           tofu_version: '1.8.8'
+      - name: Debug tofu binary2
+        run: |
+          echo "Tofu path: $(which tofu)"
+          head -n 1 $(which tofu)
+          file $(which tofu)
 
       - name: Tofu Test
         run: |
