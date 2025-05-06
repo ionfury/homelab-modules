@@ -7,25 +7,31 @@ jobs:
   talosctl-maintenance:
     runs-on: homelab-modules-runner-app
     steps:
-      - name: Debug tofu binary1
-        run: |
-          echo "Tofu path: $(which tofu)"
-          head -n 1 $(which tofu)
-          file $(which tofu)
       - name: Checkout current branch
         uses: actions/checkout@v4
-      - name: Setup Taskfile
-        uses: Illbjorn/setup-task@0.1.0
+      #- name: Setup Taskfile
+      #  uses: Illbjorn/setup-task@0.1.0
         
-      - name: Setup Tofu
-        uses: opentofu/setup-opentofu@v1
-        with:
-          tofu_version: '1.8.8'
-      - name: Debug tofu binary2
+      #- name: Setup Tofu
+      #  uses: opentofu/setup-opentofu@v1
+      #  with:
+      #    tofu_version: '1.8.8'
+      - name: Install Tofu
         run: |
-          echo "Tofu path: $(which tofu)"
-          head -n 1 $(which tofu)
-          file $(which tofu)
+          # Download the installer script:
+          curl --proto '=https' --tlsv1.2 -fsSL https://get.opentofu.org/install-opentofu.sh -o install-opentofu.sh
+          # Alternatively: wget --secure-protocol=TLSv1_2 --https-only https://get.opentofu.org/install-opentofu.sh -O install-opentofu.sh
+
+          # Grant execution permissions:
+          chmod +x install-opentofu.sh
+
+          # Please inspect the downloaded script at this point.
+
+          # Run the installer:
+          ./install-opentofu.sh --install-method standalone
+
+          # Remove the installer:
+          rm -f install-opentofu.sh
 
       - name: Tofu Test
         run: |
