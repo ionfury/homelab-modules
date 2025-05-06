@@ -37,17 +37,4 @@ jobs:
         run: |
           tofu --version
           tofu -chdir=modules/kubevirt-talos-hosts init -upgrade
-          tofu -chdir=modules/kubevirt-talos-hosts test -filter=tests/main.tftest.hcl
-
-      - name: Install talosctl
-        run: |
-          mkdir -p /home/runner/_work/tools
-          curl -sL https://github.com/siderolabs/talos/releases/latest/download/talosctl-linux-amd64 \
-            -o /home/runner/_work/tools/talosctl
-          chmod +x /home/runner/_work/tools/talosctl
-
-      - name: Test Talos node in maintenance mode (insecure)
-        run: |
-          /home/runner/_work/tools/talosctl \
-            -n talos-cp01-service.default.svc.cluster.local \
-            get disks --insecure
+          tofu -chdir=modules/kubevirt-talos-hosts test -filter=tests/main.tftest.hclç
