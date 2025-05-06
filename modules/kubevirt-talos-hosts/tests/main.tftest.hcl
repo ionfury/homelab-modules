@@ -1,6 +1,6 @@
 run "create_namespace" {
   module {
-    source = "../../kubernetes-namespace"
+    source = "../kubernetes-namespace"
   }
 
   variables {
