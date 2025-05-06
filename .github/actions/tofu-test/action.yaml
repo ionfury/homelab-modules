@@ -9,9 +9,18 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Setup Taskfile
-      uses: Illbjorn/setup-task@0.1.0
-    - name: Setup Tofu
-      uses: opentofu/setup-opentofu@v1
-      with:
-        tofu_version: ${{ inputs.tofu_version}}
+    - name: Checkout current branch
+      uses: actions/checkout@v4
+      
+    - name: Tofu Check
+      shell: sh
+      run: |
+        tofu --version
+
+    - name: Tofu Test
+      shell: sh
+      run: |
+        tofu --version
+        tofu -chdir=modules/kubevirt-talos-hosts init -upgrade
+        tofu -chdir=modules/kubevirt-talos-hosts test -filter=tests/main.tftest.hcl
+
