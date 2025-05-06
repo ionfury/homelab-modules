@@ -19,6 +19,7 @@ jobs:
 
       - name: Tofu Test
         run: |
+          tofu -chdir=modules/kubevirt-talos-hosts init -upgrade
           tofu -chdir=modules/kubevirt-talos-hosts test -filter=tests/main.tftest.hcl
 
       - name: Install talosctl
