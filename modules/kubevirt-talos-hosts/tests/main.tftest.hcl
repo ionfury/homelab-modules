@@ -12,7 +12,7 @@ run "create_namespace" {
 run "test" {
   variables {
     name                    = "homelab-modules"
-    namespace               = run.create_namespace.outputs.name
+    namespace               = run.create_namespace.name
     vm_count                = 2
     data_root_storage_class = "fast"
     data_disk_storage_class = "fast"
