@@ -10,6 +10,6 @@ resource "null_resource" "wait_2_seconds" {
   depends_on = [kubernetes_namespace.this]
 
   provisioner "local-exec" {
-    command = "sleep 2"
+    command = "sleep 10"
   }
 }
