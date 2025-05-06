@@ -7,6 +7,8 @@ jobs:
   talosctl-maintenance:
     runs-on: homelab-modules-runner-app
     steps:
+      - name: Checkout current branch
+        uses: actions/checkout@v4
       - name: Setup Taskfile
         uses: Illbjorn/setup-task@0.1.0
         
