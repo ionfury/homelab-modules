@@ -4,7 +4,7 @@ locals {
 
 resource "kubernetes_namespace" "this" {
   metadata {
-    name = "kubevirt-talos-hosts-main-test-${var.name}"
+    name = "homelab-modules-${var.name}"
   }
 }
 

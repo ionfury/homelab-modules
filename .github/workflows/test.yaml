@@ -7,15 +7,23 @@ jobs:
   talosctl-maintenance:
     runs-on: homelab-modules-runner-app
     steps:
-      - name: Install talosctl
-        run: |
-          mkdir -p /home/runner/_work/tools
-          curl -sL https://github.com/siderolabs/talos/releases/latest/download/talosctl-linux-amd64 \
-            -o /home/runner/_work/tools/talosctl
-          chmod +x /home/runner/_work/tools/talosctl
+      - name: Checkout current branch
+        uses: actions/checkout@v4
 
-      - name: Test Talos node in maintenance mode (insecure)
-        run: |
-          /home/runner/_work/tools/talosctl \
-            -n talos-cp01-service.default.svc.cluster.local \
-            get disks --insecure
+      - name: OpenTofu Tests
+        uses: dflook/tofu-test@v1
+        with:
+          path: modules/kubevirt-talos-hosts/tests
+
+      #- name: Install talosctl
+      #  run: |
+      #    mkdir -p /home/runner/_work/tools
+      #    curl -sL https://github.com/siderolabs/talos/releases/latest/download/talosctl-linux-amd64 \
+      #      -o /home/runner/_work/tools/talosctl
+      #    chmod +x /home/runner/_work/tools/talosctl
+
+      #- name: Test Talos node in maintenance mode (insecure)
+      #  run: |
+      #    /home/runner/_work/tools/talosctl \
+      #      -n talos-cp01-service.default.svc.cluster.local \
+      #      get disks --insecure

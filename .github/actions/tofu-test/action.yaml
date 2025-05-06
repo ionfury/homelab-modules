@@ -1,0 +1,18 @@
+---
+name: Run Tofu Test
+description: Run tests associated with modules.
+inputs:
+  tofu_version:
+    description: 'The version of Tofu to use'
+    required: true
+    default: '1.8.8'
+runs:
+  using: composite
+  steps:
+    - name: Checkout current branch
+      uses: actions/checkout@v4
+
+    - name: OpenTofu Tests
+      uses: dflook/tofu-test@v1
+      with:
+        path: modules/kubevirt-talos-hosts/tests
