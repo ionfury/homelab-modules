@@ -13,3 +13,9 @@ resource "null_resource" "wait_2_seconds" {
     command = "sleep 10"
   }
 }
+
+data "kubernetes_namespace" "this" {
+  metadata {
+    name = kubernetes_namespace.this.metadata[0].name
+  }
+}
