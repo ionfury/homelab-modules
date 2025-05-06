@@ -2,6 +2,15 @@ locals {
   vm_names = [for i in range(var.vm_count) : "talos-vm-${format("%s", i + 1)}"]
 }
 
+resource "kubernetes_namespace" "this" {
+  metadata {
+    #name = "homelab-modules-${var.name}"
+    generate_name = "${var.name}-"
+  }
+
+  wait_for_default_service_account = true
+}
+
 resource "talos_image_factory_schematic" "this" {
   schematic = yamlencode(
     {
@@ -36,7 +45,7 @@ resource "kubernetes_manifest" "talos_vm" {
         "app.kubernetes.io/part-of"   = var.name
         "kubevirt.io/domain"          = each.key
       }
-      namespace = var.namespace
+      namespace = kubernetes_namespace.this.metadata[0].name
     }
     spec = {
       running = true
@@ -152,7 +161,7 @@ resource "kubernetes_service" "this" {
 
   metadata {
     name      = each.key
-    namespace = var.namespace
+    namespace = kubernetes_namespace.this.metadata[0].name
     labels = {
       "app.kubernetes.io/name"      = each.key
       "app.kubernetes.io/instance"  = each.key
@@ -197,7 +206,7 @@ resource "kubernetes_service" "this" {
 resource "kubernetes_service" "lb" {
   metadata {
     name      = "${var.name}-lb"
-    namespace = var.namespace
+    namespace = kubernetes_namespace.this.metadata[0].name
     labels = {
       "app.kubernetes.io/name"      = "${var.name}-lb"
       "app.kubernetes.io/component" = "talos-lb"

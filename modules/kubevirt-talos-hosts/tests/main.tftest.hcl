@@ -1,14 +1,3 @@
-run "create_namespace" {
-  module {
-    source = "../kubernetes-namespace"
-  }
-
-  variables {
-    name = "homelab-modules"
-  }
-
-}
-
 run "test" {
   variables {
     name                    = "homelab-modules"

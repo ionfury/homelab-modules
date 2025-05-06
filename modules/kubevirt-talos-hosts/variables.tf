@@ -3,11 +3,6 @@ variable "name" {
   type        = string
 }
 
-variable "namespace" {
-  description = "The namespace to use."
-  type        = string
-}
-
 variable "vm_count" {
   description = "Number of VMs to create in the namespace."
   type        = number
