@@ -5,4 +5,13 @@ tasks:
     desc: Runs the github pull request workflow locally.
     cmds:
       - act pull_request
-
+  build-container:
+    desc: Builds the build container.
+    vars:
+      IMAGE: opentofu-runner:local 
+      PATH: '{{.ROOT_DIR}}/.github/containers/opentofu-runner'
+      VERSION: '1.8.8'
+      TARGETARCH: amd64
+    cmds:
+      - docker build {{.PATH}} --build-arg VERSION={{.VERSION}} --build-arg TARGETARCH={{.TARGETARCH}} -t {{.IMAGE}}
+      - container-structure-test test --image {{.IMAGE}} --config {{.PATH}}/tests.yaml

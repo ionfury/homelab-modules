@@ -14,8 +14,8 @@ jobs:
       - name: Generate Test Matrix
         id: set-matrix
         run: |
-          files=$(find modules -type f -path "*/tests/*.tftest.hcl" | jq -R . | jq -s .)
-          echo "matrix={\"testfile\":$files}" >> "$GITHUB_OUTPUT"
+          files=$(find modules -type f -path "*/tests/*.tftest.hcl" | jq -R . | jq -cs .)
+          echo "matrix=$(jq -n --argjson files "$files" '{testfile: $files}')" >> "$GITHUB_OUTPUT"
 
   tofu-test:
     needs: generate-matrix

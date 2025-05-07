@@ -1,0 +1,39 @@
+---
+schemaVersion: "2.0.0"
+fileExistenceTests:
+  - name: "Check flock binary exists"
+    path: "/usr/bin/flock"
+    shouldExist: true
+    permissions: "-rwxr-xr-x"
+    
+  - name: "Check tofu binary exists"
+    path: "/usr/local/bin/tofu"
+    shouldExist: true
+    permissions: "-rwxr-xr-x"
+
+commandTests:
+  - name: "Check flock is installed"
+    command: "which"
+    args: ["flock"]
+    expectedOutput:
+      - "/usr/bin/flock"
+
+  - name: "Check flock is executable and shows help"
+    command: "flock"
+    args: ["--help"]
+    expectedOutput:
+      - "flock"  
+    exitCode: 0
+
+  - name: "Check tofu is on PATH"
+    command: "which"
+    args: ["tofu"]
+    expectedOutput:
+      - "/usr/local/bin/tofu"
+
+  - name: "Check tofu version"
+    command: "tofu"
+    args: ["--version"]
+    expectedOutput:
+      - "OpenTofu"
+    exitCode: 0
