@@ -47,9 +47,10 @@ variable "memory" {
   type        = string
   default     = "4G"
 }
-
+/*
 variable "kubernetes_config" {
   description = "The full kubernetes config."
   type        = string
   sensitive   = true
 }
+*/

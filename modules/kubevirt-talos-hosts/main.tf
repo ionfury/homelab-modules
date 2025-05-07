@@ -4,8 +4,11 @@ locals {
 
 resource "kubernetes_namespace" "this" {
   metadata {
-    name = "kubevirt-talos-hosts-main-test-${var.name}"
+    #name = "homelab-modules-${var.name}"
+    generate_name = "${var.name}-"
   }
+
+  wait_for_default_service_account = true
 }
 
 resource "talos_image_factory_schematic" "this" {

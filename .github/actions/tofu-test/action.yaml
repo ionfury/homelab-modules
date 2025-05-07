@@ -1,0 +1,26 @@
+---
+name: Run Tofu Test
+description: Run tests associated with modules.
+inputs:
+  tofu_version:
+    description: 'The version of Tofu to use'
+    required: true
+    default: '1.8.8'
+runs:
+  using: composite
+  steps:
+    - name: Checkout current branch
+      uses: actions/checkout@v4
+      
+    - name: Tofu Check
+      shell: sh
+      run: |
+        tofu --version
+
+    - name: Tofu Test
+      shell: sh
+      run: |
+        tofu --version
+        tofu -chdir=modules/kubevirt-talos-hosts init -upgrade
+        tofu -chdir=modules/kubevirt-talos-hosts test -filter=tests/main.tftest.hcl
+

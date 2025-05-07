@@ -93,3 +93,4 @@ terraform.rc
 **/.env
 
 **/.upgrade-node.lock
+**/.local
