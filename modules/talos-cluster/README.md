@@ -9,7 +9,7 @@
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | 2.17.0 |
 | <a name="requirement_local"></a> [local](#requirement\_local) | 2.5 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | 3.2.3 |
-| <a name="requirement_talos"></a> [talos](#requirement\_talos) | 0.7.0 |
+| <a name="requirement_talos"></a> [talos](#requirement\_talos) | 0.8.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | 0.12.1 |
 
 ## Providers
@@ -19,7 +19,7 @@
 | <a name="provider_helm"></a> [helm](#provider\_helm) | 2.17.0 |
 | <a name="provider_local"></a> [local](#provider\_local) | 2.5 |
 | <a name="provider_null"></a> [null](#provider\_null) | 3.2.3 |
-| <a name="provider_talos"></a> [talos](#provider\_talos) | 0.7.0 |
+| <a name="provider_talos"></a> [talos](#provider\_talos) | 0.8.0 |
 
 ## Modules
 
@@ -35,17 +35,17 @@ No modules.
 | [null_resource.talos_cluster_health](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
 | [null_resource.talos_cluster_health_upgrade](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
 | [null_resource.talos_upgrade_trigger](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
-| [talos_cluster_kubeconfig.this](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/resources/cluster_kubeconfig) | resource |
-| [talos_image_factory_schematic.machine_schematic](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/resources/image_factory_schematic) | resource |
-| [talos_machine_bootstrap.this](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/resources/machine_bootstrap) | resource |
-| [talos_machine_configuration_apply.machines](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/resources/machine_configuration_apply) | resource |
-| [talos_machine_secrets.this](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/resources/machine_secrets) | resource |
+| [talos_cluster_kubeconfig.this](https://registry.terraform.io/providers/siderolabs/talos/0.8.0/docs/resources/cluster_kubeconfig) | resource |
+| [talos_image_factory_schematic.machine_schematic](https://registry.terraform.io/providers/siderolabs/talos/0.8.0/docs/resources/image_factory_schematic) | resource |
+| [talos_machine_bootstrap.this](https://registry.terraform.io/providers/siderolabs/talos/0.8.0/docs/resources/machine_bootstrap) | resource |
+| [talos_machine_configuration_apply.machines](https://registry.terraform.io/providers/siderolabs/talos/0.8.0/docs/resources/machine_configuration_apply) | resource |
+| [talos_machine_secrets.this](https://registry.terraform.io/providers/siderolabs/talos/0.8.0/docs/resources/machine_secrets) | resource |
 | [helm_template.cilium](https://registry.terraform.io/providers/hashicorp/helm/2.17.0/docs/data-sources/template) | data source |
-| [talos_client_configuration.this](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/data-sources/client_configuration) | data source |
-| [talos_image_factory_extensions_versions.machine_version](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/data-sources/image_factory_extensions_versions) | data source |
-| [talos_image_factory_urls.machine_image_url_metal](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/data-sources/image_factory_urls) | data source |
-| [talos_image_factory_urls.machine_image_url_sbc](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/data-sources/image_factory_urls) | data source |
-| [talos_machine_configuration.this](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/data-sources/machine_configuration) | data source |
+| [talos_client_configuration.this](https://registry.terraform.io/providers/siderolabs/talos/0.8.0/docs/data-sources/client_configuration) | data source |
+| [talos_image_factory_extensions_versions.machine_version](https://registry.terraform.io/providers/siderolabs/talos/0.8.0/docs/data-sources/image_factory_extensions_versions) | data source |
+| [talos_image_factory_urls.machine_image_url_metal](https://registry.terraform.io/providers/siderolabs/talos/0.8.0/docs/data-sources/image_factory_urls) | data source |
+| [talos_image_factory_urls.machine_image_url_sbc](https://registry.terraform.io/providers/siderolabs/talos/0.8.0/docs/data-sources/image_factory_urls) | data source |
+| [talos_machine_configuration.this](https://registry.terraform.io/providers/siderolabs/talos/0.8.0/docs/data-sources/machine_configuration) | data source |
 
 ## Inputs
 
