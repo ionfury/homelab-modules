@@ -10,7 +10,7 @@
 | <a name="requirement_github"></a> [github](#requirement\_github) | 6.4.0 |
 | <a name="requirement_healthchecksio"></a> [healthchecksio](#requirement\_healthchecksio) | 2.0.0 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | 2.35.1 |
-| <a name="requirement_random"></a> [random](#requirement\_random) | 3.6.3 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | 3.7.2 |
 
 ## Providers
 
@@ -21,7 +21,7 @@
 | <a name="provider_github"></a> [github](#provider\_github) | 6.4.0 |
 | <a name="provider_healthchecksio"></a> [healthchecksio](#provider\_healthchecksio) | 2.0.0 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.35.1 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.6.3 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.7.2 |
 
 ## Modules
 
@@ -39,7 +39,7 @@ No modules.
 | [kubernetes_secret.cloudflare_tunnel_secret](https://registry.terraform.io/providers/hashicorp/kubernetes/2.35.1/docs/resources/secret) | resource |
 | [kubernetes_secret.external_secrets_access_key](https://registry.terraform.io/providers/hashicorp/kubernetes/2.35.1/docs/resources/secret) | resource |
 | [kubernetes_secret.healthchecksio_pingurl](https://registry.terraform.io/providers/hashicorp/kubernetes/2.35.1/docs/resources/secret) | resource |
-| [random_password.this](https://registry.terraform.io/providers/hashicorp/random/3.6.3/docs/resources/password) | resource |
+| [random_password.this](https://registry.terraform.io/providers/hashicorp/random/3.7.2/docs/resources/password) | resource |
 | [cloudflare_accounts.this](https://registry.terraform.io/providers/cloudflare/cloudflare/4.51.0/docs/data-sources/accounts) | data source |
 | [cloudflare_zone.this](https://registry.terraform.io/providers/cloudflare/cloudflare/4.51.0/docs/data-sources/zone) | data source |
 | [github_repository.this](https://registry.terraform.io/providers/integrations/github/6.4.0/docs/data-sources/repository) | data source |
