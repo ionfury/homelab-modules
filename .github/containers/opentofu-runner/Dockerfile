@@ -6,4 +6,12 @@ RUN apk add --no-cache curl \
   | tar xzf - -C /tmp
 
 FROM debian:bookworm-slim
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  curl \
+  jq \
+  ca-certificates \
+  && curl -fsSL https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/local/bin/yq \
+  && chmod +x /usr/local/bin/yq \
+  && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 COPY --from=tofu /tmp/tofu /usr/local/bin/tofu

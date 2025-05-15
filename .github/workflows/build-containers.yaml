@@ -11,7 +11,7 @@ on:
         required: true
       path:
         type: string
-        description: Path to container.
+        description: Path to the containers.
         required: false
         default: .github/containers
 
