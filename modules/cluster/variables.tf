@@ -28,6 +28,11 @@ variable "cluster_service_subnet" {
   type        = string
 }
 
+variable "cluster_env_vars" {
+  description = "Arbitrary map of values to pass to cluster via the generated-cluster-vars.env."
+  type        = map(string)
+}
+
 variable "cilium_helm_values" {
   description = "The Helm values to use for Cilium."
   type        = string
@@ -36,11 +41,6 @@ variable "cilium_helm_values" {
 variable "cilium_version" {
   description = "The version of Cilium to use."
   type        = string
-}
-
-variable "cluster_env_vars" {
-  description = "Arbitrary map of values to pass to cluster via the generated-cluster-vars.env."
-  type        = map(string)
 }
 
 variable "kubernetes_version" {
@@ -63,36 +63,6 @@ variable "prometheus_version" {
   type        = string
 }
 
-variable "prepare_longhorn" {
-  description = "Prepare the cluster for Longhorn."
-  type        = bool
-  default     = false
-}
-
-variable "longhorn_mount_disk2" {
-  description = "Mount disk2 for Longhorn."
-  type        = bool
-  default     = false
-}
-
-variable "prepare_spegel" {
-  description = "Prepare the cluster for Spegel."
-  type        = bool
-  default     = false
-}
-
-variable "speedy_kernel_args" {
-  description = "Use speedy kernel args."
-  type        = bool
-  default     = false
-}
-
-variable "prepare_kube_prometheus_metrics" {
-  description = "Prepare the cluster for kube-prometheus-metrics."
-  type        = bool
-  default     = false
-}
-
 variable "nameservers" {
   description = "The nameservers to use for the cluster."
   type        = list(string)
@@ -108,7 +78,7 @@ variable "talos_config_path" {
   type        = string
 }
 
-variable "kube_config_path" {
+variable "kubernetes_config_path" {
   description = "The path to output the Kubernetes configuration file."
   type        = string
 }
@@ -118,32 +88,20 @@ variable "tld" {
   type        = string
 }
 
-variable "timeout" {
-  description = "The timeout to use for the cluster."
-  type        = string
-}
-
 variable "machines" {
   description = "A list of machines to create the talos cluster from."
   type = map(object({
     type = string
     install = object({
-      diskSelectors   = list(string) # https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.machine.install.diskSelector
-      extraKernelArgs = optional(list(string), [])
-      extensions      = optional(list(string), [])
-      secureboot      = optional(bool, false)
-      wipe            = optional(bool, false)
-      architecture    = optional(string, "amd64")
-      platform        = optional(string, "metal")
-      sbc             = optional(string, "")
+      disk              = string
+      extensions        = optional(list(string), [])
+      extra_kernel_args = optional(list(string), [])
+      secureboot        = optional(bool, false)
+      architecture      = optional(string, "amd64")
+      platform          = optional(string, "metal")
+      sbc               = optional(string, "")
+      wipe              = optional(bool, true)
     })
-    disks = optional(list(object({
-      device = string
-      partitions = list(object({
-        mountpoint = string
-        size       = optional(string, "")
-      }))
-    })), [])
     labels = optional(list(object({
       key   = string
       value = string
@@ -153,10 +111,10 @@ variable "machines" {
       value = string
     })), [])
     files = optional(list(object({
-      content     = string
-      permissions = string
       path        = string
       op          = string
+      permissions = string
+      content     = string
     })), [])
     interfaces = list(object({
       hardwareAddr     = string

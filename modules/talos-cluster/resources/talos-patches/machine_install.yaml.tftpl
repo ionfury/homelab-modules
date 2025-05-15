@@ -3,16 +3,4 @@
 ---
 machine:
   install:
-    diskSelector:
-%{ for selector in machine_install.diskSelectors ~}
-      ${selector}
-%{ endfor ~}
-    extraKernelArgs:
-%{ for arg in machine_install.extraKernelArgs ~}
-      - ${arg}
-%{ endfor ~}
-%{ for arg in machine_extra_kernel_args ~}
-      - ${arg}
-%{ endfor ~}
     image: ${machine_install_disk_image}
-    wipe: ${machine_install.wipe}

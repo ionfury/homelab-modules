@@ -1,8 +1,0 @@
-# Configures the machine node labels
-# https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.machine
----
-machine:
-  nodeLabels:
-%{ for item in machine_labels ~}
-    ${item.key}: ${item.value}
-%{ endfor ~}

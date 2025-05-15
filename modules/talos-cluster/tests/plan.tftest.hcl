@@ -1,339 +1,126 @@
-run "test" {
+run "minimal" {
   command = plan
 
   variables {
-    cluster_name                               = "cluster-name"
-    cluster_id                                 = 2
-    cluster_endpoint                           = "cluster_endpoint"
-    cluster_vip                                = "cluster_vip"
-    cluster_node_subnet                        = "cluster_node_subnet"
-    cluster_pod_subnet                         = "cluster_pod_subnet"
-    cluster_service_subnet                     = "cluster_service_subnet"
-    cluster_allowSchedulingOnControlPlanes     = true
-    cluster_apiServer_disablePodSecurityPolicy = true
-    cluster_coreDNS_disabled                   = true
-    cluster_proxy_disabled                     = true
-    cluster_extraManifests                     = ["extra_manifests1", "extra_manifests2"]
-    cluster_inlineManifests = [{
-      name     = "cluster_inlineManifests_name"
-      contents = "cluster_inlineManifests_contents"
-    }]
-    cluster_etcd_extraArgs = [{
-      name  = "cluster_etcd_extraArgs_name"
-      value = "cluster_etcd_extraArgs_value"
-    }]
-    cluster_controllerManager_extraArgs = [{
-      name  = "cluster_controllerManager_extraArgs_name"
-      value = "cluster_controllerManager_extraArgs_value"
-    }]
-    cluster_scheduler_extraArgs = [{
-      name  = "cluster_scheduler_extraArgs_name"
-      value = "cluster_scheduler_extraArgs_value"
-    }]
+    talos_version      = "v1.9.0"
+    kubernetes_version = "1.32.0"
 
-    machine_network_nameservers = ["nameservers1", "nameservers2"]
-    machine_time_servers        = ["cluster_machine_time_servers1", "cluster_machine_time_servers2"]
-    machine_files = [{
-      content     = "machine_files_content",
-      permissions = "machine_files_permissions",
-      path        = "machine_files_path"
-      op          = "create"
-    }]
-    machine_extensions        = ["machine_extensions1", "machine_extensions2"]
-    machine_extra_kernel_args = ["machine_extra_kernel_args1", "machine_extra_kernel_args2"]
-    machine_kubelet_extraMounts = [{
-      destination = "machine_kubelet_extraMounts_destination",
-      type        = "machine_kubelet_extraMounts_type",
-      source      = "machine_kubelet_extraMounts_source",
-      options     = ["machine_kubelet_extraMounts_options1", "machine_kubelet_extraMounts_options2"]
-    }]
-
-    talos_config_path  = "talos_config_path"
-    kube_config_path   = "kube_config_path"
-    kubernetes_version = "1.30.0"
-    talos_version      = "v1.9.2"
-    cilium_version     = "1.16.5"
-    #cilium_values use default values for valid cilium config
-    gracefully_destroy_nodes = true
-    timeout                  = "69m"
-    machines = {
-      machine1 = {
-        type = "controlplane"
-        annotations = [{
-          key   = "machine1_annotations_key"
-          value = "machine1_annotations_value"
-        }]
-        labels = [{
-          key   = "machine1_labels_key"
-          value = "machine1_labels_value"
-        }]
-        install = {
-          diskSelectors   = ["machine1_diskSelectors1", "machine1_diskSelectors2"]
-          extraKernelArgs = ["machine1_extraKernelArgs1", "machine1_extraKernelArgs2"]
-          extensions      = ["machine1_extensions1", "machine1_extensions2"]
-          secureboot      = true
-          wipe            = true
-          architecture    = "machine1_architecture"
-          platform        = ""
-          sbc             = "machine1_sbc"
-        }
-        files = [{
-          content     = "machine1_files_content"
-          permissions = "machine1_files_permissions"
-          path        = "machine1_files_path"
-          op          = "create"
-        }]
-        disks = [{
-          device = "machine1_disks_device"
-          partitions = [{
-            mountpoint = "machine1_disks_partitions_mountpoint"
-            size       = "machine1_disks_partitions_size"
-          }]
-        }]
-        interfaces = [
-          {
-            hardwareAddr     = "machine1_interfaces1_hardwareAddr"
-            addresses        = ["machine1_interfaces1_address1", "machine1_interfaces1_address2"]
-            dhcp_routemetric = 3
-            vlans = [
-              {
-                vlanId           = 4
-                addresses        = ["machine1_interfaces1_vlan1_address1", "machine1_interfaces1_vlan1_address2"]
-                dhcp_routemetric = 5
-              }
-            ]
-          },
-          {
-            hardwareAddr     = "machine1_interfaces2_hardwareAddr"
-            addresses        = ["machine1_interfaces2_address1", "machine1_interfaces2_address2"]
-            dhcp_routemetric = 6
-            vlans = [
-              {
-                vlanId           = 7
-                addresses        = ["machine1_interfaces2_vlan1_address1", "machine1_interfaces2_vlan1_address2"]
-                dhcp_routemetric = 8
-              }
-            ]
-          }
-        ]
+    talos_cluster_config = <<EOT
+clusterName: talos.local
+controlPlane:
+  endpoint: https://talos.local:6443
+EOT
+    machines = [
+      {
+        talos_config = <<EOT
+type: controlplane
+network:
+  hostname: host1
+  interfaces:
+    - addresses:
+      - 192.168.10.1/24
+EOT
       }
-      machine2 = {
-        type = "worker"
-        annotations = [{
-          key   = "machine2_annotations_key"
-          value = "machine2_annotations_value"
-        }]
-        labels = [{
-          key   = "machine2_labels_key"
-          value = "machine2_labels_value"
-        }]
-        install = {
-          diskSelectors   = ["machine2_diskSelectors1", "machine2_diskSelectors2"]
-          extraKernelArgs = ["machine2_extraKernelArgs1", "machine2_extraKernelArgs2"]
-          extensions      = ["machine2_extensions1", "machine2_extensions2"]
-          secureboot      = true
-          wipe            = true
-          architecture    = "machine2_architecture"
-          platform        = "machine2_platform"
-          sbc             = ""
-        }
-        files = [{
-          content     = "machine2_files_content"
-          permissions = "machine2_files_permissions"
-          path        = "machine2_files_path"
-          op          = "create"
-        }]
-        # talosctl --talosconfig ~/.talos/live.yaml -n node2 get volumeconfig /dev/sdb-1 -o yaml
-        disks = [{
-          device = "machine2_disks_device"
-          partitions = [{
-            mountpoint = "machine2_disks_partitions_mountpoint"
-            size       = "machine2_disks_partitions_size"
-          }]
-        }]
-        interfaces = [
-          {
-            hardwareAddr     = "machine2_interfaces1_hardwareAddr"
-            addresses        = ["machine2_interfaces1_address1", "machine2_interfaces1_address2"]
-            dhcp_routemetric = 9
-            vlans = [
-              {
-                vlanId           = 10
-                addresses        = ["machine2_interfaces1_vlan1_address1", "machine2_interfaces1_vlan1_address2"]
-                dhcp_routemetric = 11
-              }
-            ]
-          },
-          {
-            hardwareAddr     = "machine2_interfaces2_hardwareAddr"
-            addresses        = ["machine2_interfaces2_address1", "machine2_interfaces2_address2"]
-            dhcp_routemetric = 12
-            vlans = [
-              {
-                vlanId           = 13
-                addresses        = ["machine2_interfaces2_vlan1_address1", "machine2_interfaces2_vlan1_address2"]
-                dhcp_routemetric = 14
-              }
-            ]
-          }
-        ]
+    ]
+    bootstrap_charts = [
+      {
+        repository = "https://charts.bitnami.com/bitnami"
+        chart      = "nginx"
+        name       = "test-nginx"
+        version    = "15.6.0"
+        namespace  = "default"
+        values     = <<EOF
+service:
+  type: ClusterIP
+  port: 80
+EOF
       }
-    }
-    stage_talos_upgrade = true
-  }
-
-  # talos_machine_secrets.this
-  assert {
-    condition     = talos_machine_secrets.this.talos_version == "v1.9.2"
-    error_message = "data.talos_machine_secrets.this talos_version is not as expected"
-  }
-
-  # data.talos_machine_configuration.this
-  assert {
-    condition     = alltrue([for k, v in data.talos_machine_configuration.this : v.cluster_name == "cluster-name"])
-    error_message = "data.talos_machine_configuration.this cluster_name is not as expected"
+    ]
   }
 
   assert {
-    condition     = alltrue([for k, v in data.talos_machine_configuration.this : v.cluster_endpoint == "https://cluster_endpoint:6443"])
-    error_message = "data.talos_machine_configuration.this cluster_endpoint is not as expected"
+    condition     = talos_machine_configuration_apply.machines["host1"].endpoint == "192.168.10.1"
+    error_message = "Incorrect endpoint set for talos machine configuration apply"
   }
 
   assert {
-    condition     = data.talos_machine_configuration.this["machine1"].machine_type == "controlplane"
-    error_message = "data.talos_machine_configuration.this machine_type is not as expected"
+    condition     = talos_machine_bootstrap.this.endpoint == "192.168.10.1"
+    error_message = "Talos bootstrap endpoint incorrect: ${talos_machine_bootstrap.this.endpoint}"
   }
 
   assert {
-    condition     = data.talos_machine_configuration.this["machine2"].machine_type == "worker"
-    error_message = "data.talos_machine_configuration.this machine_type is not as expected"
+    condition     = talos_machine_bootstrap.this.node == "host1"
+    error_message = "Incorrect host for talos machine bootstrap node"
   }
 
   assert {
-    condition     = alltrue([for k, v in data.talos_machine_configuration.this : v.kubernetes_version == "1.30.0"])
-    error_message = "data.talos_machine_configuration.this kubernetes_version is not as expected"
+    condition     = data.talos_client_configuration.this.endpoints[0] == "192.168.10.1"
+    error_message = "Talos client configuration controlplane ip incorrect: ${talos_machine_bootstrap.this.endpoint}"
   }
 
   assert {
-    condition     = alltrue([for k, v in data.talos_machine_configuration.this : v.talos_version == "v1.9.2"])
-    error_message = "data.talos_machine_configuration.this talos_version is not as expected"
+    condition     = data.talos_client_configuration.this.nodes[0] == "host1"
+    error_message = "Incorrect talos client configuration nodes"
   }
 
   assert {
-    condition     = alltrue([for k, v in data.talos_machine_configuration.this : contains(["machine1", "machine2"], k)])
-    error_message = "data.talos_machine_configuration.this keys are not as expected"
-  }
-
-  # talos_client_configuration.this
-  assert {
-    condition     = data.talos_client_configuration.this.cluster_name == "cluster-name"
-    error_message = "data.talos_client_configuration.this cluster_name is not as expected"
+    condition     = data.talos_machine_configuration.this["host1"].talos_version == "v1.9.0"
+    error_message = "Incorrect Talos version set for host1: ${data.talos_machine_configuration.this["host1"].talos_version}"
   }
 
   assert {
-    condition     = length(data.talos_client_configuration.this.endpoints) == 1
-    error_message = "length of data.talos_client_configuration.this endpoints is not as expected"
+    condition     = data.talos_machine_configuration.this["host1"].kubernetes_version == "1.32.0"
+    error_message = "Incorrect Kubernetes version set for host1: ${data.talos_machine_configuration.this["host1"].kubernetes_version}"
   }
 
   assert {
-    condition     = data.talos_client_configuration.this.endpoints[0] == "machine1_interfaces1_address1"
-    error_message = "data.talos_client_configuration.this endpoints is not as expected"
+    condition     = data.talos_machine_configuration.this["host1"].machine_type == "controlplane"
+    error_message = "Incorrect machine type set for host1: ${data.talos_machine_configuration.this["host1"].machine_type}"
   }
 
   assert {
-    condition     = length(data.talos_client_configuration.this.nodes) == 2
-    error_message = "length of data.talos_client_configuration.this nodes is not as expected"
+    condition     = data.talos_machine_configuration.this["host1"].cluster_name == "talos.local"
+    error_message = "Incorrect cluster name set for host1: ${data.talos_machine_configuration.this["host1"].cluster_name}"
   }
 
   assert {
-    condition     = contains(data.talos_client_configuration.this.nodes, "machine1") && contains(data.talos_client_configuration.this.nodes, "machine2")
-    error_message = "data.talos_client_configuration.this nodes are not as expected"
-  }
-
-  # talos_machine_configuration_apply.machines
-  assert {
-    condition     = length(talos_machine_configuration_apply.machines) == 2
-    error_message = "length of talos_machine_configuration_apply.machines is not as expected"
+    condition     = data.talos_machine_configuration.this["host1"].cluster_endpoint == "https://talos.local:6443"
+    error_message = "Incorrect cluster endpoint set for host1: ${data.talos_machine_configuration.this["host1"].cluster_endpoint}"
   }
 
   assert {
-    condition     = length(talos_machine_configuration_apply.machines) == 2
-    error_message = "length of data.talos_machine_configuration_apply.this nodes is not as expected"
+    condition     = length(data.talos_machine_configuration.this) == 1
+    error_message = "Incorrect number of talos machines configured: ${length(data.talos_machine_configuration.this)}"
   }
 
   assert {
-    condition     = talos_machine_configuration_apply.machines["machine1"].node == "machine1" && talos_machine_configuration_apply.machines["machine2"].node == "machine2"
-    error_message = "talos_machine_configuration_apply.machines node is not as expected"
+    condition     = length(data.talos_image_factory_urls.machine_image_url_metal) == 1
+    error_message = "Incorrect length of returned metal machine image urls: ${length(data.talos_image_factory_urls.machine_image_url_metal)}"
   }
 
   assert {
-    condition     = talos_machine_configuration_apply.machines["machine1"].endpoint == "machine1_interfaces1_address1" && talos_machine_configuration_apply.machines["machine2"].endpoint == "machine2_interfaces1_address1"
-    error_message = "talos_machine_configuration_apply.machines endpoint is not as expected"
+    condition     = length(data.talos_image_factory_urls.machine_image_url_sbc) == 0
+    error_message = "Incorrect length of returned sbc machine image urls: ${length(data.talos_image_factory_urls.machine_image_url_sbc)}"
   }
 
   assert {
-    condition     = talos_machine_configuration_apply.machines["machine1"].on_destroy.graceful == true && talos_machine_configuration_apply.machines["machine2"].on_destroy.graceful == true
-    error_message = "talos_machine_configuration_apply.machines on_destroy.graceful is not as expected"
-  }
-
-  # talos_machine_bootstrap.this
-  assert {
-    condition     = talos_machine_bootstrap.this.node == "machine1"
-    error_message = "talos_machine_bootstrap.this node is not as expected"
+    condition     = strcontains(data.talos_machine_configuration.this["host1"].config_patches[0], "clusterName: talos.local")
+    error_message = "ClusterName missing from host1 cluster.yaml.tftpl patch!"
   }
 
   assert {
-    condition     = talos_machine_bootstrap.this.endpoint == "machine1_interfaces1_address1"
-    error_message = "talos_machine_bootstrap.this endpoint is not as expected"
+    condition     = strcontains(data.talos_machine_configuration.this["host1"].config_patches[1], "test-nginx")
+    error_message = "test-nginx missing from host1 inline_manifests.yaml.tftpl patch!"
   }
 
-  # talos_cluster_kubeconfig.this
-  assert {
-    condition     = talos_cluster_kubeconfig.this.node == "machine1"
-    error_message = "talos_cluster_kubeconfig.this node is not as expected"
-  }
-
-  assert {
-    condition     = talos_cluster_kubeconfig.this.endpoint == "machine1_interfaces1_address1"
-    error_message = "talos_cluster_kubeconfig.this endpoint is not as expected"
-  }
-
-  # talos_image_factory_extensions_versions.machine_version
-  assert {
-    condition     = length(data.talos_image_factory_extensions_versions.machine_version) == 2
-    error_message = "length of data.talos_image_factory_extensions_versions.machine_version is not as expected"
-  }
-
-  assert {
-    condition     = alltrue([for k, v in data.talos_image_factory_extensions_versions.machine_version : v.talos_version == "v1.9.2"])
-    error_message = "data.talos_image_factory_extensions_versions.machine_version talos_version is not as expected"
-  }
-
-  ##assert {
-  #  condition     = alltrue([for k, v in data.talos_image_factory_extensions_versions.machine_version : contains([for ext in v.extensions_info : ext.name], "iscsi-tools") && contains([for ext in v.extensions_info : ext.name], "util-linux-tools")])
-  #  error_message = "data.talos_image_factory_extensions_versions.machine_version extensions_info names do not contain expected values"
-  #}
-
-  assert {
-    condition     = length(data.talos_image_factory_extensions_versions.machine_version["machine1"].filters.names) == 4
-    error_message = "data.talos_image_factory_extensions_versions.filters names is not as expected."
-  }
-
+  # talos_image_factory_schematic.machine_schematic.id is not evaluated during a plan
   #assert {
-  #  condition     = alltrue([for k, v in data.talos_image_factory_extensions_versions.machine_version["machine1"].filters : contains(["machine1_extensions1", "machine1_extensions2"], v.names)])
-  #  error_message = "data.talos_image_factory_extensions_versions.filters names is not as expected"
+  #  condition     = strcontains(data.talos_machine_configuration.this["host1"].config_patches[2], "asdf")
+  #  error_message = length(data.talos_image_factory_urls.machine_image_url_metal)
   #}
 
-  # talos_image_factory_schematic.machine_schematic
   assert {
-    condition     = length(talos_image_factory_schematic.machine_schematic) == 2
-    error_message = "length of talos_image_factory_schematic.machine_schematic is not as expected"
+    condition     = strcontains(data.talos_machine_configuration.this["host1"].config_patches[3], "hostname: host1")
+    error_message = "hostname missing from host1 machine.yaml.tftpl patch!"
   }
-
-  # assert {
-  #   condition     = talos_image_factory_schematic.machine_schematic["machine1"].schematic.customization.systemExtensions.officialExtensions[0] == "machine1_extensions1"
-  #    error_message = "talos_image_factory_schematic.machine_schematic officialExtensions is not as expected"
-  # }
-
 }
-

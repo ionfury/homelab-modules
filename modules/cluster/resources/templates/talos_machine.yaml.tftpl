@@ -1,0 +1,72 @@
+type: ${machine_type}
+kubelet:
+  nodeIP:
+    validSubnets:
+      - ${cluster_node_subnet}
+network:
+  hostname: ${machine_hostname}
+  interfaces:
+%{ for interface in machine_interfaces ~}
+    - deviceSelector:
+        physical: true
+      addresses:
+%{ for address in interface.addresses ~}
+        - ${address}
+%{ endfor ~}
+      mtu: 1500
+      dhcp: true
+      dhcpOptions:
+        routeMetric: ${interface.dhcp_routeMetric}
+%{ if cluster_vip != "" ~}
+      vip:
+        ip: ${cluster_vip}
+%{ endif ~}
+      vlans:
+%{ for vlan in interface.vlans ~}
+        - vlanId: ${vlan.vlanId}
+          addresses:
+%{ for ip in vlan.addresses ~}
+            - ${ip}
+%{ endfor ~}
+          dhcp: true
+          dhcpOptions:
+            routeMetric: ${vlan.dhcp_routeMetric}
+%{ endfor ~}
+%{ endfor ~}
+  nameservers:
+%{ for nameserver in machine_nameservers ~}
+    - ${nameserver}
+%{ endfor ~}
+time:
+  servers:
+%{ for timeserver in machine_timeservers ~}
+    - ${timeserver}
+%{ endfor ~}
+install:
+  disk: ${machine_install.disk}
+  extraKernelArgs:
+%{ for arg in machine_install.extra_kernel_args ~}
+    - ${arg}
+%{ endfor ~}
+  wipe: ${machine_install.wipe}
+features:
+  hostDNS:
+    enabled: true
+    forwardKubeDNSToHost: true
+    resolveMemberNames: true
+nodeLabels:
+%{ for item in machine_labels ~}
+  ${item.key}: ${item.value}
+%{ endfor ~}
+nodeAnnotations:
+%{ for item in machine_annotations ~}
+  ${item.key}: ${item.value}
+%{ endfor ~}
+files:
+%{ for file in machine_files ~}
+  - content: |-
+      ${indent(6,file.content)}
+    permissions: ${file.permissions}
+    path: ${file.path}
+    op: ${file.op}
+%{ endfor ~}

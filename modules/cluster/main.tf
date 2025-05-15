@@ -1,25 +1,24 @@
 locals {
-  # tflint-ignore: terraform_unused_declarations
+  cluster_endpoint_address = "https://${var.cluster_endpoint}:6443"
   unifi_dns_records = tomap({
     for machine, details in var.machines :
     machine => {
       name   = var.cluster_endpoint
-      record = details.interfaces[0].addresses[0]
+      record = split("/", details.interfaces[0].addresses[0])[0]
     }
     if details.type == "controlplane"
   })
 
-  # tflint-ignore: terraform_unused_declarations
   unifi_users = tomap({
     for machine, details in var.machines : machine => {
       mac = details.interfaces[0].hardwareAddr
-      ip  = details.interfaces[0].addresses[0]
+      ip  = split("/", details.interfaces[0].addresses[0])[0]
     }
   })
 
   generated_cluster_env_vars = {
     cluster_name           = var.cluster_name
-    cluster_endpoint       = var.cluster_endpoint
+    cluster_endpoint       = local.cluster_endpoint_address
     cluster_vip            = var.cluster_vip
     cluster_node_subnet    = var.cluster_node_subnet
     cluster_pod_subnet     = var.cluster_pod_subnet
@@ -34,93 +33,66 @@ locals {
 
   cluster_env_vars = merge(var.cluster_env_vars, local.generated_cluster_env_vars)
 
-  cluster_extraManifests = [
+  talos_cluster_config = templatefile("${path.module}/resources/templates/talos_cluster.yaml.tftpl", {
+    cluster_endpoint       = local.cluster_endpoint_address
+    cluster_name           = var.cluster_name
+    cluster_pod_subnet     = var.cluster_pod_subnet
+    cluster_service_subnet = var.cluster_service_subnet
+    cluster_extraManifests = local.prometheus_extraManifests
+  })
+
+  machines = [
+    for name, machine in var.machines : {
+      talos_config = templatefile("${path.module}/resources/templates/talos_machine.yaml.tftpl", {
+        cluster_node_subnet = var.cluster_node_subnet
+        cluster_vip         = var.cluster_vip
+
+        machine_hostname    = name
+        machine_type        = machine.type
+        machine_interfaces  = machine.interfaces
+        machine_nameservers = var.nameservers
+        machine_timeservers = var.timeservers
+        machine_install     = machine.install
+        machine_labels      = machine.labels
+        machine_annotations = machine.annotations
+        machine_files       = machine.files
+      })
+      extensions        = machine.install.extensions
+      extra_kernel_args = machine.install.extra_kernel_args
+      secureboot        = machine.install.secureboot
+      architecture      = machine.install.architecture
+      platform          = machine.install.platform
+      sbc               = machine.install.sbc
+    }
+  ]
+
+  bootstrap_charts = [
+    #  rpc error: code = ResourceExhausted desc = grpc: received message larger than max (5039431 vs. 4194304)
+    /*{
+      repository = "https://prometheus-community.github.io/helm-charts"
+      chart      = "prometheus-operator-crds"
+      name       = "prometheus-crds"
+      version    = var.prometheus_version
+      namespace  = "kube-system"
+      values     = ""
+    },*/
+    {
+      repository = "https://helm.cilium.io/"
+      chart      = "cilium"
+      name       = "cilium"
+      version    = var.cilium_version
+      namespace  = "kube-system"
+      values     = var.cilium_helm_values
+    }
+  ]
+
+  prometheus_extraManifests = [
     # Prometheus CRDs
     "https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-${var.prometheus_version}/charts/kube-prometheus-stack/charts/crds/crds/crd-podmonitors.yaml",
     "https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-${var.prometheus_version}/charts/kube-prometheus-stack/charts/crds/crds/crd-servicemonitors.yaml",
     "https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-${var.prometheus_version}/charts/kube-prometheus-stack/charts/crds/crds/crd-probes.yaml",
     "https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-${var.prometheus_version}/charts/kube-prometheus-stack/charts/crds/crds/crd-prometheusrules.yaml",
   ]
-  cluster_inlineManifests = []
-  cluster_etcd_extraArgs = var.prepare_kube_prometheus_metrics ? [{
-    name  = "listen-metrics-urls"
-    value = "http://0.0.0.0:2381"
-  }] : []
-  cluster_scheduler_extraArgs = var.prepare_kube_prometheus_metrics ? [{
-    name  = "bind-address"
-    value = "0.0.0.0"
-  }] : []
-  cluster_controllerManager_extraArgs = var.prepare_kube_prometheus_metrics ? [{
-    name  = "bind-address"
-    value = "0.0.0.0"
-  }] : []
-
-  longhorn_machine_kubelet_extraMount = var.prepare_longhorn ? [{
-    destination = "/var/lib/longhorn"
-    type        = "bind"
-    source      = "/var/lib/longhorn"
-    options = [
-      "bind",
-      "rshared",
-      "rw",
-    ]
-  }] : []
-  longhorn_disk2_machine_kubelet_extraMount = var.longhorn_mount_disk2 ? [{
-    destination = "/var/mnt/disk2"
-    type        = "bind"
-    source      = "/var/mnt/disk2"
-    options = [
-      "bind",
-      "rshared",
-      "rw",
-    ]
-  }] : []
-
-  machine_files = var.prepare_spegel ? [{
-    path        = "/etc/cri/conf.d/20-customization.part"
-    op          = "create"
-    permissions = "0o666"
-    content     = <<-EOT
-        [plugins."io.containerd.cri.v1.images"]
-          discard_unpacked_layers = false
-      EOT
-  }] : []
-  machine_extensions = var.prepare_longhorn ? [
-    "iscsi-tools",
-    "util-linux-tools"
-  ] : []
-  machine_extra_kernel_args = var.speedy_kernel_args ? [
-    "apparmor=0",
-    "init_on_alloc=0",
-    "init_on_free=0",
-    "mitigations=off",
-    "security=none"
-  ] : []
-  machine_kubelet_extraMounts = concat(local.longhorn_machine_kubelet_extraMount, local.longhorn_disk2_machine_kubelet_extraMount)
-
-  createDefaultDiskLabel = var.prepare_longhorn ? [{
-    key   = "node.longhorn.io/create-default-disk"
-    value = "config"
-  }] : []
-
-  # HACK: This is too much effort to decompose right now.
-  defaultDiskConfigAnnotationDisk2 = var.prepare_longhorn && var.longhorn_mount_disk2 ? [{
-    key   = "node.longhorn.io/default-disks-config"
-    value = "'${jsonencode([{ "name" : "disk1", "path" : "/var/lib/longhorn", "allowScheduling" : true, "tags" : ["fast", "ssd"] }, { "name" : "disk2", "path" : "/var/mnt/disk2", "storageReserved" : 0, "allowScheduling" : true, "tags" : ["slow", "hdd"] }])}'"
-  }] : []
-
-  defaultDiskConfigAnnotation = var.prepare_longhorn && !var.longhorn_mount_disk2 ? [{
-    key   = "node.longhorn.io/default-disks-config"
-    value = "'${jsonencode([{ "name" : "disk1", "path" : "/var/lib/longhorn", "allowScheduling" : true, "tags" : ["fast", "ssd", "slow", "hdd"] }])}'"
-  }] : []
-
-  defaultNodeTagsAnnotation = var.prepare_longhorn ? [{
-    key   = "node.longhorn.io/default-node-tags"
-    value = "'${jsonencode(["storage"])}'"
-  }] : []
-
-  machine_labels      = local.createDefaultDiskLabel
-  machine_annotations = concat(local.defaultDiskConfigAnnotation, local.defaultNodeTagsAnnotation, local.defaultDiskConfigAnnotationDisk2)
 }
 
 module "params_get" {
@@ -136,6 +108,7 @@ module "params_get" {
     var.healthchecksio.api_key_store
   ]
 }
+
 module "unifi_dns" {
   source = "../unifi-dns"
 
@@ -144,6 +117,7 @@ module "unifi_dns" {
   unifi_api_key     = module.params_get.values[var.unifi.api_key_store]
   unifi_dns_records = local.unifi_dns_records
 }
+
 module "unifi_users" {
   source = "../unifi-users"
 
@@ -153,43 +127,18 @@ module "unifi_users" {
   unifi_users   = local.unifi_users
 }
 
+
 module "talos_cluster" {
-  source = "../talos-cluster"
+  depends_on = [module.unifi_dns]
+  source     = "../talos-cluster"
 
-  cluster_name           = var.cluster_name
-  cluster_endpoint       = var.cluster_endpoint
-  cluster_vip            = var.cluster_vip
-  cluster_node_subnet    = var.cluster_node_subnet
-  cluster_pod_subnet     = var.cluster_pod_subnet
-  cluster_service_subnet = var.cluster_service_subnet
-
-  cluster_allowSchedulingOnControlPlanes = true
-  cluster_coreDNS_disabled               = false
-  cluster_proxy_disabled                 = true
-  cluster_extraManifests                 = local.cluster_extraManifests
-  cluster_inlineManifests                = local.cluster_inlineManifests
-  cluster_etcd_extraArgs                 = local.cluster_etcd_extraArgs
-  cluster_scheduler_extraArgs            = local.cluster_scheduler_extraArgs
-  cluster_controllerManager_extraArgs    = local.cluster_controllerManager_extraArgs
-
-  machine_files               = local.machine_files
-  machine_extensions          = local.machine_extensions
-  machine_kubelet_extraMounts = local.machine_kubelet_extraMounts
-  machine_extra_kernel_args   = local.machine_extra_kernel_args
-  machine_network_nameservers = var.nameservers
-  machine_time_servers        = var.timeservers
-  machine_annotations         = local.machine_annotations
-  machine_labels              = local.machine_labels
-
-  cilium_version      = var.cilium_version
-  cilium_helm_values  = var.cilium_helm_values
-  kubernetes_version  = var.kubernetes_version
-  talos_version       = var.talos_version
-  kube_config_path    = var.kube_config_path
-  talos_config_path   = var.talos_config_path
-  timeout             = var.timeout
-  machines            = var.machines
-  stage_talos_upgrade = false
+  talos_version          = var.talos_version
+  kubernetes_version     = var.kubernetes_version
+  talos_config_path      = var.talos_config_path
+  kubernetes_config_path = var.kubernetes_config_path
+  talos_cluster_config   = local.talos_cluster_config
+  machines               = local.machines
+  bootstrap_charts       = local.bootstrap_charts
 }
 
 module "bootstrap" {
@@ -239,4 +188,3 @@ module "params_put" {
     }
   }
 }
-
