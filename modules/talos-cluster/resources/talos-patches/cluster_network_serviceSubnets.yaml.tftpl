@@ -1,9 +1,0 @@
-# Sets the serviceSubnets CIDR for the cluster network
-# https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.cluster.network
----
-%{ if type == "controlplane" }
-cluster:
-  network:
-    serviceSubnets:
-      - ${cluster_service_subnet}
-%{ endif }

@@ -1,9 +1,0 @@
-# Add extra manifests to the cluster
-# https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.cluster
----%{ if type == "controlplane" }
-cluster:
- extraManifests:
-%{ for manifest in cluster_extraManifests ~}
-   - ${manifest}
-%{ endfor ~}
-%{ endif } 

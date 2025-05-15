@@ -5,7 +5,7 @@
 # tflint-ignore: terraform_unused_declarations
 resource "null_resource" "talos_cluster_health" {
   depends_on = [talos_machine_bootstrap.this, talos_machine_configuration_apply.machines]
-  for_each   = { for name, machine in var.machines : name => machine if machine.type == "controlplane" }
+  for_each   = { for k, v in local.machines : k => v if yamldecode(v.talos_config) == "controlplane" }
 
   triggers = {
     always_run = timestamp()
@@ -26,7 +26,7 @@ resource "null_resource" "talos_cluster_health" {
 # tflint-ignore: terraform_unused_declarations
 resource "null_resource" "talos_cluster_health_upgrade" {
   depends_on = [null_resource.talos_upgrade_trigger]
-  for_each   = { for name, machine in var.machines : name => machine if machine.type == "controlplane" }
+  for_each   = { for k, v in local.machines : k => v if yamldecode(v.talos_config) == "controlplane" }
 
   triggers = {
     always_run = timestamp()

@@ -10,6 +10,19 @@ run "test" {
     cluster_endpoint = "${run.random.resource_name}.tomnowak.work"
     tld              = "tomnowak.work"
 
+    cilium_version     = "1.16.5"
+    kubernetes_version = "1.32.0"
+    talos_version      = "v1.10.0"
+    flux_version       = "v2.4.0"
+    prometheus_version = "20.0.0"
+
+    nameservers = ["192.168.10.1"]
+    timeservers = ["0.pool.ntp.org", "1.pool.ntp.org"]
+
+    talos_config_path      = "~/.talos/testing"
+    kubernetes_config_path = "~/.kube/testing"
+    timeout                = "10m"
+
     cluster_vip            = "192.168.10.6"
     cluster_node_subnet    = "192.168.10.0/24"
     cluster_pod_subnet     = "172.30.0.0/16"
@@ -22,6 +35,8 @@ run "test" {
 ipam:
   mode: kubernetes
 kubeProxyReplacement: true
+operator:
+  replicas: 1
 cgroup:
   autoMount:
     enabled: false
@@ -49,31 +64,31 @@ securityContext:
       - SYS_ADMIN
       - SYS_RESOURCE
 EOT
-    cilium_version     = "1.16.5"
-    kubernetes_version = "1.30.2"
-    talos_version      = "v1.9.1"
-    flux_version       = "v2.4.0"
-    prometheus_version = "17.0.2"
-
-    prepare_longhorn     = true
-    longhorn_mount_disk2 = false
-    prepare_spegel       = true
-    speedy_kernel_args   = true
-
-    nameservers = ["192.168.10.1"]
-    timeservers = ["0.pool.ntp.org", "1.pool.ntp.org"]
-
-    talos_config_path = "~/.talos/testing"
-    kube_config_path  = "~/.kube/testing"
-    timeout           = "10m"
 
     machines = {
       node44 = {
         type    = "controlplane"
-        install = { diskSelectors = ["type: 'ssd'"] }
+        install = { disk = "/dev/sda" }
         interfaces = [{
           hardwareAddr = "ac:1f:6b:2d:ba:1e"
-          addresses    = ["192.168.10.218"]
+          addresses    = ["192.168.10.218/24"]
+        }]
+        labels = [{
+          key   = "hello"
+          value = "world"
+        }]
+        annotations = [{
+          key   = "hello"
+          value = "world"
+        }]
+        files = [{
+          path        = "/etc/cri/conf.d/20-customization.part"
+          op          = "create"
+          permissions = "0o666"
+          content     = <<EOT
+[plugins."io.containerd.cri.v1.images"]
+  discard_unpacked_layers = false
+EOT
         }]
       }
     }

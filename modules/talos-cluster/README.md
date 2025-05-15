@@ -1,5 +1,16 @@
 # talos-cluster
 
+This is a generic terraform module for deploying and managing a talos cluster via terraform.  It takes a number of opinionated stances to streamline the lifecycle over using the terraform resources directly.  
+
+* **Explicit [machine](https://www.talos.dev/v1.10/reference/configuration/v1alpha1/config/#Config.machine) vs [cluster](https://www.talos.dev/v1.10/reference/configuration/v1alpha1/config/#Config.cluster) config**: The talos config manifest separates the spec into these primary attributes; this module takes in a `talos_cluster_config` of the `cluster` properties, along with a `machines` variable of (primary) type `list(object(talos_config = string))`, along with a number of other properties specifying the installation.
+* **Assumed Interfaces**: The module assumes that the primary ip interface for all nodes is at `machines[*].talos_config.network.interfaces[0].addresses[0]`.  Additionally, the same interface on `machines[0]`, where `type == controlplane` will be used for the bootstrap node.
+* **Inline helm chart functionality**:  The `inline_manifests` functionality is overridden and populated via `var.bootstrap_charts`.
+* **Talos Imagefactory**: `machine.install.image` is automatically populated via the arguments provided in each `machine` variable via integration with [talos image factory](https://factory.talos.dev/).
+* **Opinionated Upgrades**: The native terraform module does not yet implement `talos upgrade` functionality.  This is implemented in this module via a `null_resource` provider to execute a script to upgrade each node in order.  This introduces a number of external dependencies on this provider, namely:
+  * [flock](https://www.man7.org/linux/man-pages/man2/flock.2.html)
+  * [talosctl]()
+  * [yq]()
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -17,7 +28,7 @@
 | Name | Version |
 |------|---------|
 | <a name="provider_helm"></a> [helm](#provider\_helm) | 2.17.0 |
-| <a name="provider_local"></a> [local](#provider\_local) | 2.5 |
+| <a name="provider_local"></a> [local](#provider\_local) | 2.5.0 |
 | <a name="provider_null"></a> [null](#provider\_null) | 3.2.3 |
 | <a name="provider_talos"></a> [talos](#provider\_talos) | 0.7.0 |
 
@@ -40,7 +51,7 @@ No modules.
 | [talos_machine_bootstrap.this](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/resources/machine_bootstrap) | resource |
 | [talos_machine_configuration_apply.machines](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/resources/machine_configuration_apply) | resource |
 | [talos_machine_secrets.this](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/resources/machine_secrets) | resource |
-| [helm_template.cilium](https://registry.terraform.io/providers/hashicorp/helm/2.17.0/docs/data-sources/template) | data source |
+| [helm_template.bootstrap_charts](https://registry.terraform.io/providers/hashicorp/helm/2.17.0/docs/data-sources/template) | data source |
 | [talos_client_configuration.this](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/data-sources/client_configuration) | data source |
 | [talos_image_factory_extensions_versions.machine_version](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/data-sources/image_factory_extensions_versions) | data source |
 | [talos_image_factory_urls.machine_image_url_metal](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/data-sources/image_factory_urls) | data source |
@@ -51,37 +62,14 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cilium_helm_values"></a> [cilium\_helm\_values](#input\_cilium\_helm\_values) | The values to use for the Cilium Helm chart.<br/>  See: https://github.com/cilium/cilium/blob/main/install/kubernetes/cilium/values.yamln<br/>  And: https://www.talos.dev/v1.9/kubernetes-guides/network/deploying-cilium/#without-kube-proxy | `string` | `"ipam:\n  mode: kubernetes\nkubeProxyReplacement: true\ncgroup:\n  autoMount:\n    enabled: false\n  hostRoot: /sys/fs/cgroup\nk8sServiceHost: 127.0.0.1\nk8sServicePort: 7445\nsecurityContext:\n  capabilities:\n    ciliumAgent:\n      - CHOWN\n      - KILL\n      - NET_ADMIN\n      - NET_RAW\n      - IPC_LOCK\n      - SYS_ADMIN\n      - SYS_RESOURCE\n      - PERFMON\n      - BPF\n      - DAC_OVERRIDE\n      - FOWNER\n      - SETGID\n      - SETUID\n    cleanCiliumState:\n      - NET_ADMIN\n      - SYS_ADMIN\n      - SYS_RESOURCE\n"` | no |
-| <a name="input_cilium_version"></a> [cilium\_version](#input\_cilium\_version) | The version of Cilium to use. | `string` | `"1.16.5"` | no |
-| <a name="input_cluster_allowSchedulingOnControlPlanes"></a> [cluster\_allowSchedulingOnControlPlanes](#input\_cluster\_allowSchedulingOnControlPlanes) | Whether to allow scheduling on control plane nodes. | `bool` | `true` | no |
-| <a name="input_cluster_controllerManager_extraArgs"></a> [cluster\_controllerManager\_extraArgs](#input\_cluster\_controllerManager\_extraArgs) | A list of extra arguments to pass to the kube controller manager service. | <pre>list(object({<br/>    name  = string<br/>    value = string<br/>  }))</pre> | `[]` | no |
-| <a name="input_cluster_coreDNS_disabled"></a> [cluster\_coreDNS\_disabled](#input\_cluster\_coreDNS\_disabled) | Whether to disable CoreDNS. | `bool` | `false` | no |
-| <a name="input_cluster_endpoint"></a> [cluster\_endpoint](#input\_cluster\_endpoint) | The endpoint for the Talos cluster. | `string` | `"10.10.10.10"` | no |
-| <a name="input_cluster_etcd_extraArgs"></a> [cluster\_etcd\_extraArgs](#input\_cluster\_etcd\_extraArgs) | A list of extra arguments to pass to the kube etcd service. | <pre>list(object({<br/>    name  = string<br/>    value = string<br/>  }))</pre> | `[]` | no |
-| <a name="input_cluster_extraManifests"></a> [cluster\_extraManifests](#input\_cluster\_extraManifests) | A list of extra manifests to apply to the Talos cluster. | `list(string)` | `[]` | no |
-| <a name="input_cluster_inlineManifests"></a> [cluster\_inlineManifests](#input\_cluster\_inlineManifests) | A list of inline manifests to apply to the Talos cluster. | <pre>list(object({<br/>    name     = string<br/>    contents = string<br/>  }))</pre> | `[]` | no |
-| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | A name to provide for the Talos cluster. | `string` | `"cluster"` | no |
-| <a name="input_cluster_node_subnet"></a> [cluster\_node\_subnet](#input\_cluster\_node\_subnet) | The subnet to use for the Talos cluster nodes. | `string` | `"192.168.10.0/24"` | no |
-| <a name="input_cluster_pod_subnet"></a> [cluster\_pod\_subnet](#input\_cluster\_pod\_subnet) | The pod subnet to use for pods on the Talos cluster. | `string` | `"172.16.0.0/16"` | no |
-| <a name="input_cluster_proxy_disabled"></a> [cluster\_proxy\_disabled](#input\_cluster\_proxy\_disabled) | Whether to disable the kube-proxy. | `bool` | `true` | no |
-| <a name="input_cluster_scheduler_extraArgs"></a> [cluster\_scheduler\_extraArgs](#input\_cluster\_scheduler\_extraArgs) | A list of extra arguments to pass to the kube scheduler service. | <pre>list(object({<br/>    name  = string<br/>    value = string<br/>  }))</pre> | `[]` | no |
-| <a name="input_cluster_service_subnet"></a> [cluster\_service\_subnet](#input\_cluster\_service\_subnet) | The pod subnet to use for services on the Talos cluster. | `string` | `"172.17.0.0/16"` | no |
-| <a name="input_cluster_vip"></a> [cluster\_vip](#input\_cluster\_vip) | The VIP to use for the Talos cluster. Applied to the first interface of control plane machines. | `string` | `""` | no |
-| <a name="input_gracefully_destroy_nodes"></a> [gracefully\_destroy\_nodes](#input\_gracefully\_destroy\_nodes) | Whether to gracefully destroy nodes. | `bool` | `false` | no |
-| <a name="input_kube_config_path"></a> [kube\_config\_path](#input\_kube\_config\_path) | The path to output the Kubernetes configuration file. | `string` | `"~/.kube"` | no |
-| <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | The version of kubernetes to deploy. | `string` | `"1.30.1"` | no |
-| <a name="input_machine_annotations"></a> [machine\_annotations](#input\_machine\_annotations) | A list of annotations to add to all machines in the cluster. | <pre>list(object({<br/>    key   = string<br/>    value = string<br/>  }))</pre> | `[]` | no |
-| <a name="input_machine_extensions"></a> [machine\_extensions](#input\_machine\_extensions) | A list of extensions to add to all machines in the cluster. | `list(string)` | `[]` | no |
-| <a name="input_machine_extra_kernel_args"></a> [machine\_extra\_kernel\_args](#input\_machine\_extra\_kernel\_args) | A list of extra kernel arguments to add to the machines. | `list(string)` | `[]` | no |
-| <a name="input_machine_files"></a> [machine\_files](#input\_machine\_files) | A list of files to add to all machines in the cluster. See: https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.machine.files. | <pre>list(object({<br/>    content     = string<br/>    permissions = string<br/>    path        = string<br/>    op          = string<br/>  }))</pre> | `[]` | no |
-| <a name="input_machine_kubelet_extraMounts"></a> [machine\_kubelet\_extraMounts](#input\_machine\_kubelet\_extraMounts) | A list of extra mounts to add to the kubelet. | <pre>list(object({<br/>    destination = string<br/>    type        = string<br/>    source      = string<br/>    options     = list(string)<br/>  }))</pre> | `[]` | no |
-| <a name="input_machine_labels"></a> [machine\_labels](#input\_machine\_labels) | A list of labels to add to all machines in the cluster. | <pre>list(object({<br/>    key   = string<br/>    value = string<br/>  }))</pre> | `[]` | no |
-| <a name="input_machine_network_nameservers"></a> [machine\_network\_nameservers](#input\_machine\_network\_nameservers) | A list of nameservers to use for the Talos cluster. | `list(string)` | <pre>[<br/>  "1.1.1.1",<br/>  "1.0.0.1"<br/>]</pre> | no |
-| <a name="input_machine_time_servers"></a> [machine\_time\_servers](#input\_machine\_time\_servers) | A list of NTP servers to use for the Talos cluster. | `list(string)` | <pre>[<br/>  "0.pool.ntp.org",<br/>  "1.pool.ntp.org"<br/>]</pre> | no |
-| <a name="input_machines"></a> [machines](#input\_machines) | A list of machines to create the talos cluster from. | <pre>map(object({<br/>    type = string<br/>    install = object({<br/>      diskSelectors   = list(string) # https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.machine.install.diskSelector<br/>      extraKernelArgs = optional(list(string), [])<br/>      extensions      = optional(list(string), [])<br/>      secureboot      = optional(bool, false)<br/>      wipe            = optional(bool, false)<br/>      architecture    = optional(string, "amd64")<br/>      platform        = optional(string, "metal")<br/>      sbc             = optional(string, "")<br/>    })<br/>    disks = optional(list(object({<br/>      device = string<br/>      partitions = list(object({<br/>        mountpoint = string<br/>        size       = optional(string, "")<br/>      }))<br/>    })), [])<br/>    labels = optional(list(object({<br/>      key   = string<br/>      value = string<br/>    })), [])<br/>    annotations = optional(list(object({<br/>      key   = string<br/>      value = string<br/>    })), [])<br/>    files = optional(list(object({<br/>      content     = string<br/>      permissions = string<br/>      path        = string<br/>      op          = string<br/>    })), [])<br/>    interfaces = list(object({<br/>      hardwareAddr     = string<br/>      addresses        = list(string)<br/>      dhcp_routeMetric = optional(number, 100)<br/>      vlans = optional(list(object({<br/>        vlanId           = number<br/>        addresses        = list(string)<br/>        dhcp_routeMetric = optional(number, 100)<br/>      })), [])<br/>    }))<br/>  }))</pre> | n/a | yes |
-| <a name="input_stage_talos_upgrade"></a> [stage\_talos\_upgrade](#input\_stage\_talos\_upgrade) | Weather or not to stage talos upgrades.  If this is set to false, the upgrade will be applied immediately and node will reboot. | `bool` | `false` | no |
+| <a name="input_bootstrap_charts"></a> [bootstrap\_charts](#input\_bootstrap\_charts) | A list of helm charts to bootstrap into talos via inline\_manifests. | <pre>list(object({<br/>    repository = string<br/>    chart      = string<br/>    name       = string<br/>    version    = string<br/>    namespace  = string<br/>    values     = string<br/>  }))</pre> | `[]` | no |
+| <a name="input_kubernetes_config_path"></a> [kubernetes\_config\_path](#input\_kubernetes\_config\_path) | The path to output the Kubernetes configuration file. | `string` | `"~/.kube"` | no |
+| <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | The version of kubernetes to deploy. | `string` | n/a | yes |
+| <a name="input_machines"></a> [machines](#input\_machines) | A list of machines to create the talos cluster from. | <pre>list(object({<br/>    talos_config      = string # https://www.talos.dev/v1.10/reference/configuration/v1alpha1/config/#Config.machine<br/>    extensions        = optional(list(string), [])<br/>    extra_kernel_args = optional(list(string), [])<br/>    secureboot        = optional(bool, false)<br/>    architecture      = optional(string, "amd64")<br/>    platform          = optional(string, "metal")<br/>    sbc               = optional(string, "")<br/>  }))</pre> | n/a | yes |
+| <a name="input_on_destroy"></a> [on\_destroy](#input\_on\_destroy) | How to preform node destruction | <pre>object({<br/>    graceful = string<br/>    reboot   = string<br/>    reset    = string<br/>  })</pre> | <pre>{<br/>  "graceful": false,<br/>  "reboot": true,<br/>  "reset": true<br/>}</pre> | no |
+| <a name="input_talos_cluster_config"></a> [talos\_cluster\_config](#input\_talos\_cluster\_config) | The config for the talos cluster.  This will be applied to each controlplane node. See: https://www.talos.dev/v1.10/reference/configuration/v1alpha1/config/#Config.cluster | `string` | n/a | yes |
 | <a name="input_talos_config_path"></a> [talos\_config\_path](#input\_talos\_config\_path) | The path to output the Talos configuration file. | `string` | `"~/.talos"` | no |
-| <a name="input_talos_version"></a> [talos\_version](#input\_talos\_version) | The version of Talos to use. | `string` | `"v1.9.0"` | no |
+| <a name="input_talos_version"></a> [talos\_version](#input\_talos\_version) | The version of Talos to use. | `string` | n/a | yes |
 | <a name="input_timeout"></a> [timeout](#input\_timeout) | The timeout to use for the Talos cluster. | `string` | `"10m"` | no |
 
 ## Outputs

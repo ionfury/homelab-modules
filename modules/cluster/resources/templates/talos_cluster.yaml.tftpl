@@ -1,0 +1,21 @@
+controlPlane:
+  endpoint: ${cluster_endpoint}
+allowSchedulingOnControlPlanes: true
+clusterName: ${cluster_name}
+network:
+  cni:
+    name: none
+  podSubnets:
+    - ${cluster_pod_subnet}
+  serviceSubnets:
+    - ${cluster_service_subnet}
+apiServer:
+  disablePodSecurityPolicy: true
+proxy:
+  disabled: true
+coreDNS:
+  disabled: false
+extraManifests:
+%{ for manifest in cluster_extraManifests ~}
+  - ${manifest}
+%{ endfor ~}
