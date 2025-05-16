@@ -40,7 +40,7 @@ jobs:
     uses: ./.github/workflows/build-containers.yaml
     permissions:
       contents: read
-      packages: read
+      packages: write 
     secrets: inherit
     strategy:
       matrix:
