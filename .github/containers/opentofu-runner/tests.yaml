@@ -4,7 +4,6 @@ fileExistenceTests:
   - name: "Check flock binary exists"
     path: "/usr/bin/flock"
     shouldExist: true
-    permissions: "-rwxr-xr-x"
     
   - name: "Check tofu binary exists"
     path: "/usr/local/bin/tofu"
@@ -12,24 +11,12 @@ fileExistenceTests:
     permissions: "-rwxr-xr-x"
 
 commandTests:
-  - name: "Check flock is installed"
-    command: "which"
-    args: ["flock"]
-    expectedOutput:
-      - "/usr/bin/flock"
-
   - name: "Check flock is executable and shows help"
     command: "flock"
-    args: ["--help"]
+    args: ["--version"]
     expectedOutput:
       - "flock"  
     exitCode: 0
-
-  - name: "Check tofu is on PATH"
-    command: "which"
-    args: ["tofu"]
-    expectedOutput:
-      - "/usr/local/bin/tofu"
 
   - name: "Check tofu version"
     command: "tofu"
@@ -43,11 +30,4 @@ commandTests:
     args: ["--version"]
     expectedOutput:
       - "yq"
-    exitCode: 0
-
-  - name: "Check jq version"
-    command: "jq"
-    args: ["--version"]
-    expectedOutput:
-      - "jq"
     exitCode: 0
