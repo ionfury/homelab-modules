@@ -18,6 +18,9 @@ jobs:
   build-test-push:
     name: Build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write 
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
@@ -31,14 +34,13 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ github.token }}
-          
+
       - name: Build and load Docker image
         uses: docker/build-push-action@v3
         with:
           context: ${{ inputs.path }}/${{ inputs.container }}
           file: ${{ inputs.path }}/${{ inputs.container }}/Dockerfile
           push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-          load: true
           tags: ghcr.io/${{ github.repository_owner }}/${{ inputs.container }}:latest
           build-args: |
             VERSION=1.8.8
