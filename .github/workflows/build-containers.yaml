@@ -32,6 +32,16 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ github.token }}
 
+      - name: Generate Docker tags
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/${{ inputs.container || github.event.repository.name }}
+          tags: |
+            type=ref,event=branch
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
+            type=semver,pattern={{version}},enable=${{ github.event_name == 'push' }}
+
       - name: Build and load Docker image
         uses: docker/build-push-action@v3
         with:
@@ -39,7 +49,7 @@ jobs:
           file: ${{ inputs.path }}/${{ inputs.container }}/Dockerfile
           push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           load: true
-          tags: ghcr.io/${{ github.repository_owner }}/${{ inputs.container }}:latest
+          tags: ${{ steps.meta.outputs.tags }}
           build-args: |
             VERSION=1.8.8
             TARGETARCH=amd64
