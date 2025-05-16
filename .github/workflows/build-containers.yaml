@@ -18,9 +18,6 @@ jobs:
   build-test-push:
     name: Build
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write 
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
