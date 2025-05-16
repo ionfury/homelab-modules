@@ -58,6 +58,5 @@ jobs:
         name: Run Tests
         uses: jmcombs/container-structure-test-action@main
         with:
-          image: ghcr.io/${{ github.repository_owner }}/${{ inputs.container }}:latest
+          image: ${{ steps.meta.outputs.tags }}
           config: ${{ inputs.path }}/${{ inputs.container }}/tests.yaml
-          platform: linux/amd64
