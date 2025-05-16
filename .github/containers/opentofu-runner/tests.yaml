@@ -37,3 +37,17 @@ commandTests:
     expectedOutput:
       - "OpenTofu"
     exitCode: 0
+
+  - name: "Check yq version"
+    command: "yq"
+    args: ["--version"]
+    expectedOutput:
+      - "yq"
+    exitCode: 0
+
+  - name: "Check jq version"
+    command: "jq"
+    args: ["--version"]
+    expectedOutput:
+      - "jq"
+    exitCode: 0

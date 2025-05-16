@@ -11,10 +11,9 @@ on:
         required: true
       path:
         type: string
-        description: Path to container.
+        description: Path to the containers.
         required: false
         default: .github/containers
-
 jobs:
   build-test-push:
     name: Build
@@ -38,19 +37,17 @@ jobs:
         with:
           context: ${{ inputs.path }}/${{ inputs.container }}
           file: ${{ inputs.path }}/${{ inputs.container }}/Dockerfile
-          push: false
+          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           load: true
           tags: ghcr.io/${{ github.repository_owner }}/${{ inputs.container }}:latest
+          build-args: |
+            VERSION=1.8.8
+            TARGETARCH=amd64
 
-      - name: Run Tests
+      - if: ${{ github.event_name != 'push' && github.ref != 'refs/heads/main' }}
+        name: Run Tests
         uses: jmcombs/container-structure-test-action@main
         with:
           image: ghcr.io/${{ github.repository_owner }}/${{ inputs.container }}:latest
           config: ${{ inputs.path }}/${{ inputs.container }}/tests.yaml
           platform: linux/amd64
-
-      - name: Push image to GHCR
-        if: ${{ success() }}
-        run: |
-          docker push ghcr.io/${{ github.repository_owner }}/${{ inputs.container }}:latest
-

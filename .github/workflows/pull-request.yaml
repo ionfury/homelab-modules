@@ -4,30 +4,68 @@ name: Pull Request CI
 
 on:
   pull_request:
-    paths:
-      - 'modules/**/*.tf'
-      - 'modules/**/*.hcl'
 
-env:
-  tofu_version: '1.8.8'
-  terraform_docs_version: 'v0.19.0'
-  tflint_version: 'v0.54.0'
+#env:
+#  tofu_version: '1.8.8'
+#  terraform_docs_version: 'v0.19.0'
+#  tflint_version: 'v0.54.0'
 
 jobs:
-  tofu-lint:
-    runs-on: homelab-modules-runner-app
+  prepare:
+    name: Get Changed Files
+    runs-on: ubuntu-latest
+    outputs:
+      changed-containers: ${{ steps.changed-containers.outputs.changed_files }}
+      changed-modules: ${{ steps.changed-modules.outputs.changed_files }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Tofu CI
-        uses: ./.github/actions/tofu-ci
+      - name: Get changed containers
+        id: changed-containers
+        uses: bjw-s-labs/action-changed-files@v0.3.3
         with:
-          tofu_version: ${{ env.tofu_version }}
-          terraform_docs_version: ${{ env.terraform_docs_version }}
-          tflint_version: ${{ env.tflint_version }}
+          path: .github/containers
+          include_only_directories: true
+          max_depth: 1
 
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        id: auto-commit-action
+      - name: Get changed modules
+        id: changed-modules
+        uses: bjw-s-labs/action-changed-files@v0.3.3
         with:
-          commit_message: Apply fixes from Tofu CI
+          path: modules
+          include_only_directories: true
+          max_depth: 1
+          include_deleted_files: true
+
+  build:
+    if: ${{ needs.prepare.outputs.changed-containers != '[]' }}
+    needs: ["prepare"]
+    name: Build ${{ matrix.container }}
+    uses: ./.github/workflows/build-containers.yaml
+    permissions:
+      contents: read
+      packages: read
+    secrets: inherit
+    strategy:
+      matrix:
+        container: ${{ fromJSON(needs.prepare.outputs.changed-containers) }}
+      fail-fast: false
+      max-parallel: 4
+    with:
+      container: ${{ matrix.container }}
+      path: .github/containers
+
+#  tofu-lint:
+#    runs-on: homelab-modules-runner-app
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v4
+#      - name: Tofu CI
+#        uses: ./.github/actions/tofu-ci
+#        with:
+#          tofu_version: ${{ env.tofu_version }}
+#          terraform_docs_version: ${{ env.terraform_docs_version }}
+#          tflint_version: ${{ env.tflint_version }}
+
+#      - uses: stefanzweifel/git-auto-commit-action@v5
+#        id: auto-commit-action
+#        with:
+#          commit_message: Apply fixes from Tofu CI
