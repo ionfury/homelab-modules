@@ -1,3 +1,37 @@
 terraform {
   required_version = ">= 1.8.8"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "5.80.0"
+    }
+    flux = {
+      source  = "fluxcd/flux"
+      version = "1.4.0"
+    }
+    unifi = {
+      source  = "filipowm/unifi"
+      version = "1.0.0"
+    }
+    github = {
+      source  = "integrations/github"
+      version = "6.4.0"
+    }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "2.35.1"
+    }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "4.51.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.6.3"
+    }
+    healthchecksio = {
+      source  = "kristofferahl/healthchecksio"
+      version = "2.0.0"
+    }
+  }
 }

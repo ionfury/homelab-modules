@@ -93,87 +93,17 @@ locals {
     "https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-${var.prometheus_version}/charts/kube-prometheus-stack/charts/crds/crds/crd-probes.yaml",
     "https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-${var.prometheus_version}/charts/kube-prometheus-stack/charts/crds/crds/crd-prometheusrules.yaml",
   ]
-}
 
-module "params_get" {
-  source = "../params-get"
-
-  aws = var.aws
-  parameters = [
+  params_get = toset([
     var.unifi.api_key_store,
     var.github.token_store,
     var.external_secrets.id_store,
     var.external_secrets.secret_store,
     var.cloudflare.api_key_store,
     var.healthchecksio.api_key_store
-  ]
-}
+  ])
 
-module "unifi_dns" {
-  source = "../unifi-dns"
-
-  unifi_address     = var.unifi.address
-  unifi_site        = var.unifi.site
-  unifi_api_key     = module.params_get.values[var.unifi.api_key_store]
-  unifi_dns_records = local.unifi_dns_records
-}
-
-module "unifi_users" {
-  source = "../unifi-users"
-
-  unifi_address = var.unifi.address
-  unifi_site    = var.unifi.site
-  unifi_api_key = module.params_get.values[var.unifi.api_key_store]
-  unifi_users   = local.unifi_users
-}
-
-
-module "talos_cluster" {
-  depends_on = [module.unifi_dns]
-  source     = "../talos-cluster"
-
-  talos_version          = var.talos_version
-  kubernetes_version     = var.kubernetes_version
-  talos_config_path      = var.talos_config_path
-  kubernetes_config_path = var.kubernetes_config_path
-  talos_cluster_config   = local.talos_cluster_config
-  machines               = local.machines
-  bootstrap_charts       = local.bootstrap_charts
-}
-
-module "bootstrap" {
-  source = "../bootstrap"
-
-  cluster_name     = var.cluster_name
-  flux_version     = var.flux_version
-  tld              = var.tld
-  cluster_env_vars = local.cluster_env_vars
-
-  kubernetes_config_host                   = module.talos_cluster.kubeconfig_host
-  kubernetes_config_client_certificate     = module.talos_cluster.kubeconfig_client_certificate
-  kubernetes_config_client_key             = module.talos_cluster.kubeconfig_client_key
-  kubernetes_config_cluster_ca_certificate = module.talos_cluster.kubeconfig_cluster_ca_certificate
-
-  github_org             = var.github.org
-  github_repository      = var.github.repository
-  github_repository_path = var.github.repository_path
-  github_token           = module.params_get.values[var.github.token_store]
-
-  external_secrets_access_key_id     = module.params_get.values[var.external_secrets.id_store]
-  external_secrets_access_key_secret = module.params_get.values[var.external_secrets.secret_store]
-
-  cloudflare_account_name = var.cloudflare.account
-  cloudflare_email        = var.cloudflare.email
-  cloudflare_api_key      = module.params_get.values[var.cloudflare.api_key_store]
-
-  healthchecksio_api_key = module.params_get.values[var.healthchecksio.api_key_store]
-}
-
-module "params_put" {
-  source = "../params-put"
-
-  aws = var.aws
-  parameters = {
+  params_put = {
     kubeconfig = {
       name        = "/homelab/infrastructure/clusters/${var.cluster_name}/kubeconfig"
       description = "Kubeconfig for cluster '${var.cluster_name}'."
@@ -186,5 +116,74 @@ module "params_put" {
       type        = "SecureString"
       value       = module.talos_cluster.talosconfig_raw
     }
+  }
+}
+
+data "aws_ssm_parameter" "params_get" {
+  for_each = local.params_get
+  name     = each.value
+}
+
+resource "unifi_dns_record" "record" {
+  for_each = local.unifi_dns_records
+
+  name     = coalesce(each.value.name, each.key)
+  record   = each.value.record
+  enabled  = each.value.enabled
+  port     = each.value.port
+  priority = each.value.priority
+  type     = each.value.type
+  ttl      = each.value.ttl
+  weight   = each.value.weight
+}
+
+resource "unifi_user" "user" {
+  for_each = local.unifi_users
+
+  name     = each.key
+  mac      = each.value.mac
+  fixed_ip = each.value.ip
+  note     = "Managed by Terraform."
+}
+
+module "talos_cluster" {
+  depends_on = [unifi_dns_record.record, unifi_user.user]
+  source     = "./resources/modules/talos-cluster"
+
+  talos_version          = var.talos_version
+  kubernetes_version     = var.kubernetes_version
+  talos_config_path      = var.talos_config_path
+  kubernetes_config_path = var.kubernetes_config_path
+  talos_cluster_config   = local.talos_cluster_config
+  machines               = local.machines
+  bootstrap_charts       = local.bootstrap_charts
+}
+
+module "bootstrap" {
+  source = "./resources/modules/bootstrap"
+
+  cluster_name     = var.cluster_name
+  flux_version     = var.flux_version
+  tld              = var.tld
+  cluster_env_vars = local.cluster_env_vars
+
+  github_org                         = var.github.org
+  github_repository                  = var.github.repository
+  github_repository_path             = var.github.repository_path
+  external_secrets_access_key_id     = data.params_get[var.external_secrets.id_store].value
+  external_secrets_access_key_secret = data.params_get[var.external_secrets.secret_store].value
+  cloudflare_account_name            = var.cloudflare.account
+}
+
+resource "aws_ssm_parameter" "params_put" {
+  for_each = local.params_put
+
+  name        = each.value.name
+  description = each.value.description
+  type        = each.value.type
+  value       = each.value.value
+
+  tags = {
+    managed-by = "terraform"
   }
 }

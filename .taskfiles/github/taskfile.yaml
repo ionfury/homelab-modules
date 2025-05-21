@@ -8,10 +8,10 @@ tasks:
   build-container:
     desc: Builds the build container.
     vars:
-      IMAGE: opentofu-runner:local 
-      PATH: '{{.ROOT_DIR}}/.github/containers/opentofu-runner'
-      VERSION: '1.8.8'
-      TARGETARCH: amd64
+      IMAGE: homelab-modules-runner
+      PATH: '{{.ROOT_DIR}}/.github/containers/runner'
+      VERSION: '2.324.0'
+      PLATFORM: linux/amd64
     cmds:
-      - docker build {{.PATH}} --build-arg VERSION={{.VERSION}} --build-arg TARGETARCH={{.TARGETARCH}} -t {{.IMAGE}}
-      - container-structure-test test --image {{.IMAGE}} --config {{.PATH}}/tests.yaml
+      - docker build {{.PATH}} --build-arg VERSION={{.VERSION}} --platform={{.PLATFORM}} -t {{.IMAGE}}
+      - container-structure-test test --image {{.IMAGE}} --platform={{.PLATFORM}} --config {{.PATH}}/tests.yaml

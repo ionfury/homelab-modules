@@ -1,0 +1,52 @@
+---
+schemaVersion: "2.0.0"
+
+commandTests:
+  - name: "Check tofu version"
+    command: "tofu"
+    args: ["--version"]
+    expectedOutput:
+      - "OpenTofu"
+    exitCode: 0
+
+  - name: "Check tflint version"
+    command: "tflint"
+    args: ["--version"]
+    expectedOutput:
+      - "TFLint"
+    exitCode: 0
+
+  - name: "Check terraform-docs version"
+    command: "terraform-docs"
+    args: ["--version"]
+    expectedOutput:
+      - "terraform-docs"
+    exitCode: 0
+
+  - name: "Check flock is executable and shows help"
+    command: "flock"
+    args: ["--version"]
+    expectedOutput:
+      - "flock"  
+    exitCode: 0
+
+  - name: "Check yq version"
+    command: "yq"
+    args: ["--version"]
+    expectedOutput:
+      - "yq"
+    exitCode: 0
+
+  - name: "Check jq version"
+    command: "jq"
+    args: ["--version"]
+    expectedOutput:
+      - "jq"
+    exitCode: 0
+
+  - name: "Check talosctl version"
+    command: "talosctl"
+    args: ["version"]
+    expectedOutput:
+      - "Client"
+    exitCode: 1
