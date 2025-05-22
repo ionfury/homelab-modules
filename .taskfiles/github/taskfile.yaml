@@ -9,7 +9,7 @@ tasks:
     desc: Builds the build container.
     vars:
       IMAGE: homelab-modules-runner
-      PATH: '{{.ROOT_DIR}}/.github/containers/runner'
+      PATH: '{{.ROOT_DIR}}'
       VERSION: '2.324.0'
       PLATFORM: linux/amd64
     cmds:

@@ -6,6 +6,7 @@ FROM ghcr.io/actions/actions-runner:${VERSION}
 ENV HOMEBREW_NO_ANALYTICS=1 \
   HOMEBREW_NO_ENV_HINTS=1 \
   HOMEBREW_NO_INSTALL_CLEANUP=1 \
+  TF_IN_AUTOMATION=1 \
   PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
 
 USER root
@@ -26,3 +27,5 @@ RUN eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" \
   && brew update \
   && brew bundle --file=/home/runner/Brewfile \
   && brew cleanup --prune=all
+
+RUN tofuenv install latest && tofuenv use latest
