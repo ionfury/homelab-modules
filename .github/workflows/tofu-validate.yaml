@@ -4,7 +4,6 @@ name: Tofu Validate
 
 on:
   workflow_dispatch:
-  workflow_call:
   pull_request:
     branches: [ main ]
     paths:
