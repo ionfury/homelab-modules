@@ -30,6 +30,15 @@ jobs:
       - uses: terraform-linters/setup-tflint@v4
         name: Setup TFLint
 
-      - name: Check Tofu
+      - name: Fix Tofu
         shell: bash
-        run: task tofu:check
+        run: task tofu:fix
+
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: github-actions[bot]
+          author_email: github-actions[bot]@users.noreply.github.com
+          message: 'chore: auto-update tofu'
+          add: .
+          branch: ${{ github.head_ref }}
