@@ -4,8 +4,8 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.8.8 |
-| <a name="requirement_ansible"></a> [ansible](#requirement\_ansible) | ~> 1.3.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~>5.80.0 |
+| <a name="requirement_ansible"></a> [ansible](#requirement\_ansible) | 1.3.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 5.80.0 |
 
 ## Providers
 
@@ -22,11 +22,11 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [ansible_playbook.setup_iptables](https://registry.terraform.io/providers/ansible/ansible/latest/docs/resources/playbook) | resource |
-| [ansible_playbook.setup_ipxe](https://registry.terraform.io/providers/ansible/ansible/latest/docs/resources/playbook) | resource |
-| [ansible_playbook.setup_tftp_server](https://registry.terraform.io/providers/ansible/ansible/latest/docs/resources/playbook) | resource |
-| [aws_ssm_parameter.pxeboot_password](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ssm_parameter) | data source |
-| [aws_ssm_parameter.pxeboot_user](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ssm_parameter) | data source |
+| [ansible_playbook.setup_iptables](https://registry.terraform.io/providers/ansible/ansible/1.3.0/docs/resources/playbook) | resource |
+| [ansible_playbook.setup_ipxe](https://registry.terraform.io/providers/ansible/ansible/1.3.0/docs/resources/playbook) | resource |
+| [ansible_playbook.setup_tftp_server](https://registry.terraform.io/providers/ansible/ansible/1.3.0/docs/resources/playbook) | resource |
+| [aws_ssm_parameter.pxeboot_password](https://registry.terraform.io/providers/hashicorp/aws/5.80.0/docs/data-sources/ssm_parameter) | data source |
+| [aws_ssm_parameter.pxeboot_user](https://registry.terraform.io/providers/hashicorp/aws/5.80.0/docs/data-sources/ssm_parameter) | data source |
 
 ## Inputs
 
