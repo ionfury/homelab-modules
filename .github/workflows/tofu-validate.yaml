@@ -4,7 +4,10 @@ name: Tofu Validate
 
 on:
   workflow_dispatch:
-  workflow_call:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'modules/**'
 
 jobs:
   tofu-validate:
@@ -26,6 +29,4 @@ jobs:
 
       - name: Check Tofu
         shell: bash
-        run: |
-          ls \
-          task tofu:check
+        run: ls

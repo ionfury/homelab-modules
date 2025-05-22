@@ -4,7 +4,11 @@ name: Container Validate
 
 on:
   workflow_dispatch:
-  workflow_call:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'Dockerfile'
+      - 'docker-bake.hcl'
 
 jobs:
   container-validate:
