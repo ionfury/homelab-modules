@@ -31,6 +31,7 @@ jobs:
         uses: docker/bake-action@v6
         with:
           push: true
+          files: ./docker-bake.hcl
           set: |
             *.output=type=registry
             *.tags=ghcr.io/y${{ github.repository_owner }}/homelab-modules-runner:latest
