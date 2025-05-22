@@ -12,13 +12,9 @@ on:
 jobs:
   tofu-validate:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Setup Taskfile
         uses: Illbjorn/setup-task@0.1.0
@@ -36,13 +32,4 @@ jobs:
 
       - name: Fix Tofu
         shell: bash
-        run: task tofu:fix
-
-      - name: Commit changes
-        uses: EndBug/add-and-commit@v9
-        with:
-          author_name: github-actions[bot]
-          author_email: github-actions[bot]@users.noreply.github.com
-          message: 'chore: auto-update tofu'
-          add: .
-          push: true
+        run: task tofu:check
