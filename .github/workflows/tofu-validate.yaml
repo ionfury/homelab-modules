@@ -26,4 +26,6 @@ jobs:
 
       - name: Check Tofu
         shell: bash
-        run: task tofu:check
+        run: |
+          ls \
+          task tofu:check
