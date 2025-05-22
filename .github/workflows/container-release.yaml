@@ -4,7 +4,11 @@ name: Container Release
 
 on:
   workflow_dispatch:
-  workflow_call:
+  push:
+    branches: ["main"]
+    paths:
+      - 'Dockerfile'
+      - 'docker-bake.hcl'
 
 jobs:
   container-release:
