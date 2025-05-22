@@ -13,10 +13,12 @@ resource "flux_bootstrap_git" "this" {
   path                   = local.github_repository_cluster_directory
   kustomization_override = file("${path.module}/resources/kustomization.yaml")
 }
+
 resource "github_repository_file" "this" {
   repository = data.github_repository.this.name
   file       = "${local.github_repository_cluster_directory}/generated-cluster-vars.env"
   content = templatefile("${path.module}/resources/generated-cluster-vars.env.tftpl", {
     cluster_vars = var.cluster_env_vars
   })
+  overwrite_on_create = true
 }

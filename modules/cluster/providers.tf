@@ -5,7 +5,7 @@ provider "aws" {
 
 provider "unifi" {
   api_url        = var.unifi.address
-  api_key        = data.params_get[var.unifi.api_key_store].value
+  api_key        = data.aws_ssm_parameter.params_get[var.unifi.api_key_store].value
   username       = ""
   password       = ""
   allow_insecure = true
@@ -23,7 +23,7 @@ provider "flux" {
     url = "https://github.com/${var.github.org}/${var.github.repository}.git"
     http = {
       username = "git" # This can be any string when using a personal access token
-      password = data.params_get[var.github.token_store].value
+      password = data.aws_ssm_parameter.params_get[var.github.token_store].value
     }
   }
 }
@@ -37,14 +37,14 @@ provider "kubernetes" {
 
 provider "github" {
   owner = var.github.org
-  token = data.params_get[var.github.token_store].value
+  token = data.aws_ssm_parameter.params_get[var.github.token_store].value
 }
 
 provider "cloudflare" {
   email   = var.cloudflare.email
-  api_key = data.params_get[var.cloudflare.api_key_store].value
+  api_key = data.aws_ssm_parameter.params_get[var.cloudflare.api_key_store].value
 }
 
 provider "healthchecksio" {
-  api_key = data.params_get[var.healthchecksio.api_key_store].value
+  api_key = data.aws_ssm_parameter.params_get[var.healthchecksio.api_key_store].value
 }

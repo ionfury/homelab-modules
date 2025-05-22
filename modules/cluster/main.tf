@@ -127,16 +127,13 @@ data "aws_ssm_parameter" "params_get" {
 resource "unifi_dns_record" "record" {
   for_each = local.unifi_dns_records
 
-  name     = coalesce(each.value.name, each.key)
-  record   = each.value.record
-  enabled  = each.value.enabled
-  port     = each.value.port
-  priority = each.value.priority
-  type     = each.value.type
-  ttl      = each.value.ttl
-  weight   = each.value.weight
+  name    = coalesce(each.value.name, each.key)
+  record  = each.value.record
+  enabled = true
+  type    = "A"
+  ttl     = 0
 }
-
+/*
 resource "unifi_user" "user" {
   for_each = local.unifi_users
 
@@ -145,9 +142,10 @@ resource "unifi_user" "user" {
   fixed_ip = each.value.ip
   note     = "Managed by Terraform."
 }
+*/
 
 module "talos_cluster" {
-  depends_on = [unifi_dns_record.record, unifi_user.user]
+  depends_on = [unifi_dns_record.record, ]
   source     = "./resources/modules/talos-cluster"
 
   talos_version          = var.talos_version
@@ -170,8 +168,8 @@ module "bootstrap" {
   github_org                         = var.github.org
   github_repository                  = var.github.repository
   github_repository_path             = var.github.repository_path
-  external_secrets_access_key_id     = data.params_get[var.external_secrets.id_store].value
-  external_secrets_access_key_secret = data.params_get[var.external_secrets.secret_store].value
+  external_secrets_access_key_id     = data.aws_ssm_parameter.params_get[var.external_secrets.id_store].value
+  external_secrets_access_key_secret = data.aws_ssm_parameter.params_get[var.external_secrets.secret_store].value
   cloudflare_account_name            = var.cloudflare.account
 }
 
