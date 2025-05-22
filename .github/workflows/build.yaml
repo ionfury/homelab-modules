@@ -1,0 +1,80 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Build Containers
+
+on:
+  workflow_dispatch:
+    inputs:
+      validate:
+        description: 'Run the validate job (build+test)'
+        required: false
+        default: true
+        type: boolean
+      release:
+        description: 'Run the release job (build+push)'
+        required: false
+        default: false
+        type: boolean
+
+  workflow_call:
+    inputs:
+      validate:
+        description: 'Run the validate job (build+test)'
+        required: false
+        default: true
+        type: boolean
+      release:
+        description: 'Run the release job (build+push)'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  validate:
+    if: ${{ inputs.validate }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Bake & load image for testing
+        uses: docker/bake-action@v6
+        with:
+          load: true
+          targets: default
+          set: |
+            *.tags=ghcr.io/${{ github.repository_owner }}/homelab-modules-runner:test
+
+      - name: Run Tests
+        uses: jmcombs/container-structure-test-action@main
+        with:
+          image: ghcr.io/${{ github.repository_owner }}/homelab-modules-runner:test
+          config: tests.yaml
+
+  release:
+    if: ${{ inputs.release }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Bake & push multi-arch image
+        uses: docker/bake-action@v6
+        with:
+          push: true
+          set: |
+            *.output=type=registry
+            *.tags=ghcr.io/y${{ github.repository_owner }}/homelab-modules-runner:latest

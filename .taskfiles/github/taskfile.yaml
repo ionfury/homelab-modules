@@ -1,5 +1,10 @@
 version: "3"
 
+vars:
+  IMAGE: homelab-modules-runner:local
+  PLATFORM: linux/amd64
+
+
 tasks:
   pull-request:
     desc: Runs the github pull request workflow locally.
@@ -8,10 +13,11 @@ tasks:
   build-container:
     desc: Builds the build container.
     vars:
-      IMAGE: homelab-modules-runner
       PATH: '{{.ROOT_DIR}}'
-      VERSION: '2.324.0'
-      PLATFORM: linux/amd64
     cmds:
-      - docker build {{.PATH}} --build-arg VERSION={{.VERSION}} --platform={{.PLATFORM}} -t {{.IMAGE}}
+      - docker buildx bake image-local --set image.tags={{.IMAGE}}
       - container-structure-test test --image {{.IMAGE}} --platform={{.PLATFORM}} --config {{.PATH}}/tests.yaml
+  run-container:
+    desc: Runs the docker container.
+    cmds:
+      - docker run --platform {{.PLATFORM}} -it --rm {{.IMAGE}} /bin/bash
