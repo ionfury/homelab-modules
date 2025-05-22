@@ -3,6 +3,17 @@
 name: Build Containers
 
 on:
+  workflow_dispatch:
+    inputs:
+      container:
+        type: string
+        description: Container name.
+        required: true
+      path:
+        type: string
+        description: Path to the containers.
+        required: false
+        default: .github/containers
   workflow_call:
     inputs:
       container:
