@@ -131,6 +131,7 @@ tasks:
       MODULE_PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
       FIX: '{{.FIX | default "true"}}'
     cmds:
+      - tflint --version
       - tflint --chdir={{.MODULE_PATH}} --recursive {{if eq .FIX "true"}}--fix{{end}}
     preconditions:
       - which tflint
@@ -146,6 +147,7 @@ tasks:
       MODULE_PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
       FIX: '{{.FIX | default "true"}}'
     cmds:
+      - tofu --version
       - tofu fmt {{if eq .FIX "false"}}-check{{end}} -recursive {{.MODULE_PATH}}   
     preconditions:
       - which tofu
@@ -160,7 +162,8 @@ tasks:
       MODULE: "{{index .MATCH 0}}"
       MODULE_PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
     cmds: 
-      - terraform-docs markdown --output-file {{.MODULE_PATH}}/README.md {{if eq .FIX "false"}}--output-check{{end}} {{.MODULE_PATH}}
+      - terraform-docs --version
+      - terraform-docs markdown --output-file {{.MODULE_PATH}}/README.md {{if eq .FIX "false"}} --output-check {{end}} {{.MODULE_PATH}} 
     preconditions:
       - which terraform-docs
     sources:

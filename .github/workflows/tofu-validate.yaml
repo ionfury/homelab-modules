@@ -13,6 +13,9 @@ jobs:
   tofu-validate:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Setup Taskfile
         uses: Illbjorn/setup-task@0.1.0
 
@@ -26,7 +29,6 @@ jobs:
     
       - uses: terraform-linters/setup-tflint@v4
         name: Setup TFLint
-
-      - name: Check Tofu
+      - name: Fix Tofu
         shell: bash
-        run: ls
+        run: task tofu:check
