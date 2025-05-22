@@ -1,5 +1,10 @@
 version: "3"
 
+vars:
+  IMAGE: homelab-modules-runner:local
+  PLATFORM: linux/amd64
+
+
 tasks:
   pull-request:
     desc: Runs the github pull request workflow locally.
@@ -8,10 +13,11 @@ tasks:
   build-container:
     desc: Builds the build container.
     vars:
-      IMAGE: opentofu-runner:local 
-      PATH: '{{.ROOT_DIR}}/.github/containers/opentofu-runner'
-      VERSION: '1.8.8'
-      TARGETARCH: amd64
+      PATH: '{{.ROOT_DIR}}'
     cmds:
-      - docker build {{.PATH}} --build-arg VERSION={{.VERSION}} --build-arg TARGETARCH={{.TARGETARCH}} -t {{.IMAGE}}
-      - container-structure-test test --image {{.IMAGE}} --config {{.PATH}}/tests.yaml
+      - docker buildx bake image-local --set image.tags={{.IMAGE}}
+      - container-structure-test test --image {{.IMAGE}} --platform={{.PLATFORM}} --config {{.PATH}}/tests.yaml
+  run-container:
+    desc: Runs the docker container.
+    cmds:
+      - docker run --platform {{.PLATFORM}} -it --rm {{.IMAGE}} /bin/bash

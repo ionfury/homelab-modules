@@ -2,19 +2,17 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: '3'
 
-vars:
-  WORKSTATION_RESOURCES_DIR: '{{.ROOT_DIR}}/.taskfiles/workstation/resources'
-
 tasks:
-
   brew:
     desc: Set up Homebrew tools
+    vars:
+      BREWFILE: '{{.ROOT_DIR}}/Brewfile'
     cmds:
-      - brew bundle --file {{.WORKSTATION_RESOURCES_DIR}}/Brewfile
+      - brew bundle --file {{.BREWFILE}}
     sources:
-      - '{{.WORKSTATION_RESOURCES_DIR}}/Brewfile'
+      - '{{.BREWFILE}}'
     generates:
-      - '{{.WORKSTATION_RESOURCES_DIR}}/Brewfile.lock.json'
+      - '{{.BREWFILE}}.lock.json'
     preconditions:
       - which brew
-      - test -f {{.WORKSTATION_RESOURCES_DIR}}/Brewfile
+      - test -f {{.BREWFILE}}

@@ -19,25 +19,36 @@ In brief, the `cluster` module does the following:
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.8.8 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 5.80.0 |
+| <a name="requirement_cloudflare"></a> [cloudflare](#requirement\_cloudflare) | 5.5.0 |
+| <a name="requirement_flux"></a> [flux](#requirement\_flux) | 1.4.0 |
+| <a name="requirement_github"></a> [github](#requirement\_github) | 6.4.0 |
+| <a name="requirement_healthchecksio"></a> [healthchecksio](#requirement\_healthchecksio) | 2.0.0 |
+| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | 2.35.1 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | 3.6.3 |
+| <a name="requirement_unifi"></a> [unifi](#requirement\_unifi) | 1.0.0 |
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.80.0 |
+| <a name="provider_unifi"></a> [unifi](#provider\_unifi) | 1.0.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_bootstrap"></a> [bootstrap](#module\_bootstrap) | ../bootstrap | n/a |
-| <a name="module_params_get"></a> [params\_get](#module\_params\_get) | ../params-get | n/a |
-| <a name="module_params_put"></a> [params\_put](#module\_params\_put) | ../params-put | n/a |
-| <a name="module_talos_cluster"></a> [talos\_cluster](#module\_talos\_cluster) | ../talos-cluster | n/a |
-| <a name="module_unifi_dns"></a> [unifi\_dns](#module\_unifi\_dns) | ../unifi-dns | n/a |
-| <a name="module_unifi_users"></a> [unifi\_users](#module\_unifi\_users) | ../unifi-users | n/a |
+| <a name="module_bootstrap"></a> [bootstrap](#module\_bootstrap) | ./resources/modules/bootstrap | n/a |
+| <a name="module_talos_cluster"></a> [talos\_cluster](#module\_talos\_cluster) | ./resources/modules/talos-cluster | n/a |
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [aws_ssm_parameter.params_put](https://registry.terraform.io/providers/hashicorp/aws/5.80.0/docs/resources/ssm_parameter) | resource |
+| [unifi_dns_record.record](https://registry.terraform.io/providers/filipowm/unifi/1.0.0/docs/resources/dns_record) | resource |
+| [aws_ssm_parameter.params_get](https://registry.terraform.io/providers/hashicorp/aws/5.80.0/docs/data-sources/ssm_parameter) | data source |
 
 ## Inputs
 

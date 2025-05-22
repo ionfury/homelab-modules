@@ -18,8 +18,10 @@ network:
       dhcpOptions:
         routeMetric: ${interface.dhcp_routeMetric}
 %{ if cluster_vip != "" ~}
+%{ if machine_type == "controlplane" ~}
       vip:
         ip: ${cluster_vip}
+%{ endif ~}
 %{ endif ~}
       vlans:
 %{ for vlan in interface.vlans ~}
