@@ -7,5 +7,5 @@ on:
     branches: ["main"]
 
 jobs:
-  release:
-    uses: ./.github/workflows/container-release.yml
+  container-release:
+    uses: ./.github/workflows/container-release.yaml
