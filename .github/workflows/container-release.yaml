@@ -33,4 +33,4 @@ jobs:
           push: true
           set: |
             *.output=type=registry
-            *.tags=ghcr.io/y${{ github.repository_owner }}/homelab-modules-runner:latest
+            *.tags=ghcr.io/${{ github.repository_owner }}/homelab-modules-runner:latest
