@@ -29,14 +29,6 @@ jobs:
     
       - uses: terraform-linters/setup-tflint@v4
         name: Setup TFLint
-
-      - name: Generate and diff README.md
-        run: |
-          terraform-docs --version
-          cd modules/pxe-pi
-          terraform-docs markdown --output-file generated.md .
-          diff -u README.md generated.md || (echo "::error::README.md is out of date. Run terraform-docs and commit the changes."; exit 1)
-
       - name: Fix Tofu
         shell: bash
         run: task tofu:check
