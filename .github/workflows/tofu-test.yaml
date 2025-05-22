@@ -1,0 +1,21 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Tofu Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  tofu-test:
+    runs-on: homelab-modules-runner-app
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Tofu Integration Tests
+        shell: bash
+        run: |
+          tofu --version
+          tofu -chdir=modules/cluster init -upgrade
+          tofu -chdir=modules/cluster test -filter=tests/integration.tftest.hcl
+
