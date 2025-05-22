@@ -163,7 +163,7 @@ tasks:
       MODULE_PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
     cmds: 
       - terraform-docs --version
-      - terraform-docs markdown --output-file {{.MODULE_PATH}}/README.md {{if eq .FIX "false"}}--output-check{{end}} {{.MODULE_PATH}}
+      - terraform-docs markdown --output-file {{.MODULE_PATH}}/README.md {{if eq .FIX "false"}} --output-check {{end}} {{.MODULE_PATH}} 
     preconditions:
       - which terraform-docs
     sources:
