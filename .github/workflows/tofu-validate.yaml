@@ -32,6 +32,7 @@ jobs:
 
       - name: Generate and diff README.md
         run: |
+          terraform-docs --version
           cd modules/pxe-pi
           terraform-docs markdown . > generated.md
           diff -u README.md generated.md || (echo "::error::README.md is out of date. Run terraform-docs and commit the changes."; exit 1)
