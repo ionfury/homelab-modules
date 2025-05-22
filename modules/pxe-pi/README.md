@@ -52,8 +52,8 @@ No outputs.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_ansible"></a> [ansible](#provider\_ansible) | ~> 1.3.0 |
-| <a name="provider_aws"></a> [aws](#provider\_aws) | ~>5.80.0 |
+| <a name="provider_ansible"></a> [ansible](#provider\_ansible) | 1.3.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.80.0 |
 
 ## Modules
 

@@ -8,7 +8,7 @@ locals {
     }
     if details.type == "controlplane"
   })
-
+  # tflint-ignore: terraform_unused_declarations
   unifi_users = tomap({
     for machine, details in var.machines : machine => {
       mac = details.interfaces[0].hardwareAddr
