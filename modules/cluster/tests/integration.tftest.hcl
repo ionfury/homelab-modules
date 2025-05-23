@@ -107,7 +107,7 @@ EOT
 
   github = {
     org             = "ionfury"
-    repository      = "homelab"
+    repository      = "homelab-integration"
     repository_path = "kubernetes/clusters"
     token_store     = "/homelab/integration/accounts/github/token"
   }
