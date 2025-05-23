@@ -10,6 +10,10 @@ run "random" {
 # Preconfigured the network for static 'integration' cluster.
 mock_provider "unifi" {}
 
+provider "aws" {
+  alias = "env"
+}
+
 variables {
   cluster_name     = run.random.resource_name
   cluster_endpoint = "192.168.10.218"
@@ -113,6 +117,7 @@ EOT
 run "provision" {
   providers = {
     unifi = unifi
+    aws   = aws.env
   }
   variables {
     talos_version = "v1.10.0"
@@ -122,6 +127,7 @@ run "provision" {
 run "upgrade" {
   providers = {
     unifi = unifi
+    aws   = aws.env
   }
   variables {
     talos_version = "v1.10.1"
@@ -147,6 +153,7 @@ run "upgrade_test" {
 run "scale_up" {
   providers = {
     unifi = unifi
+    aws   = aws.env
   }
   variables {
     talos_version = "v1.10.1"
