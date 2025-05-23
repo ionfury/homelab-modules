@@ -53,11 +53,6 @@ variable "talos_version" {
   type        = string
 }
 
-variable "flux_version" {
-  description = "The version of Flux to use."
-  type        = string
-}
-
 variable "prometheus_version" {
   description = "The version of Prometheus to use."
   type        = string
@@ -80,11 +75,6 @@ variable "talos_config_path" {
 
 variable "kubernetes_config_path" {
   description = "The path to output the Kubernetes configuration file."
-  type        = string
-}
-
-variable "tld" {
-  description = "The top-level domain to use."
   type        = string
 }
 
