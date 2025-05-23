@@ -48,17 +48,57 @@ variables {
   }
 
   cilium_helm_values = <<EOT
+autoDirectNodeRoutes: true
+ipv4NativeRoutingCIDR: 172.30.0.0/16
+bandwidthManager:
+  bbr: true
+  enabled: true
+bgpControlPlane:
+  enabled: false
 ipam:
   mode: kubernetes
-kubeProxyReplacement: true
-operator:
-  replicas: 1
 cgroup:
   autoMount:
     enabled: false
   hostRoot: /sys/fs/cgroup
+cluster:
+  id: 1
+  name: ${run.random.resource_name}
+kubeProxyReplacement: true
+enableIPv4BIGTCP: true
+endpointRoutes:
+  enabled: false
+envoy:
+  enabled: true
+externalIPs:
+  enabled: false
+hubble:
+  enabled: false
+l2announcements:
+  enabled: true
+loadBalancer:
+  acceleration: best-effort
+  algorithm: maglev
+  mode: dsr
+operator:
+  rollOutPods: true
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+  dashboards:
+    enabled: true
+    annotations:
+      grafana_folder: Network
+prometheus:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    trustCRDsExist: true
 k8sServiceHost: 127.0.0.1
 k8sServicePort: 7445
+rollOutCiliumPods: true
+routingMode: native
 securityContext:
   capabilities:
     ciliumAgent:
