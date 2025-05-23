@@ -105,13 +105,13 @@ locals {
 
   params_put = {
     kubeconfig = {
-      name        = "/homelab/infrastructure/clusters/${var.cluster_name}/kubeconfig"
+      name        = "/homelab/infrastructure/clusters/integration/${var.cluster_name}/kubeconfig"
       description = "Kubeconfig for cluster '${var.cluster_name}'."
       type        = "SecureString"
       value       = module.talos_cluster.kubeconfig_raw
     }
     talosconfig = {
-      name        = "/homelab/infrastructure/clusters/${var.cluster_name}/talosconfig"
+      name        = "/homelab/infrastructure/clusters/integration/${var.cluster_name}/talosconfig"
       description = "Talosconfig for cluster '${var.cluster_name}'."
       type        = "SecureString"
       value       = module.talos_cluster.talosconfig_raw
