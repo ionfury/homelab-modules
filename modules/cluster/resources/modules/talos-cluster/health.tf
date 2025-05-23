@@ -16,7 +16,7 @@ resource "null_resource" "talos_cluster_health" {
 
     environment = {
       TALOSCONFIG = pathexpand(local_sensitive_file.talosconfig.filename)
-      NODE        = split("/", yamldecode(each.value.talos_config).network.interfaces[0].addresses[0])[0] #each.key
+      NODE        = each.key #split("/", yamldecode(each.value.talos_config).network.interfaces[0].addresses[0])[0] 
       TIMEOUT     = var.timeout
     }
   }
@@ -37,7 +37,7 @@ resource "null_resource" "talos_cluster_health_upgrade" {
 
     environment = {
       TALOSCONFIG = pathexpand(local_sensitive_file.talosconfig.filename)
-      NODE        = split("/", yamldecode(each.value.talos_config).network.interfaces[0].addresses[0])[0] #each.key
+      NODE        = each.key #split("/", yamldecode(each.value.talos_config).network.interfaces[0].addresses[0])[0] #
       TIMEOUT     = var.timeout
     }
   }

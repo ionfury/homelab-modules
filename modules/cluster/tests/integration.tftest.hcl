@@ -1,9 +1,26 @@
-# Preconfigured the network for static 'integration' cluster.
-mock_provider "unifi" {}
 
+mock_provider "unifi" {}
+/*run "random" {
+  providers = {
+    unifi = unifi
+    aws   = aws.env
+  }
+  module {
+    source = "./tests/harness/random"
+  }
+}*/
+
+# Preconfigured the network for static 'integration' cluster.
+/*
 # Consume the env vars instead of local config
 provider "aws" {
   alias = "env"
+}
+*/
+provider "aws" {
+  alias   = "env"
+  region  = "us-east-2"
+  profile = "terragrunt"
 }
 
 variables {
@@ -82,15 +99,6 @@ EOT
         key   = "hello"
         value = "world"
       }]
-      files = [{
-        path        = "/etc/cri/conf.d/20-customization.part"
-        op          = "create"
-        permissions = "0o666"
-        content     = <<EOT
-[plugins."io.containerd.cri.v1.images"]
-  discard_unpacked_layers = false
-EOT
-      }]
     }
   }
 
@@ -149,6 +157,10 @@ run "upgrade" {
 }
 
 run "upgrade_test" {
+  providers = {
+    unifi = unifi
+    aws   = aws.env
+  }
   module {
     source = "./tests/harness/talos"
   }
@@ -187,15 +199,6 @@ run "scale_up" {
         annotations = [{
           key   = "hello"
           value = "world"
-        }]
-        files = [{
-          path        = "/etc/cri/conf.d/20-customization.part"
-          op          = "create"
-          permissions = "0o666"
-          content     = <<EOT
-[plugins."io.containerd.cri.v1.images"]
-  discard_unpacked_layers = false
-EOT
         }]
       }
       node45 = {

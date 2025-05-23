@@ -41,16 +41,16 @@ output "kubeconfig_raw" {
 }
 
 output "kubeconfig_host" {
+  sensitive = true
+  value     = talos_cluster_kubeconfig.this.kubernetes_client_configuration.host
+}
+
+output "kubeconfig_client_certificate" {
   # Ensure the kubeconfig is written after the cluster is healthy.
   # Implicit dependencies will attempt to use the kubeconfig file before the cluster is healthy.
   depends_on = [null_resource.talos_cluster_health_upgrade]
   sensitive  = true
-  value      = talos_cluster_kubeconfig.this.kubernetes_client_configuration.host
-}
-
-output "kubeconfig_client_certificate" {
-  sensitive = true
-  value     = base64decode(talos_cluster_kubeconfig.this.kubernetes_client_configuration.client_certificate)
+  value      = base64decode(talos_cluster_kubeconfig.this.kubernetes_client_configuration.client_certificate)
 }
 
 output "kubeconfig_client_key" {

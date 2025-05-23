@@ -156,8 +156,17 @@ module "talos_cluster" {
   machines               = local.machines
   bootstrap_charts       = local.bootstrap_charts
 }
-/*
+
 module "bootstrap" {
+  providers = {
+    flux           = flux
+    aws            = aws
+    github         = github
+    kubernetes     = kubernetes
+    cloudflare     = cloudflare
+    healthchecksio = healthchecksio
+  }
+
   depends_on = [module.talos_cluster]
   source     = "./resources/modules/bootstrap"
 
@@ -173,7 +182,7 @@ module "bootstrap" {
   external_secrets_access_key_secret = data.aws_ssm_parameter.params_get[var.external_secrets.secret_store].value
   cloudflare_account_name            = var.cloudflare.account
 }
-*/
+
 resource "aws_ssm_parameter" "params_put" {
   for_each = local.params_put
 
