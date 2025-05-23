@@ -158,7 +158,8 @@ module "talos_cluster" {
 }
 
 module "bootstrap" {
-  source = "./resources/modules/bootstrap"
+  depends_on = [module.talos_cluster]
+  source     = "./resources/modules/bootstrap"
 
   cluster_name     = var.cluster_name
   flux_version     = var.flux_version
