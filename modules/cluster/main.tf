@@ -180,6 +180,7 @@ resource "aws_ssm_parameter" "params_put" {
   description = each.value.description
   type        = each.value.type
   value       = each.value.value
+  overwrite   = true
 
   tags = {
     managed-by = "terraform"
