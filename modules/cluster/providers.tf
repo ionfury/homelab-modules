@@ -41,8 +41,8 @@ provider "github" {
 }
 
 provider "cloudflare" {
-  email   = var.cloudflare.email
-  api_key = data.aws_ssm_parameter.params_get[var.cloudflare.api_key_store].value
+  email     = var.cloudflare.email
+  api_token = data.aws_ssm_parameter.params_get[var.cloudflare.token_store].value
 }
 
 provider "healthchecksio" {

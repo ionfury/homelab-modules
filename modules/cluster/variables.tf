@@ -159,9 +159,9 @@ variable "github" {
 variable "cloudflare" {
   description = "The Cloudflare account to use."
   type = object({
-    account       = string
-    email         = string
-    api_key_store = string
+    account     = string
+    email       = string
+    token_store = string
   })
 }
 

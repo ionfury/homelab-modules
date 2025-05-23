@@ -111,9 +111,9 @@ EOT
   }
 
   cloudflare = {
-    account       = "homelab"
-    email         = "ionfury@gmail.com"
-    api_key_store = "/homelab/integration/accounts/cloudflare/api-key"
+    account     = "homelab"
+    email       = "ionfury@gmail.com"
+    token_store = "/homelab/integration/accounts/cloudflare/token"
   }
 
   external_secrets = {

@@ -99,7 +99,7 @@ locals {
     var.github.token_store,
     var.external_secrets.id_store,
     var.external_secrets.secret_store,
-    var.cloudflare.api_key_store,
+    var.cloudflare.token_store,
     var.healthchecksio.api_key_store
   ])
 
