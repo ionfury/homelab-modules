@@ -29,7 +29,6 @@ provider "flux" {
 }
 
 provider "kubernetes" {
-  depends_on             = [module.talos-]
   host                   = module.talos_cluster.kubeconfig_host
   client_certificate     = module.talos_cluster.kubeconfig_client_certificate
   client_key             = module.talos_cluster.kubeconfig_client_key
