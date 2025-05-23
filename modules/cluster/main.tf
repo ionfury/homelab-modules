@@ -111,7 +111,7 @@ locals {
       value       = module.talos_cluster.kubeconfig_raw
     }
     talosconfig = {
-      name        = "${ssm_output_path}/${var.cluster_name}/talosconfig"
+      name        = "${var.ssm_output_path}/${var.cluster_name}/talosconfig"
       description = "Talosconfig for cluster '${var.cluster_name}'."
       type        = "SecureString"
       value       = module.talos_cluster.talosconfig_raw

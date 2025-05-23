@@ -14,6 +14,13 @@ provider "aws" {
   alias = "env"
 }
 
+/*
+provider "aws" {
+  alias   = "env"
+  region  = "us-east-2"
+  profile = "terragrunt"
+}
+*/
 variables {
   cluster_name     = run.random.resource_name
   cluster_endpoint = "192.168.10.218"
