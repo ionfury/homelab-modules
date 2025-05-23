@@ -48,6 +48,7 @@ In brief, the `cluster` module does the following:
 |------|------|
 | [aws_ssm_parameter.params_put](https://registry.terraform.io/providers/hashicorp/aws/5.80.0/docs/resources/ssm_parameter) | resource |
 | [unifi_dns_record.record](https://registry.terraform.io/providers/filipowm/unifi/1.0.0/docs/resources/dns_record) | resource |
+| [unifi_user.user](https://registry.terraform.io/providers/filipowm/unifi/1.0.0/docs/resources/user) | resource |
 | [aws_ssm_parameter.params_get](https://registry.terraform.io/providers/hashicorp/aws/5.80.0/docs/data-sources/ssm_parameter) | data source |
 
 ## Inputs
