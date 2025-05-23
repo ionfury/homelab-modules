@@ -21,3 +21,29 @@ tasks:
     desc: Runs the docker container.
     cmds:
       - docker run --platform {{.PLATFORM}} -it --rm {{.IMAGE}} /bin/bash
+  get-remote-kubeconfig:
+    desc: gets the remote kubeconfig
+    vars:
+      CLUSTER: intent-cub
+    cmd: |
+      aws ssm get-parameter \
+        --name /homelab/infrastructure/clusters/integration/{{.CLUSTER}}/kubeconfig \
+        --with-decryption \
+        --query 'Parameter.Value' \
+        --output text \
+        --profile terragrunt \
+        --region us-east-2 \
+      > ~/.kube/testing/{{.CLUSTER}}.yaml 
+  get-remote-talosconfig:
+    desc: gets the remote talosconfig
+    vars:
+      CLUSTER: intent-cub
+    cmd: |
+      aws ssm get-parameter \
+        --name /homelab/infrastructure/clusters/integration/{{.CLUSTER}}/talosconfig \
+        --with-decryption \
+        --query 'Parameter.Value' \
+        --output text \
+        --profile terragrunt \
+        --region us-east-2 \
+      > ~/.talos/testing/{{.CLUSTER}}.yaml 
