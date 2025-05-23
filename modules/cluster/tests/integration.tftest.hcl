@@ -1,15 +1,35 @@
+run "random" {
+  providers = {
+    unifi = unifi
+  }
+  module {
+    source = "./tests/harness/random"
+  }
+}
+
 # Preconfigured the network for static 'integration' cluster.
 mock_provider "unifi" {}
 
+provider "aws" {
+  alias = "env"
+}
+
+/*
+provider "aws" {
+  alias   = "env"
+  region  = "us-east-2"
+  profile = "terragrunt"
+}
+*/
 variables {
-  cluster_name     = "integration"
-  cluster_endpoint = "integration.tomnowak.work"
-  tld              = "tomnowak.work"
+  cluster_name     = run.random.resource_name
+  cluster_endpoint = "192.168.10.218"
+  #tld              = "tomnowak.work"
 
   cilium_version     = "1.16.5"
   kubernetes_version = "1.32.0"
   talos_version      = "v1.10.0"
-  flux_version       = "v2.4.0"
+  # flux_version       = "v2.4.0"
   prometheus_version = "20.0.0"
 
   nameservers = ["192.168.10.1"]
@@ -28,17 +48,57 @@ variables {
   }
 
   cilium_helm_values = <<EOT
+autoDirectNodeRoutes: true
+ipv4NativeRoutingCIDR: 172.30.0.0/16
+bandwidthManager:
+  bbr: true
+  enabled: true
+bgpControlPlane:
+  enabled: false
 ipam:
   mode: kubernetes
-kubeProxyReplacement: true
-operator:
-  replicas: 1
 cgroup:
   autoMount:
     enabled: false
   hostRoot: /sys/fs/cgroup
+cluster:
+  id: 1
+  name: ${run.random.resource_name}
+kubeProxyReplacement: true
+enableIPv4BIGTCP: true
+endpointRoutes:
+  enabled: false
+envoy:
+  enabled: true
+externalIPs:
+  enabled: false
+hubble:
+  enabled: false
+l2announcements:
+  enabled: true
+loadBalancer:
+  acceleration: best-effort
+  algorithm: maglev
+  mode: dsr
+operator:
+  rollOutPods: true
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+  dashboards:
+    enabled: true
+    annotations:
+      grafana_folder: Network
+prometheus:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    trustCRDsExist: true
 k8sServiceHost: 127.0.0.1
 k8sServicePort: 7445
+rollOutCiliumPods: true
+routingMode: native
 securityContext:
   capabilities:
     ciliumAgent:
@@ -100,32 +160,13 @@ EOT
     site          = "default"
   }
 
-  github = {
-    org             = "ionfury"
-    repository      = "homelab"
-    repository_path = "kubernetes/clusters"
-    token_store     = "/homelab/integration/accounts/github/token"
-  }
-
-  cloudflare = {
-    account       = "homelab"
-    email         = "ionfury@gmail.com"
-    api_key_store = "/homelab/integration/accounts/cloudflare/api-key"
-  }
-
-  external_secrets = {
-    id_store     = "/homelab/integration/accounts/external-secrets/id"
-    secret_store = "/homelab/integration/accounts/external-secrets/secret"
-  }
-
-  healthchecksio = {
-    api_key_store = "/homelab/integration/accounts/healthchecksio/api-key"
-  }
+  ssm_output_path = "/homelab/infrastructure/clusters/integration"
 }
 
 run "provision" {
   providers = {
     unifi = unifi
+    aws   = aws.env
   }
   variables {
     talos_version = "v1.10.0"
@@ -135,6 +176,7 @@ run "provision" {
 run "upgrade" {
   providers = {
     unifi = unifi
+    aws   = aws.env
   }
   variables {
     talos_version = "v1.10.1"
@@ -147,7 +189,7 @@ run "upgrade_test" {
   }
 
   variables {
-    talos_config_path = "~/.talos/testing/integration.yaml"
+    talos_config_path = "~/.talos/testing/${run.random.resource_name}.yaml"
     node              = "node44"
   }
 
@@ -160,6 +202,7 @@ run "upgrade_test" {
 run "scale_up" {
   providers = {
     unifi = unifi
+    aws   = aws.env
   }
   variables {
     talos_version = "v1.10.1"

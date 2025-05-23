@@ -15,7 +15,7 @@ locals {
       ip  = split("/", details.interfaces[0].addresses[0])[0]
     }
   })
-
+  /*
   generated_cluster_env_vars = {
     cluster_name           = var.cluster_name
     cluster_endpoint       = local.cluster_endpoint_address
@@ -32,7 +32,7 @@ locals {
   }
 
   cluster_env_vars = merge(var.cluster_env_vars, local.generated_cluster_env_vars)
-
+*/
   talos_cluster_config = templatefile("${path.module}/resources/templates/talos_cluster.yaml.tftpl", {
     cluster_endpoint       = local.cluster_endpoint_address
     cluster_name           = var.cluster_name
@@ -96,22 +96,22 @@ locals {
 
   params_get = toset([
     var.unifi.api_key_store,
-    var.github.token_store,
-    var.external_secrets.id_store,
-    var.external_secrets.secret_store,
-    var.cloudflare.api_key_store,
-    var.healthchecksio.api_key_store
+    #var.github.token_store,
+    #var.external_secrets.id_store,
+    #var.external_secrets.secret_store,
+    #var.cloudflare.api_key_store,
+    #var.healthchecksio.api_key_store
   ])
 
   params_put = {
     kubeconfig = {
-      name        = "/homelab/infrastructure/clusters/${var.cluster_name}/kubeconfig"
+      name        = "${var.ssm_output_path}/${var.cluster_name}/kubeconfig"
       description = "Kubeconfig for cluster '${var.cluster_name}'."
       type        = "SecureString"
       value       = module.talos_cluster.kubeconfig_raw
     }
     talosconfig = {
-      name        = "/homelab/infrastructure/clusters/${var.cluster_name}/talosconfig"
+      name        = "${var.ssm_output_path}/${var.cluster_name}/talosconfig"
       description = "Talosconfig for cluster '${var.cluster_name}'."
       type        = "SecureString"
       value       = module.talos_cluster.talosconfig_raw
@@ -145,7 +145,7 @@ resource "unifi_user" "user" {
 
 
 module "talos_cluster" {
-  depends_on = [unifi_dns_record.record, ]
+  depends_on = [unifi_dns_record.record, unifi_user.user]
   source     = "./resources/modules/talos-cluster"
 
   talos_version          = var.talos_version
@@ -156,7 +156,7 @@ module "talos_cluster" {
   machines               = local.machines
   bootstrap_charts       = local.bootstrap_charts
 }
-
+/*
 module "bootstrap" {
   source = "./resources/modules/bootstrap"
 
@@ -172,7 +172,7 @@ module "bootstrap" {
   external_secrets_access_key_secret = data.aws_ssm_parameter.params_get[var.external_secrets.secret_store].value
   cloudflare_account_name            = var.cloudflare.account
 }
-
+*/
 resource "aws_ssm_parameter" "params_put" {
   for_each = local.params_put
 

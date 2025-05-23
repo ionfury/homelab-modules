@@ -29,12 +29,3 @@ jobs:
 
       - name: Tofu Integration Tests
         run: tofu -chdir=modules/cluster test -filter=tests/integration.tftest.hcl
-
-
-      - name: Tofu Integration Tests
-        shell: bash
-        run: |
-          tofu --version
-          tofu -chdir=modules/cluster init -upgrade
-          tofu -chdir=modules/cluster test -filter=tests/integration.tftest.hcl
-

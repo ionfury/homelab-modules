@@ -27,12 +27,12 @@ variable "cluster_service_subnet" {
   description = "The pod subnet to use for services on the Talos cluster."
   type        = string
 }
-
+/*
 variable "cluster_env_vars" {
   description = "Arbitrary map of values to pass to cluster via the generated-cluster-vars.env."
   type        = map(string)
 }
-
+*/
 variable "cilium_helm_values" {
   description = "The Helm values to use for Cilium."
   type        = string
@@ -50,11 +50,6 @@ variable "kubernetes_version" {
 
 variable "talos_version" {
   description = "The version of Talos to use."
-  type        = string
-}
-
-variable "flux_version" {
-  description = "The version of Flux to use."
   type        = string
 }
 
@@ -80,11 +75,6 @@ variable "talos_config_path" {
 
 variable "kubernetes_config_path" {
   description = "The path to output the Kubernetes configuration file."
-  type        = string
-}
-
-variable "tld" {
-  description = "The top-level domain to use."
   type        = string
 }
 
@@ -146,6 +136,12 @@ variable "unifi" {
   })
 }
 
+variable "ssm_output_path" {
+  description = "The aws ssm parameter path to store config in."
+  type        = string
+  default     = "/homelab/infrastructure/clusters"
+}
+/*
 variable "github" {
   description = "The GitHub repository to use."
   type = object({
@@ -179,3 +175,4 @@ variable "healthchecksio" {
     api_key_store = string
   })
 }
+*/
