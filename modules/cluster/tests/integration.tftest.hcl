@@ -112,6 +112,8 @@ EOT
     api_key_store = "/homelab/integration/accounts/unifi/api-key"
     site          = "default"
   }
+
+  ssm_output_path = "/homelab/infrastructure/clusters/integration"
 }
 
 run "provision" {

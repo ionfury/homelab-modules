@@ -135,6 +135,12 @@ variable "unifi" {
     api_key_store = string
   })
 }
+
+variable "ssm_output_path" {
+  description = "The aws ssm parameter path to store config in."
+  type        = string
+  default     = "/homelab/infrastructure/clusters"
+}
 /*
 variable "github" {
   description = "The GitHub repository to use."
