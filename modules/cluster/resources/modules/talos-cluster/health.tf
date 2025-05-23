@@ -1,6 +1,7 @@
 # This completes when the cluster is ready to be upgraded.
 resource "null_resource" "talos_cluster_health" {
-  for_each = { for k, v in var.machines : k => v if yamldecode(v.talos_config) == "controlplane" }
+  depends_on = [talos_machine_bootstrap.this, talos_machine_configuration_apply.machines]
+  for_each   = { for k, v in var.machines : k => v if yamldecode(v.talos_config) == "controlplane" }
 
   triggers = {
     always_run = timestamp()
@@ -21,11 +22,11 @@ resource "null_resource" "talos_cluster_health" {
 # This upgrades the cluster
 resource "null_resource" "talos_upgrade_trigger" {
   depends_on = [null_resource.talos_cluster_health]
-  for_each   = var.machines
+  for_each   = local.machines
 
   triggers = {
-    desired_talos_tag    = var.machine_talos_version[each.key]
-    desired_schematic_id = var.machine_schematic_id[each.key]
+    desired_talos_tag    = local.machine_talos_version[each.key]
+    desired_schematic_id = local.machine_schematic_id[each.key]
   }
 
   # Should only upgrade if there's a schematic mismatch
@@ -37,7 +38,7 @@ resource "null_resource" "talos_upgrade_trigger" {
 
       DESIRED_TALOS_TAG       = self.triggers.desired_talos_tag
       DESIRED_TALOS_SCHEMATIC = self.triggers.desired_schematic_id
-      TALOS_CONFIG_PATH       = var.talos_config_path
+      TALOS_CONFIG_PATH       = local_sensitive_file.talosconfig.filename
       TALOS_NODE              = split("/", yamldecode(each.value.talos_config).network.interfaces[0].addresses[0])[0] #each.key
       TIMEOUT                 = var.timeout
     }

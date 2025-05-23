@@ -1,9 +1,18 @@
+run "random" {
+  providers = {
+    unifi = unifi
+  }
+  module {
+    source = "./tests/harness/random"
+  }
+}
+
 # Preconfigured the network for static 'integration' cluster.
 mock_provider "unifi" {}
 
 variables {
-  cluster_name     = "integration"
-  cluster_endpoint = "integration.tomnowak.work"
+  cluster_name     = run.random.resource_name
+  cluster_endpoint = "192.168.10.218"
   tld              = "tomnowak.work"
 
   cilium_version     = "1.16.5"
@@ -147,7 +156,7 @@ run "upgrade_test" {
   }
 
   variables {
-    talos_config_path = "~/.talos/testing/integration.yaml"
+    talos_config_path = "~/.talos/testing/${run.random.resource_name}.yaml"
     node              = "node44"
   }
 

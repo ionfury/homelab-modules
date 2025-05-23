@@ -12,6 +12,7 @@ if [ -z "$DESIRED_TALOS_TAG" ] || [ -z "$DESIRED_TALOS_SCHEMATIC" ] || [ -z "$TA
   exit 1
 fi
 
+echo "config: $TALOS_CONFIG_PATH"
 echo "Upgrade check running on: $TALOS_NODE"
 echo "Waiting one minute for this node to be available..."
 for i in {1..12}; do talosctl --talosconfig "$TALOS_CONFIG_PATH" get machinestatus --nodes "$TALOS_NODE" -o json 2>/dev/null | jq -e '.spec.status.ready' >/dev/null && break || sleep 10; done

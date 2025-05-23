@@ -5,6 +5,10 @@ terraform {
       source  = "hashicorp/external"
       version = "2.3.4"
     }
+    unifi = {
+      source  = "filipowm/unifi"
+      version = "1.0.0"
+    }
   }
 }
 

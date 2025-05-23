@@ -5,14 +5,19 @@ terraform {
       source  = "hashicorp/aws"
       version = "5.80.0"
     }
-    flux = {
-      source  = "fluxcd/flux"
-      version = "1.4.0"
+    random = {
+      source  = "hashicorp/random"
+      version = "3.6.3"
     }
     unifi = {
       source  = "filipowm/unifi"
       version = "1.0.0"
     }
+    /*
+    flux = {
+      source  = "fluxcd/flux"
+      version = "1.4.0"
+    }    
     github = {
       source  = "integrations/github"
       version = "6.4.0"
@@ -25,14 +30,11 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "5.5.0"
     }
-    random = {
-      source  = "hashicorp/random"
-      version = "3.6.3"
-    }
     healthchecksio = {
       source  = "kristofferahl/healthchecksio"
       version = "2.0.0"
     }
+*/
   }
 }
 

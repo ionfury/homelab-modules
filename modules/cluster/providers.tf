@@ -11,7 +11,7 @@ provider "unifi" {
   allow_insecure = true
   site           = var.unifi.site
 }
-
+/*
 provider "flux" {
   kubernetes = {
     host                   = module.talos_cluster.kubeconfig_host
@@ -48,3 +48,4 @@ provider "cloudflare" {
 provider "healthchecksio" {
   api_key = data.aws_ssm_parameter.params_get[var.healthchecksio.api_key_store].value
 }
+*/
