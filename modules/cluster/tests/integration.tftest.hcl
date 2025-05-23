@@ -2,7 +2,9 @@
 mock_provider "unifi" {}
 
 # Consume the env vars instead of local config
-provider "aws_env" {}
+provider "aws" {
+  alias = "env"
+}
 
 variables {
   cluster_name     = "integration"
@@ -129,7 +131,7 @@ EOT
 run "provision" {
   providers = {
     unifi = unifi
-    aws   = aws
+    aws   = aws.env
   }
   variables {
     talos_version = "v1.10.0"
@@ -139,7 +141,7 @@ run "provision" {
 run "upgrade" {
   providers = {
     unifi = unifi
-    aws   = aws
+    aws   = aws.env
   }
   variables {
     talos_version = "v1.10.1"
@@ -165,7 +167,7 @@ run "upgrade_test" {
 run "scale_up" {
   providers = {
     unifi = unifi
-    aws   = aws
+    aws   = aws.env
   }
   variables {
     talos_version = "v1.10.1"
