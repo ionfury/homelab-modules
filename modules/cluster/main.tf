@@ -8,7 +8,7 @@ locals {
     }
     if details.type == "controlplane"
   })
-  # tflint-ignore: terraform_unused_declarations
+
   unifi_users = tomap({
     for machine, details in var.machines : machine => {
       mac = details.interfaces[0].hardwareAddr
@@ -133,7 +133,7 @@ resource "unifi_dns_record" "record" {
   type    = "A"
   ttl     = 0
 }
-/*
+
 resource "unifi_user" "user" {
   for_each = local.unifi_users
 
@@ -142,7 +142,7 @@ resource "unifi_user" "user" {
   fixed_ip = each.value.ip
   note     = "Managed by Terraform."
 }
-*/
+
 
 module "talos_cluster" {
   depends_on = [unifi_dns_record.record, ]

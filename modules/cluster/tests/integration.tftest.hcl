@@ -1,12 +1,9 @@
-run "random" {
-  module {
-    source = "./tests/harness/random"
-  }
-}
+# Preconfigured the network for static 'integration' cluster.
+mock_provider "unifi" {}
 
 variables {
-  cluster_name     = run.random.resource_name
-  cluster_endpoint = "${run.random.resource_name}.tomnowak.work"
+  cluster_name     = "integration"
+  cluster_endpoint = "integration.tomnowak.work"
   tld              = "tomnowak.work"
 
   cilium_version     = "1.16.5"
@@ -98,8 +95,8 @@ EOT
   }
 
   unifi = {
-    address       = "https://192.168.1.1"
-    api_key_store = "/homelab/infrastructure/accounts/unifi/api-key"
+    address       = "https://10.10.10.10"
+    api_key_store = "/homelab/integration/accounts/unifi/api-key"
     site          = "default"
   }
 
@@ -107,32 +104,38 @@ EOT
     org             = "ionfury"
     repository      = "homelab"
     repository_path = "kubernetes/clusters"
-    token_store     = "/homelab/infrastructure/accounts/github/token"
+    token_store     = "/homelab/integration/accounts/github/token"
   }
 
   cloudflare = {
     account       = "homelab"
     email         = "ionfury@gmail.com"
-    api_key_store = "/homelab/infrastructure/accounts/cloudflare/api-key"
+    api_key_store = "/homelab/integration/accounts/cloudflare/api-key"
   }
 
   external_secrets = {
-    id_store     = "/homelab/infrastructure/accounts/external-secrets/id"
-    secret_store = "/homelab/infrastructure/accounts/external-secrets/secret"
+    id_store     = "/homelab/integration/accounts/external-secrets/id"
+    secret_store = "/homelab/integration/accounts/external-secrets/secret"
   }
 
   healthchecksio = {
-    api_key_store = "/homelab/infrastructure/accounts/healthchecksio/api-key"
+    api_key_store = "/homelab/integration/accounts/healthchecksio/api-key"
   }
 }
 
 run "provision" {
+  providers = {
+    unifi = unifi
+  }
   variables {
     talos_version = "v1.10.0"
   }
 }
 
 run "upgrade" {
+  providers = {
+    unifi = unifi
+  }
   variables {
     talos_version = "v1.10.1"
   }
@@ -144,7 +147,7 @@ run "upgrade_test" {
   }
 
   variables {
-    talos_config_path = "~/.talos/testing/${run.random.resource_name}.yaml"
+    talos_config_path = "~/.talos/testing/integration.yaml"
     node              = "node44"
   }
 
@@ -155,6 +158,9 @@ run "upgrade_test" {
 }
 
 run "scale_up" {
+  providers = {
+    unifi = unifi
+  }
   variables {
     talos_version = "v1.10.1"
 
