@@ -108,28 +108,6 @@ EOT
     api_key_store = "/homelab/integration/accounts/unifi/api-key"
     site          = "default"
   }
-
-  github = {
-    org             = "ionfury"
-    repository      = "homelab"
-    repository_path = "kubernetes/clusters"
-    token_store     = "/homelab/integration/accounts/github/token"
-  }
-
-  cloudflare = {
-    account       = "homelab"
-    email         = "ionfury@gmail.com"
-    api_key_store = "/homelab/integration/accounts/cloudflare/api-key"
-  }
-
-  external_secrets = {
-    id_store     = "/homelab/integration/accounts/external-secrets/id"
-    secret_store = "/homelab/integration/accounts/external-secrets/secret"
-  }
-
-  healthchecksio = {
-    api_key_store = "/homelab/integration/accounts/healthchecksio/api-key"
-  }
 }
 
 run "provision" {
