@@ -1,6 +1,6 @@
 provider "aws" {
-  region  = var.aws.region
-  profile = var.aws.profile
+  #  region  = var.aws.region
+  #  profile = var.aws.profile
 }
 
 provider "unifi" {
