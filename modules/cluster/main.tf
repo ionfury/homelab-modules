@@ -144,8 +144,8 @@ resource "unifi_user" "user" {
 }
 */
 module "talos_cluster" {
-  depends_on = [unifi_dns_record.record, unifi_user.user]
-  source     = "./resources/modules/talos-cluster"
+  #  depends_on = [unifi_dns_record.record, unifi_user.user]
+  source = "./resources/modules/talos-cluster"
 
   talos_version          = var.talos_version
   kubernetes_version     = var.kubernetes_version
