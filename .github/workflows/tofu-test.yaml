@@ -4,6 +4,12 @@ name: Tofu Test
 
 on:
   workflow_dispatch:
+    inputs:
+      module:
+        description: 'Module to run tests in'
+        required: true
+        type: string
+        
 
 jobs:
   tofu-test:
@@ -25,7 +31,13 @@ jobs:
         run: tofu --version
 
       - name: Tofu Init
-        run: tofu -chdir=modules/cluster init
+        run: tofu -chdir=modules/${{ inputs.module }} init
+
+      - name: Tofu Plan Tests
+        run: tofu -chdir=modules/${{ inputs.module }} test -filter=tests/plan.tftest.hcl
+
+      - name: Tofu Apply Tests
+        run: tofu -chdir=modules/${{ inputs.module }} test -filter=tests/apply.tftest.hcl
 
       - name: Tofu Integration Tests
-        run: tofu -chdir=modules/cluster test -filter=tests/integration.tftest.hcl
+        run: tofu -chdir=modules/${{ inputs.module }} test -filter=tests/integration.tftest.hcl

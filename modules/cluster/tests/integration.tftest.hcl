@@ -24,12 +24,10 @@ provider "aws" {
 variables {
   cluster_name     = run.random.resource_name
   cluster_endpoint = "192.168.10.218"
-  #tld              = "tomnowak.work"
 
   cilium_version     = "1.16.5"
   kubernetes_version = "1.32.0"
   talos_version      = "v1.10.0"
-  # flux_version       = "v2.4.0"
   prometheus_version = "20.0.0"
 
   nameservers = ["192.168.10.1"]
@@ -43,9 +41,6 @@ variables {
   cluster_node_subnet    = "192.168.10.0/24"
   cluster_pod_subnet     = "172.30.0.0/16"
   cluster_service_subnet = "172.31.0.0/16"
-  cluster_env_vars = {
-    test = "best"
-  }
 
   cilium_helm_values = <<EOT
 autoDirectNodeRoutes: true

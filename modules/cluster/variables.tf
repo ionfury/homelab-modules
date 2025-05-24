@@ -27,12 +27,7 @@ variable "cluster_service_subnet" {
   description = "The pod subnet to use for services on the Talos cluster."
   type        = string
 }
-/*
-variable "cluster_env_vars" {
-  description = "Arbitrary map of values to pass to cluster via the generated-cluster-vars.env."
-  type        = map(string)
-}
-*/
+
 variable "cilium_helm_values" {
   description = "The Helm values to use for Cilium."
   type        = string
@@ -122,8 +117,7 @@ variable "machines" {
 variable "aws" {
   description = "The AWS account to use."
   type = object({
-    region  = string
-    profile = string
+    region = string
   })
 }
 
@@ -141,38 +135,3 @@ variable "ssm_output_path" {
   type        = string
   default     = "/homelab/infrastructure/clusters"
 }
-/*
-variable "github" {
-  description = "The GitHub repository to use."
-  type = object({
-    org             = string
-    repository      = string
-    repository_path = string
-    token_store     = string
-  })
-}
-
-variable "cloudflare" {
-  description = "The Cloudflare account to use."
-  type = object({
-    account       = string
-    email         = string
-    api_key_store = string
-  })
-}
-
-variable "external_secrets" {
-  description = "The external secret store."
-  type = object({
-    id_store     = string
-    secret_store = string
-  })
-}
-
-variable "healthchecksio" {
-  description = "The healthchecks.io account to use."
-  type = object({
-    api_key_store = string
-  })
-}
-*/
