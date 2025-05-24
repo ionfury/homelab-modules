@@ -88,6 +88,5 @@ EOT
     }
 
     ssm_output_path = "/homelab/infrastructure/clusters/integration/ephemeral"
-
   }
 }
