@@ -123,7 +123,7 @@ data "aws_ssm_parameter" "params_get" {
   for_each = local.params_get
   name     = each.value
 }
-
+/*
 resource "unifi_dns_record" "record" {
   for_each = local.unifi_dns_records
 
@@ -142,8 +142,7 @@ resource "unifi_user" "user" {
   fixed_ip = each.value.ip
   note     = "Managed by Terraform."
 }
-
-
+*/
 module "talos_cluster" {
   depends_on = [unifi_dns_record.record, unifi_user.user]
   source     = "./resources/modules/talos-cluster"
