@@ -1,7 +1,4 @@
 run "provision" {
-  providers = {
-    unifi = unifi
-  }
   module {
     source = "../kubevirt-talos-hosts"
   }
@@ -14,13 +11,8 @@ run "provision" {
   }
 }
 
-# Not using unifi networking for this test
-mock_provider "unifi" {}
 
 run "apply" {
-  providers = {
-    unifi = unifi
-  }
   variables {
     cluster_name     = "cluster-apply"
     cluster_endpoint = run.provision.lb.dns
