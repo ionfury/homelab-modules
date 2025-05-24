@@ -1,10 +1,9 @@
 locals {
-  vm_names = [for i in range(var.vm_count) : "talos-vm-${format("%s", i + 1)}"]
+  vm_names = [for i in range(var.vm_count) : "${var.name}-talos-vm-${format("%s", i + 1)}"]
 }
 
 resource "kubernetes_namespace" "this" {
   metadata {
-    #name = "homelab-modules-${var.name}"
     generate_name = "${var.name}-"
   }
 
