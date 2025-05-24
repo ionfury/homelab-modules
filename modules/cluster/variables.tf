@@ -122,8 +122,7 @@ variable "machines" {
 variable "aws" {
   description = "The AWS account to use."
   type = object({
-    region  = string
-    profile = string
+    region = string
   })
 }
 
@@ -141,38 +140,3 @@ variable "ssm_output_path" {
   type        = string
   default     = "/homelab/infrastructure/clusters"
 }
-/*
-variable "github" {
-  description = "The GitHub repository to use."
-  type = object({
-    org             = string
-    repository      = string
-    repository_path = string
-    token_store     = string
-  })
-}
-
-variable "cloudflare" {
-  description = "The Cloudflare account to use."
-  type = object({
-    account       = string
-    email         = string
-    api_key_store = string
-  })
-}
-
-variable "external_secrets" {
-  description = "The external secret store."
-  type = object({
-    id_store     = string
-    secret_store = string
-  })
-}
-
-variable "healthchecksio" {
-  description = "The healthchecks.io account to use."
-  type = object({
-    api_key_store = string
-  })
-}
-*/

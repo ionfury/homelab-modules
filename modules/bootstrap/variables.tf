@@ -9,37 +9,6 @@ variable "flux_version" {
   default     = "v2.4.0"
 }
 
-variable "github_org" {
-  description = "Github organization"
-  type        = string
-}
-
-variable "github_repository" {
-  description = "Github repository"
-  type        = string
-}
-
-variable "github_repository_path" {
-  description = "Path in the Github repository to the cluster configuration"
-  type        = string
-  default     = "clusters"
-}
-
-variable "external_secrets_access_key_id" {
-  description = "AWS access key ID for external-secrets."
-  type        = string
-}
-
-variable "external_secrets_access_key_secret" {
-  description = "AWS secret access key for external-secrets."
-  type        = string
-}
-
-variable "cloudflare_account_name" {
-  description = "The name of the Cloudflare account"
-  type        = string
-}
-
 variable "tld" {
   description = "The top-level domain to use for the Cloudflare Tunnel"
   type        = string
@@ -64,4 +33,55 @@ variable "cluster_env_vars" {
   description = "Environment variables to add to the cluster git repository root directory, to be consumed by flux. See: https://fluxcd.io/flux/components/kustomize/kustomizations/#post-build-variable-substitution"
   type        = map(string)
   default     = {}
+}
+
+variable "kubeconfig" {
+  description = "Credentials to access kubernetes cluster"
+  type = object({
+    host                   = string
+    client_certificate     = string
+    client_key             = string
+    cluster_ca_certificate = string
+  })
+}
+
+variable "aws" {
+  description = "The AWS account to use."
+  type = object({
+    region = string
+  })
+}
+
+variable "github" {
+  description = "The GitHub repository to use."
+  type = object({
+    org             = string
+    repository      = string
+    repository_path = string
+    token_store     = string
+  })
+}
+
+variable "cloudflare" {
+  description = "The Cloudflare account to use."
+  type = object({
+    account         = string
+    email           = string
+    api_token_store = string
+  })
+}
+
+variable "external_secrets" {
+  description = "The external secret store."
+  type = object({
+    id_store     = string
+    secret_store = string
+  })
+}
+
+variable "healthchecksio" {
+  description = "The healthchecks.io account to use."
+  type = object({
+    api_key_store = string
+  })
 }

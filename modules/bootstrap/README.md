@@ -16,6 +16,7 @@
 
 | Name | Version |
 |------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.80.0 |
 | <a name="provider_cloudflare"></a> [cloudflare](#provider\_cloudflare) | 5.5.0 |
 | <a name="provider_flux"></a> [flux](#provider\_flux) | 1.4.0 |
 | <a name="provider_github"></a> [github](#provider\_github) | 6.4.0 |
@@ -40,6 +41,7 @@ No modules.
 | [kubernetes_secret.external_secrets_access_key](https://registry.terraform.io/providers/hashicorp/kubernetes/2.35.1/docs/resources/secret) | resource |
 | [kubernetes_secret.healthchecksio_pingurl](https://registry.terraform.io/providers/hashicorp/kubernetes/2.35.1/docs/resources/secret) | resource |
 | [random_password.this](https://registry.terraform.io/providers/hashicorp/random/3.6.3/docs/resources/password) | resource |
+| [aws_ssm_parameter.params_get](https://registry.terraform.io/providers/hashicorp/aws/5.80.0/docs/data-sources/ssm_parameter) | data source |
 | [cloudflare_accounts.this](https://registry.terraform.io/providers/cloudflare/cloudflare/5.5.0/docs/data-sources/accounts) | data source |
 | [cloudflare_zero_trust_tunnel_cloudflared_token.this](https://registry.terraform.io/providers/cloudflare/cloudflare/5.5.0/docs/data-sources/zero_trust_tunnel_cloudflared_token) | data source |
 | [github_repository.this](https://registry.terraform.io/providers/integrations/github/6.4.0/docs/data-sources/repository) | data source |
@@ -49,17 +51,17 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cloudflare_account_name"></a> [cloudflare\_account\_name](#input\_cloudflare\_account\_name) | The name of the Cloudflare account | `string` | n/a | yes |
+| <a name="input_aws"></a> [aws](#input\_aws) | The AWS account to use. | <pre>object({<br/>    region = string<br/>  })</pre> | n/a | yes |
+| <a name="input_cloudflare"></a> [cloudflare](#input\_cloudflare) | The Cloudflare account to use. | <pre>object({<br/>    account         = string<br/>    email           = string<br/>    api_token_store = string<br/>  })</pre> | n/a | yes |
 | <a name="input_cloudflare_tunnel_secret_annotations"></a> [cloudflare\_tunnel\_secret\_annotations](#input\_cloudflare\_tunnel\_secret\_annotations) | Annotations to add to the secret for the Cloudflare Tunnel. For https://github.com/mittwald/kubernetes-replicator?tab=readme-ov-file#pull-based-replication | `map(string)` | <pre>{<br/>  "replicator.v1.mittwald.de/replication-allowed": "true",<br/>  "replicator.v1.mittwald.de/replication-allowed-namespaces": "network"<br/>}</pre> | no |
 | <a name="input_cluster_env_vars"></a> [cluster\_env\_vars](#input\_cluster\_env\_vars) | Environment variables to add to the cluster git repository root directory, to be consumed by flux. See: https://fluxcd.io/flux/components/kustomize/kustomizations/#post-build-variable-substitution | `map(string)` | `{}` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the cluster | `string` | n/a | yes |
-| <a name="input_external_secrets_access_key_id"></a> [external\_secrets\_access\_key\_id](#input\_external\_secrets\_access\_key\_id) | AWS access key ID for external-secrets. | `string` | n/a | yes |
-| <a name="input_external_secrets_access_key_secret"></a> [external\_secrets\_access\_key\_secret](#input\_external\_secrets\_access\_key\_secret) | AWS secret access key for external-secrets. | `string` | n/a | yes |
+| <a name="input_external_secrets"></a> [external\_secrets](#input\_external\_secrets) | The external secret store. | <pre>object({<br/>    id_store     = string<br/>    secret_store = string<br/>  })</pre> | n/a | yes |
 | <a name="input_flux_version"></a> [flux\_version](#input\_flux\_version) | Version of Flux to install | `string` | `"v2.4.0"` | no |
-| <a name="input_github_org"></a> [github\_org](#input\_github\_org) | Github organization | `string` | n/a | yes |
-| <a name="input_github_repository"></a> [github\_repository](#input\_github\_repository) | Github repository | `string` | n/a | yes |
-| <a name="input_github_repository_path"></a> [github\_repository\_path](#input\_github\_repository\_path) | Path in the Github repository to the cluster configuration | `string` | `"clusters"` | no |
+| <a name="input_github"></a> [github](#input\_github) | The GitHub repository to use. | <pre>object({<br/>    org             = string<br/>    repository      = string<br/>    repository_path = string<br/>    token_store     = string<br/>  })</pre> | n/a | yes |
+| <a name="input_healthchecksio"></a> [healthchecksio](#input\_healthchecksio) | The healthchecks.io account to use. | <pre>object({<br/>    api_key_store = string<br/>  })</pre> | n/a | yes |
 | <a name="input_healthchecksio_replication_allowed_namespaces"></a> [healthchecksio\_replication\_allowed\_namespaces](#input\_healthchecksio\_replication\_allowed\_namespaces) | Namespaces to allow replication for healthchecks.io.  See: https://github.com/mittwald/kubernetes-replicator?tab=readme-ov-file#pull-based-replication | `string` | `"monitoring"` | no |
+| <a name="input_kubeconfig"></a> [kubeconfig](#input\_kubeconfig) | Credentials to access kubernetes cluster | <pre>object({<br/>    host                   = string<br/>    client_certificate     = string<br/>    client_key             = string<br/>    cluster_ca_certificate = string<br/>  })</pre> | n/a | yes |
 | <a name="input_tld"></a> [tld](#input\_tld) | The top-level domain to use for the Cloudflare Tunnel | `string` | n/a | yes |
 
 ## Outputs
