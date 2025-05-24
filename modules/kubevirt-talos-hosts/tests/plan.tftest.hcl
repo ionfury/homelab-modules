@@ -1,4 +1,6 @@
 run "test" {
+  command = plan
+
   variables {
     name                    = "homelab-modules"
     namespace               = run.create_namespace.name
