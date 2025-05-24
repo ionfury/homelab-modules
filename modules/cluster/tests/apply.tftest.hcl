@@ -71,10 +71,11 @@ EOT
         type    = "controlplane"
         install = { disk = "/dev/sda" }
         interfaces = [{
-          addresses = ["${run.provision.vms[0].ip}"]
+          addresses = ["${run.provision.vms["cluster-apply-talos-vm-1"].ip}"]
         }]
       }
     }
+
     aws = {
       region = "us-east-2"
     }
