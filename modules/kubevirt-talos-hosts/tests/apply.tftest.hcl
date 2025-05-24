@@ -18,7 +18,7 @@ run "apply" {
   }
 
   assert {
-    condition     = kubernetes_service.this.metadata[0].name == "homelab-modules-talos-vm-1"
+    condition     = kubernetes_service.this[0].metadata[0].name == "homelab-modules-talos-vm-1"
     error_message = "Incorrect"
   }
 }

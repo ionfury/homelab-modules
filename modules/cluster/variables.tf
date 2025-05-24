@@ -27,12 +27,7 @@ variable "cluster_service_subnet" {
   description = "The pod subnet to use for services on the Talos cluster."
   type        = string
 }
-/*
-variable "cluster_env_vars" {
-  description = "Arbitrary map of values to pass to cluster via the generated-cluster-vars.env."
-  type        = map(string)
-}
-*/
+
 variable "cilium_helm_values" {
   description = "The Helm values to use for Cilium."
   type        = string
