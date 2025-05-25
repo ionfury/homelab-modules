@@ -102,7 +102,7 @@ variable "machines" {
       content     = string
     })), [])
     interfaces = list(object({
-      hardwareAddr     = string
+      #     hardwareAddr     = string
       addresses        = list(string)
       dhcp_routeMetric = optional(number, 100)
       vlans = optional(list(object({
