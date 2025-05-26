@@ -51,6 +51,9 @@ resource "kubernetes_manifest" "talos_vm" {
       template = {
         metadata = {
           creationTimestamp = null
+          labels = {
+            "talos-cluster" = "${var.name}"
+          }
         }
         spec = {
           terminationGracePeriodSeconds = 0
@@ -171,10 +174,7 @@ resource "kubernetes_service" "this" {
 
   spec {
     selector = {
-      "app.kubernetes.io/name"      = each.key
-      "app.kubernetes.io/instance"  = each.key
-      "app.kubernetes.io/component" = "talos"
-      "app.kubernetes.io/part-of"   = var.name
+      "vm.kubevirt.io/name" : each.key
     }
 
     port {
@@ -215,8 +215,7 @@ resource "kubernetes_service" "lb" {
 
   spec {
     selector = {
-      "app.kubernetes.io/component" = "talos"
-      "app.kubernetes.io/part-of"   = var.name
+      "talos-cluster" = "${var.name}"
     }
 
     port {
