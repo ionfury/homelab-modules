@@ -17,6 +17,12 @@ run "apply" {
     cluster_name     = "cluster-apply"
     cluster_endpoint = run.provision.lb.dns
 
+    cluster_on_destroy = {
+      graceful = false
+      reboot   = false
+      reset    = true
+    }
+
     cilium_version     = "1.16.5"
     kubernetes_version = "1.32.0"
     talos_version      = "v1.10.0"

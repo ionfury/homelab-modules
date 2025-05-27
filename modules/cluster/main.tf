@@ -154,6 +154,7 @@ module "talos_cluster" {
   talos_cluster_config   = local.talos_cluster_config
   machines               = local.machines
   bootstrap_charts       = local.bootstrap_charts
+  on_destroy             = var.cluster_on_destroy
 }
 /*
 module "bootstrap" {

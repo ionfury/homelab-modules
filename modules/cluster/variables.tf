@@ -28,6 +28,20 @@ variable "cluster_service_subnet" {
   type        = string
 }
 
+variable "cluster_on_destroy" {
+  description = "How to preform node destruction"
+  type = object({
+    graceful = string
+    reboot   = string
+    reset    = string
+  })
+  default = {
+    graceful = false
+    reboot   = true
+    reset    = true
+  }
+}
+
 variable "cilium_helm_values" {
   description = "The Helm values to use for Cilium."
   type        = string
