@@ -3,8 +3,9 @@
 name: Tofu Test
 
 on:
-  repository_dispatch:
-    types: [test-command]
+  workflow_dispatch:
+#  repository_dispatch:
+#    types: [test-command]
         
 jobs:
   changed-modules:
