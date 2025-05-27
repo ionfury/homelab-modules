@@ -4,8 +4,6 @@ name: Tofu Test
 
 on:
   workflow_dispatch:
-#  repository_dispatch:
-#    types: [test-command]
         
 jobs:
   changed-modules:
@@ -23,8 +21,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.PAT }}
-          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+          token: ${{ secrets.GITHUB_TOKEN }} 
+          repository: ${{ github.repository }}
           ref: ${{ steps.vars.outputs.branch }}
 
       - name: Install jq
@@ -58,7 +56,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }} 
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           ref: ${{ steps.vars.outputs.branch }}
 
@@ -93,7 +91,7 @@ jobs:
       - name: Add reaction
         uses: peter-evans/create-or-update-comment@v4
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }} 
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           reactions: hooray
