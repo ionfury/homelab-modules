@@ -3,6 +3,8 @@
 name: Dispatch Tofu Tests
 
 on:
+  push:
+    branches: [main]
   issue_comment:
     types: [created]
 
