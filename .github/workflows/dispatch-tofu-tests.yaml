@@ -57,7 +57,7 @@ jobs:
     strategy:
       matrix:
         module: ${{ fromJson(needs.detect-modules.outputs.modules) }}
-    uses: ./.github/workflows/tofu-test.yml
+    uses: ./.github/workflows/tofu-test.yaml
     with:
       module: ${{ matrix.module }}
     secrets:
