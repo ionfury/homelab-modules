@@ -12,20 +12,27 @@ jobs:
     outputs:
       modules:  ${{ steps.detect.outputs.modules }}
     steps:
-      - name: Checkout
+      - name: Checkout PR head
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.event.client_payload.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.client_payload.pull_request.head.ref }}
+          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+          ref: ${{ github.event.client_payload.github.payload.pull_request.head.ref }}
+          fetch-depth: 0
 
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
 
+      - name: Fetch base branch
+        run: |
+          git fetch origin \
+            ${{ github.event.client_payload.github.payload.pull_request.base.ref }}
+
       - name: Detect changed modules
         id: detect
         run: |
-          MODULES=$(git diff --name-only origin/${{ steps.pr.outputs.base_ref }}...HEAD \
+          BASE=${{ github.event.client_payload.github.payload.pull_request.base.ref }}
+          MODULES=$(git diff --name-only origin/$BASE...HEAD \
             | grep '^modules/' \
             | cut -d/ -f2 \
             | sort -u \
