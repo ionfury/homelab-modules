@@ -8,7 +8,6 @@ on:
       ref:
         description: 'Git ref to test'
         required: true
-        default: main
         
 jobs:
   changed-modules:
@@ -16,6 +15,8 @@ jobs:
     outputs:
       modules:  ${{ steps.detect.outputs.modules }}
     steps:
+      - name: echo
+        run: echo ${{ inputs.ref }}
       - name: Checkout
         uses: actions/checkout@v3
         with:
