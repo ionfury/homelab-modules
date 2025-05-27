@@ -3,11 +3,8 @@
 name: Tofu Test
 
 on:
-  workflow_dispatch:
-    inputs:
-      ref:
-        description: 'Git ref to test'
-        required: true
+  repository_dispatch:
+    types: [test-command]
         
 jobs:
   changed-modules:
@@ -15,14 +12,19 @@ jobs:
     outputs:
       modules:  ${{ steps.detect.outputs.modules }}
     steps:
-      - name: echo
-        run: echo ${{ inputs.ref }}
+      - name: Get target branch name
+        id: vars
+        run: |
+          branch=${{ github.event.client_payload.slash_command.args.named.branch }}
+          if [[ -z "$branch" ]]; then branch="main"; fi
+          echo "branch=$branch" >> $GITHUB_OUTPUT
+
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }} 
-          repository: ${{ github.repository }}
-          ref: ${{ inputs.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+          ref: ${{ steps.vars.outputs.branch }}
 
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
@@ -45,12 +47,19 @@ jobs:
       matrix:
         module: ${{ fromJson(needs.changed-modules.outputs.modules) }}
     steps:
+      - name: Get target branch name
+        id: vars
+        run: |
+          branch=${{ github.event.client_payload.slash_command.args.named.branch }}
+          if [[ -z "$branch" ]]; then branch="main"; fi
+          echo "branch=$branch" >> $GITHUB_OUTPUT
+
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }} 
-          repository: ${{ github.repository }}
-          ref: ${{ inputs.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+          ref: ${{ steps.vars.outputs.branch }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -83,7 +92,7 @@ jobs:
       - name: Add reaction
         uses: peter-evans/create-or-update-comment@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }} 
+          token: ${{ secrets.PAT }}
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           reactions: hooray
