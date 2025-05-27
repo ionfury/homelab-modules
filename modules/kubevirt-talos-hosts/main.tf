@@ -52,7 +52,7 @@ resource "kubernetes_manifest" "talos_vm" {
         metadata = {
           creationTimestamp = null
           labels = {
-            "talos-cluster" = "${var.name}"
+            "talos-cluster" = var.name
           }
         }
         spec = {
@@ -215,7 +215,7 @@ resource "kubernetes_service" "lb" {
 
   spec {
     selector = {
-      "talos-cluster" = "${var.name}"
+      "talos-cluster" = var.name
     }
 
     port {

@@ -127,13 +127,6 @@ variable "machines" {
   }))
 }
 
-variable "aws" {
-  description = "The AWS account to use."
-  type = object({
-    region = string
-  })
-}
-
 variable "ssm_output_path" {
   description = "The aws ssm parameter path to store config in."
   type        = string
