@@ -43,5 +43,3 @@ resource "unifi_user" "user" {
   fixed_ip = each.value.ip
   note     = "Managed by Terraform."
 }
-
-# Trigger a test
