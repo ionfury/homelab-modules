@@ -52,11 +52,11 @@ jobs:
           echo "modules=$MODULES" >> $GITHUB_OUTPUT
 
   dispatch-tests:
-    needs: detect-modules
-    if: ${{ needs.detect-modules.outputs.modules != '[]' }}
+    needs: detect-changed-modules
+    if: ${{ needs.detect-changed-modules.outputs.modules != '[]' }}
     strategy:
       matrix:
-        module: ${{ fromJson(needs.detect-modules.outputs.modules) }}
+        module: ${{ fromJson(needs.detect-changed-modules.outputs.modules) }}
     uses: ./.github/workflows/tofu-test.yaml
     with:
       module: ${{ matrix.module }}
