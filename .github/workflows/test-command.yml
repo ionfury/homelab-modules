@@ -76,17 +76,3 @@ jobs:
 
       - name: Tofu Integration Tests
         run: tofu -chdir=modules/${{ matrix.module }} test -filter=tests/integration.tftest.hcl
-
-  completed:
-    runs-on: ubuntu-latest
-    name: Add reaction
-    needs: [test-modules]
-    if: always()
-    steps:
-      - name: Add reaction
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          token: ${{ secrets.PAT }}
-          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
-          comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
-          reactions: hooray
