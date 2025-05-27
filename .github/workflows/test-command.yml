@@ -4,6 +4,11 @@ name: Tofu Test
 
 on:
   workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Git ref to test'
+        required: true
+        default: main
         
 jobs:
   changed-modules:
@@ -11,19 +16,12 @@ jobs:
     outputs:
       modules:  ${{ steps.detect.outputs.modules }}
     steps:
-      - name: Get target branch name
-        id: vars
-        run: |
-          branch=${{ github.event.client_payload.slash_command.args.named.branch }}
-          if [[ -z "$branch" ]]; then branch="main"; fi
-          echo "branch=$branch" >> $GITHUB_OUTPUT
-
       - name: Checkout
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }} 
           repository: ${{ github.repository }}
-          ref: ${{ steps.vars.outputs.branch }}
+          ref: ${{ inputs.ref }}
 
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
@@ -46,19 +44,12 @@ jobs:
       matrix:
         module: ${{ fromJson(needs.changed-modules.outputs.modules) }}
     steps:
-      - name: Get target branch name
-        id: vars
-        run: |
-          branch=${{ github.event.client_payload.slash_command.args.named.branch }}
-          if [[ -z "$branch" ]]; then branch="main"; fi
-          echo "branch=$branch" >> $GITHUB_OUTPUT
-
       - name: Checkout
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }} 
-          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
-          ref: ${{ steps.vars.outputs.branch }}
+          repository: ${{ github.repository }}
+          ref: ${{ inputs.ref }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
