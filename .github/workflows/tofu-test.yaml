@@ -10,7 +10,6 @@ on:
         required: true
         type: string
         
-
 jobs:
   tofu-test:
     runs-on: homelab-modules-runner-app

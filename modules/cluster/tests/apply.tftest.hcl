@@ -20,7 +20,7 @@ run "apply" {
     cluster_on_destroy = {
       graceful = false
       reboot   = false
-      reset    = true
+      reset    = false
     }
 
     cilium_version     = "1.16.5"
