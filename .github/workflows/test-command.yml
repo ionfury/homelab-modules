@@ -8,7 +8,6 @@ on:
       ref:
         description: 'Git ref to test'
         required: true
-        default: main
         
 jobs:
   changed-modules:
