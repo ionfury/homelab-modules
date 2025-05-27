@@ -13,7 +13,7 @@ jobs:
         id: scd
         uses: peter-evans/slash-command-dispatch@v4
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }} # https://github.com/peter-evans/slash-command-dispatch/issues/147
           permission: admin
           dispatch-type: workflow
           issue-type: pull-request
