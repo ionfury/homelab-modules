@@ -3,7 +3,7 @@ locals {
   zone_id    = "799905ff93d585a9a0633949275cbf98" #lookup(data.cloudflare_zones.domain.zones[0], "id")
 }
 data "cloudflare_accounts" "this" {
-  name = var.cloudflare_account_name
+  name = var.cloudflare.account
 }
 /* 
 Blocks of type "filter" are not expected here?

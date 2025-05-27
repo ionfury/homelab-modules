@@ -45,5 +45,8 @@ No modules.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_lb"></a> [lb](#output\_lb) | Loadbalancer service for VMs -> { ip, dns} |
+| <a name="output_vms"></a> [vms](#output\_vms) | Map of Talos services -> { ip, dns } |
 <!-- END_TF_DOCS -->

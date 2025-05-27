@@ -4,7 +4,28 @@ name: Tofu Test
 
 on:
   workflow_dispatch:
-
+    inputs:
+      module:
+        description: 'Module to run tests in'
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      module:
+        description: 'Module to run tests in'
+        required: true
+        type: string
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        description: 'AWS access key'
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        description: 'AWS secret key'
+        required: true
+      AWS_REGION:
+        description: 'AWS region'
+        required: true
+        
 jobs:
   tofu-test:
     runs-on: homelab-modules-runner-app
@@ -19,13 +40,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # Tofu is already set up in the homelab-modules-runner-app container, built from the root Dockerfile
-
       - name: Check Tofu Version
         run: tofu --version
 
       - name: Tofu Init
-        run: tofu -chdir=modules/cluster init
+        run: tofu -chdir=modules/${{ inputs.module }} init
+
+      - name: Tofu Plan Tests
+        run: tofu -chdir=modules/${{ inputs.module }} test -filter=tests/plan.tftest.hcl
+
+      - name: Tofu Apply Tests
+        run: tofu -chdir=modules/${{ inputs.module }} test -filter=tests/apply.tftest.hcl
 
       - name: Tofu Integration Tests
-        run: tofu -chdir=modules/cluster test -filter=tests/integration.tftest.hcl
+        run: tofu -chdir=modules/${{ inputs.module }} test -filter=tests/integration.tftest.hcl

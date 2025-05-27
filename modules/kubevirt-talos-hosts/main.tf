@@ -1,10 +1,9 @@
 locals {
-  vm_names = [for i in range(var.vm_count) : "talos-vm-${format("%s", i + 1)}"]
+  vm_names = [for i in range(var.vm_count) : "${var.name}-talos-vm-${format("%s", i + 1)}"]
 }
 
 resource "kubernetes_namespace" "this" {
   metadata {
-    #name = "homelab-modules-${var.name}"
     generate_name = "${var.name}-"
   }
 
@@ -52,6 +51,9 @@ resource "kubernetes_manifest" "talos_vm" {
       template = {
         metadata = {
           creationTimestamp = null
+          labels = {
+            "talos-cluster" = var.name
+          }
         }
         spec = {
           terminationGracePeriodSeconds = 0
@@ -172,10 +174,7 @@ resource "kubernetes_service" "this" {
 
   spec {
     selector = {
-      "app.kubernetes.io/name"      = each.key
-      "app.kubernetes.io/instance"  = each.key
-      "app.kubernetes.io/component" = "talos"
-      "app.kubernetes.io/part-of"   = var.name
+      "vm.kubevirt.io/name" : each.key
     }
 
     port {
@@ -216,8 +215,7 @@ resource "kubernetes_service" "lb" {
 
   spec {
     selector = {
-      "app.kubernetes.io/component" = "talos"
-      "app.kubernetes.io/part-of"   = var.name
+      "talos-cluster" = var.name
     }
 
     port {

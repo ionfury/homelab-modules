@@ -1,9 +1,9 @@
 locals {
-  github_repository_cluster_directory = "${var.github_repository_path}/${var.cluster_name}"
+  github_repository_cluster_directory = "${var.github.repository_path}/${var.cluster_name}"
 }
 
 data "github_repository" "this" {
-  full_name = "${var.github_org}/${var.github_repository}"
+  full_name = "${var.github.org}/${var.github.repository}"
 }
 
 resource "flux_bootstrap_git" "this" {

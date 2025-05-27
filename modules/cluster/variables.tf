@@ -27,12 +27,21 @@ variable "cluster_service_subnet" {
   description = "The pod subnet to use for services on the Talos cluster."
   type        = string
 }
-/*
-variable "cluster_env_vars" {
-  description = "Arbitrary map of values to pass to cluster via the generated-cluster-vars.env."
-  type        = map(string)
+
+variable "cluster_on_destroy" {
+  description = "How to preform node destruction"
+  type = object({
+    graceful = string
+    reboot   = string
+    reset    = string
+  })
+  default = {
+    graceful = false
+    reboot   = true
+    reset    = true
+  }
 }
-*/
+
 variable "cilium_helm_values" {
   description = "The Helm values to use for Cilium."
   type        = string
@@ -107,7 +116,6 @@ variable "machines" {
       content     = string
     })), [])
     interfaces = list(object({
-      hardwareAddr     = string
       addresses        = list(string)
       dhcp_routeMetric = optional(number, 100)
       vlans = optional(list(object({
@@ -119,60 +127,8 @@ variable "machines" {
   }))
 }
 
-variable "aws" {
-  description = "The AWS account to use."
-  type = object({
-    region  = string
-    profile = string
-  })
-}
-
-variable "unifi" {
-  description = "The Unifi controller to use."
-  type = object({
-    address       = string
-    site          = string
-    api_key_store = string
-  })
-}
-
 variable "ssm_output_path" {
   description = "The aws ssm parameter path to store config in."
   type        = string
   default     = "/homelab/infrastructure/clusters"
 }
-/*
-variable "github" {
-  description = "The GitHub repository to use."
-  type = object({
-    org             = string
-    repository      = string
-    repository_path = string
-    token_store     = string
-  })
-}
-
-variable "cloudflare" {
-  description = "The Cloudflare account to use."
-  type = object({
-    account       = string
-    email         = string
-    api_key_store = string
-  })
-}
-
-variable "external_secrets" {
-  description = "The external secret store."
-  type = object({
-    id_store     = string
-    secret_store = string
-  })
-}
-
-variable "healthchecksio" {
-  description = "The healthchecks.io account to use."
-  type = object({
-    api_key_store = string
-  })
-}
-*/
