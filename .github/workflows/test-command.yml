@@ -16,6 +16,8 @@ jobs:
     outputs:
       modules:  ${{ steps.detect.outputs.modules }}
     steps:
+      - name: echo
+        run: echo ${{ inputs.ref }}
       - name: Checkout
         uses: actions/checkout@v3
         with:
