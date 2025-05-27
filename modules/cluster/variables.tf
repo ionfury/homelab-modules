@@ -116,7 +116,6 @@ variable "machines" {
       content     = string
     })), [])
     interfaces = list(object({
-      #     hardwareAddr     = string
       addresses        = list(string)
       dhcp_routeMetric = optional(number, 100)
       vlans = optional(list(object({
@@ -132,15 +131,6 @@ variable "aws" {
   description = "The AWS account to use."
   type = object({
     region = string
-  })
-}
-
-variable "unifi" {
-  description = "The Unifi controller to use."
-  type = object({
-    address       = string
-    site          = string
-    api_key_store = string
   })
 }
 
