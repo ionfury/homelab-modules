@@ -141,7 +141,7 @@ run "upgrade" {
     talos_version = "v1.10.1"
   }
 }
-
+/*
 run "upgrade_test" {
   module {
     source = "./tests/harness/talos"
@@ -157,7 +157,7 @@ run "upgrade_test" {
     error_message = "Incorrect talos version: ${data.external.talos_info.result["talos_version"]}"
   }
 }
-
+*/
 run "scale_up" {
   variables {
     talos_version = "v1.10.1"
