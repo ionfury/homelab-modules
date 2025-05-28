@@ -10,6 +10,12 @@ on:
       base_ref:
         description: 'Pull request base branch'
         required: true
+      head_sha:
+        description: 'Commit head sha'
+        required: true
+      check_id:
+        description: 'Check ID to update'
+        required: true
 
 jobs:
   changed-modules:
@@ -68,3 +74,17 @@ jobs:
 
       - name: Tofu Integration Tests
         run: tofu -chdir=modules/${{ matrix.module }} test -filter=tests/integration.tftest.hcl
+  
+  complete-check:
+    needs: test-modules
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Complete “test-modules” Check Run
+        uses: marketplace-actions/github-checks@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          check_id: ${{ github.event.inputs.check_id }}
+          sha: ${{ github.event.inputs.head_sha }}
+          status: completed
+          conclusion: ${{ needs.test-modules.result }}

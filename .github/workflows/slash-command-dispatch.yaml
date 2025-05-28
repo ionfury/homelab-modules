@@ -17,6 +17,15 @@ jobs:
       - uses: xt0rted/pull-request-comment-branch@v3
         id: comment-branch
 
+      - name: Create “test-modules” Check Run
+        id: new-check
+        uses: marketplace-actions/github-checks@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: test-modules
+          sha: ${{ steps.comment-branch.outputs.head_sha }}
+          status: in_progress
+
       - name: Slash Command Dispatch
         id: scd
         uses: peter-evans/slash-command-dispatch@v4
@@ -29,6 +38,8 @@ jobs:
           static-args: |
             head_ref=${{ steps.comment-branch.outputs.head_ref }}
             base_ref=${{ steps.comment-branch.outputs.base_ref }}
+            head_sha=${{ steps.comment-branch.outputs.head_sha }}
+            check_id=${{ steps.new-check.outputs.check_id }}
 
       - name: Edit comment with error message
         if: steps.scd.outputs.error-message
