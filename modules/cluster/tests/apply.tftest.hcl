@@ -1,6 +1,6 @@
 run "provision" {
   module {
-    source = "../kubevirt-talos-hosts"
+    source = "../cluster-kubevirt-hosts"
   }
   variables {
     name                    = "cluster-apply"
