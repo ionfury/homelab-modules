@@ -4,10 +4,10 @@ name: Tofu Test
 on:
   workflow_dispatch:
     inputs:
-      ref:
+      head_ref:
         description: 'Pull request head ref'
         required: true
-      base:
+      base_ref:
         description: 'Pull request base branch'
         required: true
 
@@ -20,16 +20,16 @@ jobs:
       - name: Checkout PR head
         uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.inputs.ref }}
+          ref: ${{ github.event.inputs.head_ref }}
           fetch-depth: 0
 
       - name: Fetch base branch
-        run: git fetch origin ${{ github.event.inputs.base }}
+        run: git fetch origin ${{ github.event.inputs.base_ref }}
 
       - name: Detect changed modules
         id: detect
         run: |
-          MODULES=$(git diff --name-only origin/${{ github.event.inputs.base }}...HEAD \
+          MODULES=$(git diff --name-only origin/${{ github.event.inputs.base_ref }}...HEAD \
             | grep '^modules/' | cut -d/ -f2 | sort -u | jq -R -s -c 'split("\n")[:-1]')
           echo "modules=$MODULES" >> $GITHUB_OUTPUT
 
@@ -44,7 +44,7 @@ jobs:
       - name: Checkout PR head
         uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.inputs.ref }}
+          ref: ${{ github.event.inputs.head_ref }}
           fetch-depth: 0
 
       - name: Configure AWS credentials
