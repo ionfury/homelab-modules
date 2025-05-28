@@ -27,8 +27,8 @@ jobs:
             test
           dispatch-type: workflow
           static-args: |
-            ref=${{ steps.comment-branch.outputs.head_ref }}
-            base=${{ steps.comment-branch.outputs.base_ref }}
+            head_ref=${{ steps.comment-branch.outputs.head_ref }}
+            base_ref=${{ steps.comment-branch.outputs.base_ref }}
 
       - name: Edit comment with error message
         if: steps.scd.outputs.error-message
