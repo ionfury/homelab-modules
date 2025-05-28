@@ -109,6 +109,4 @@ jobs:
           check_id: ${{ needs.start-check.outputs.check_id }}
           sha: ${{ github.event.inputs.head_sha }}
           status: completed
-          conclusion: ${{ needs['test-modules'].result == 'skipped' 
-                          ? 'success' 
-                          : needs['test-modules'].result }}
+          conclusion: ${{ needs['test-modules'].result == 'skipped' && 'success' || needs['test-modules'].result }}
