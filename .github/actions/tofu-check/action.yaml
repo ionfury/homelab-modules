@@ -24,7 +24,7 @@ runs:
       with:
         tofu_version: ${{ inputs.tofu_version}}
     - name: Install a binary from GitHub releases
-      uses: jaxxstorm/action-install-gh-release@v1.14.0
+      uses: jaxxstorm/action-install-gh-release@v2.1.0
       with:
         repo: terraform-docs/terraform-docs
         tag: ${{ inputs.terraform_docs_version }}
