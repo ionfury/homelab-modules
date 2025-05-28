@@ -55,7 +55,7 @@ jobs:
       - name: Detect changed modules
         id: detect
         run: |
-          MODULES=$(git diff --name-only origin/${{ github.event.inputs.base_ref }}...HEAD \
+          MODULES=$(git diff --diff-filter=d --name-only origin/${{ github.event.inputs.base_ref }}...HEAD \
             | grep '^modules/' | cut -d/ -f2 | sort -u | jq -R -s -c 'split("\n")[:-1]')
           echo "modules=$MODULES" >> $GITHUB_OUTPUT
 
@@ -64,6 +64,7 @@ jobs:
     if: ${{ needs.changed-modules.outputs.modules != '[]' }}
     runs-on: homelab-modules-runner-app
     strategy:
+      fail-fast: false 
       matrix:
         module: ${{ fromJson(needs.changed-modules.outputs.modules) }}
         test: ["plan", "apply", "integration"]
