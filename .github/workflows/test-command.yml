@@ -1,42 +1,36 @@
 ---
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 name: Tofu Test
-
 on:
-  repository_dispatch:
-    types: [test-command]
-        
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Pull request head ref'
+        required: true
+      base:
+        description: 'Pull request base branch'
+        required: true
+
 jobs:
   changed-modules:
     runs-on: ubuntu-latest
     outputs:
-      modules:  ${{ steps.detect.outputs.modules }}
+      modules: ${{ steps.detect.outputs.modules }}
     steps:
       - name: Checkout PR head
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.event.client_payload.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.client_payload.pull_request.head.ref }}
+          ref: ${{ github.event.inputs.ref }}
           fetch-depth: 0
 
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
-
       - name: Fetch base branch
-        run: |
-          git fetch origin \
-            ${{ github.event.client_payload.pull_request.base.ref }}
+        run: git fetch origin ${{ github.event.inputs.base }}
 
       - name: Detect changed modules
         id: detect
         run: |
-          BASE=${{ github.event.client_payload.pull_request.base.ref }}
-          MODULES=$(git diff --name-only origin/$BASE...HEAD \
-            | grep '^modules/' \
-            | cut -d/ -f2 \
-            | sort -u \
-            | jq -R -s -c 'split("\n")[:-1]')
+          MODULES=$(git diff --name-only origin/${{ github.event.inputs.base }}...HEAD \
+            | grep '^modules/' | cut -d/ -f2 | sort -u | jq -R -s -c 'split("\n")[:-1]')
           echo "modules=$MODULES" >> $GITHUB_OUTPUT
 
   test-modules:
@@ -50,9 +44,7 @@ jobs:
       - name: Checkout PR head
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.event.client_payload.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.client_payload.pull_request.head.ref }}
+          ref: ${{ github.event.inputs.ref }}
           fetch-depth: 0
 
       - name: Configure AWS credentials

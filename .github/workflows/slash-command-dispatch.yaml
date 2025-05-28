@@ -23,9 +23,12 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }} # https://github.com/peter-evans/slash-command-dispatch/issues/147
           permission: admin
-          issue-type: pull-request
           commands: |
             test
+          dispatch-type: workflow
+          static-args: |
+            ref=${{ steps.comment-branch.outputs.branch }}
+            base=${{ github.event.client_payload.pull_request.base.ref }}
 
       - name: Edit comment with error message
         if: steps.scd.outputs.error-message
