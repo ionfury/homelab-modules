@@ -7,20 +7,6 @@ run "random" {
   }
 }
 
-# Preconfigured the network for static 'integration' cluster.
-mock_provider "unifi" {}
-
-provider "aws" {
-  alias = "env"
-}
-
-/*
-provider "aws" {
-  alias   = "env"
-  region  = "us-east-2"
-  profile = "terragrunt"
-}
-*/
 variables {
   cluster_name     = run.random.resource_name
   cluster_endpoint = "192.168.10.218"
@@ -144,35 +130,16 @@ EOT
     }
   }
 
-  aws = {
-    region  = "us-east-2"
-    profile = "terragrunt"
-  }
-
-  unifi = {
-    address       = "https://10.10.10.10"
-    api_key_store = "/homelab/integration/accounts/unifi/api-key"
-    site          = "default"
-  }
-
   ssm_output_path = "/homelab/infrastructure/clusters/integration"
 }
 
 run "provision" {
-  providers = {
-    unifi = unifi
-    aws   = aws.env
-  }
   variables {
     talos_version = "v1.10.0"
   }
 }
 
 run "upgrade" {
-  providers = {
-    unifi = unifi
-    aws   = aws.env
-  }
   variables {
     talos_version = "v1.10.1"
   }
@@ -195,10 +162,6 @@ run "upgrade_test" {
 }
 
 run "scale_up" {
-  providers = {
-    unifi = unifi
-    aws   = aws.env
-  }
   variables {
     talos_version = "v1.10.1"
 
