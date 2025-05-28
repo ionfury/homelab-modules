@@ -10,9 +10,12 @@ on:
 jobs:
   bump:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
+        
       - name: Bump version and push tag
         uses: anothrNick/github-tag-action@1.71.0
         env:
