@@ -1,6 +1,6 @@
 run "provision" {
   module {
-    source = "../kubevirt-talos-hosts"
+    source = "../cluster-kubevirt-hosts"
   }
   variables {
     name                    = "cluster-apply"
@@ -80,16 +80,6 @@ EOT
           addresses = ["${run.provision.vms["cluster-apply-talos-vm-1"].ip}"]
         }]
       }
-    }
-
-    aws = {
-      region = "us-east-2"
-    }
-
-    unifi = {
-      address       = "https://10.10.10.10"
-      api_key_store = "/homelab/integration/accounts/unifi/api-key"
-      site          = "default"
     }
 
     ssm_output_path = "/homelab/infrastructure/clusters/integration/ephemeral"
