@@ -19,7 +19,7 @@ jobs:
 
       - name: Create “test-modules” Check Run
         id: new-check
-        uses: marketplace-actions/github-checks@v1
+        uses: LouisBrunner/checks-action@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: test-modules

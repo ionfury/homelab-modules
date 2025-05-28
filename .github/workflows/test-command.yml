@@ -81,7 +81,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Complete “test-modules” Check Run
-        uses: marketplace-actions/github-checks@v1
+        uses: LouisBrunner/checks-action@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           check_id: ${{ github.event.inputs.check_id }}
