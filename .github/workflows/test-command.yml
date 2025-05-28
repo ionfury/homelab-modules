@@ -34,7 +34,7 @@ jobs:
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
           name: test-modules
-          sha: ${{ steps.comment-branch.outputs.head_sha }}
+          sha: ${{ github.event.inputs.head_sha }}
           status: in_progress
           details_url: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
@@ -108,7 +108,7 @@ jobs:
         uses: LouisBrunner/checks-action@v2
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
-          check_id: ${{ needs.start-check.check-id }}
+          check_id: ${{ needs.start-check.check_id }}
           sha: ${{ github.event.inputs.head_sha }}
           status: completed
           conclusion: ${{ needs.test-modules.result }}
