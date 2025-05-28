@@ -9,7 +9,6 @@ jobs:
   slashCommandDispatch:
     runs-on: ubuntu-latest
     permissions:
-      checks: write # for creating a check
       actions: write # Allow create workflow dispatch events
       pull-requests: write  # For doing the emoji reaction on a PR comment
       issues: write  # For doing the emoji reaction on an issue comment
@@ -18,11 +17,18 @@ jobs:
       - uses: xt0rted/pull-request-comment-branch@v3
         id: comment-branch
 
+      - name: Get Token
+        id: get_workflow_token
+        uses: peter-murray/workflow-application-token-action@v4
+        with:
+          application_id: ${{ secrets.APPLICATION_ID }}
+          application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
+
       - name: Create “test-modules” Check Run
         id: new-check
         uses: LouisBrunner/checks-action@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.get_workflow_token.outputs.token }}
           name: test-modules
           sha: ${{ steps.comment-branch.outputs.head_sha }}
           status: in_progress
