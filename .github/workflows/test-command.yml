@@ -83,7 +83,7 @@ jobs:
       - name: Complete “test-modules” Check Run
         uses: LouisBrunner/checks-action@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT }}
           check_id: ${{ github.event.inputs.check_id }}
           sha: ${{ github.event.inputs.head_sha }}
           status: completed
