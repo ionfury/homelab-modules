@@ -236,4 +236,3 @@ resource "kubernetes_service" "lb" {
   }
 }
 
-#asdf
