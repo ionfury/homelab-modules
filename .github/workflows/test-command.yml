@@ -19,7 +19,7 @@ jobs:
     name: Start Check
     runs-on: ubuntu-latest
     outputs:
-      check-id: ${{ steps.new-check.outputs.check_id }}
+      check_id: ${{ steps.new-check.outputs.check_id }}
     steps:
       - name: Get Token
         id: get_workflow_token
