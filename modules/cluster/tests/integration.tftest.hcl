@@ -1,7 +1,4 @@
 run "random" {
-  providers = {
-    unifi = unifi
-  }
   module {
     source = "./tests/harness/random"
   }
