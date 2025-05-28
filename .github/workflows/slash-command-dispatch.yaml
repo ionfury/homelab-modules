@@ -9,6 +9,7 @@ jobs:
   slashCommandDispatch:
     runs-on: ubuntu-latest
     permissions:
+      checks: write # for creating a check
       actions: write # Allow create workflow dispatch events
       pull-requests: write  # For doing the emoji reaction on a PR comment
       issues: write  # For doing the emoji reaction on an issue comment
