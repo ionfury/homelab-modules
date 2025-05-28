@@ -1,42 +1,36 @@
 ---
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 name: Tofu Test
-
 on:
-  repository_dispatch:
-    types: [test-command]
-        
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Pull request head ref'
+        required: true
+      base:
+        description: 'Pull request base branch'
+        required: true
+
 jobs:
   changed-modules:
     runs-on: ubuntu-latest
     outputs:
-      modules:  ${{ steps.detect.outputs.modules }}
+      modules: ${{ steps.detect.outputs.modules }}
     steps:
-      - name: Get target branch name
-        id: vars
-        run: |
-          branch=${{ github.event.client_payload.slash_command.args.named.branch }}
-          if [[ -z "$branch" ]]; then branch="main"; fi
-          echo "branch=$branch" >> $GITHUB_OUTPUT
-
-      - name: Checkout
+      - name: Checkout PR head
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.PAT }}
-          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
-          ref: ${{ steps.vars.outputs.branch }}
+          ref: ${{ github.event.inputs.ref }}
+          fetch-depth: 0
 
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
+      - name: Fetch base branch
+        run: git fetch origin ${{ github.event.inputs.base }}
 
       - name: Detect changed modules
         id: detect
         run: |
-          MODULES=$(git diff --name-only origin/${{ steps.pr.outputs.base_ref }}...HEAD \
-            | grep '^modules/' \
-            | cut -d/ -f2 \
-            | sort -u \
-            | jq -R -s -c 'split("\n")[:-1]')
+          MODULES=$(git diff --name-only origin/${{ github.event.inputs.base }}...HEAD \
+            | grep '^modules/' | cut -d/ -f2 | sort -u | jq -R -s -c 'split("\n")[:-1]')
           echo "modules=$MODULES" >> $GITHUB_OUTPUT
 
   test-modules:
@@ -47,19 +41,11 @@ jobs:
       matrix:
         module: ${{ fromJson(needs.changed-modules.outputs.modules) }}
     steps:
-      - name: Get target branch name
-        id: vars
-        run: |
-          branch=${{ github.event.client_payload.slash_command.args.named.branch }}
-          if [[ -z "$branch" ]]; then branch="main"; fi
-          echo "branch=$branch" >> $GITHUB_OUTPUT
-
-      - name: Checkout
+      - name: Checkout PR head
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.PAT }}
-          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
-          ref: ${{ steps.vars.outputs.branch }}
+          ref: ${{ github.event.inputs.ref }}
+          fetch-depth: 0
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -82,17 +68,3 @@ jobs:
 
       - name: Tofu Integration Tests
         run: tofu -chdir=modules/${{ matrix.module }} test -filter=tests/integration.tftest.hcl
-
-  completed:
-    runs-on: ubuntu-latest
-    name: Add reaction
-    needs: [test-modules]
-    if: always()
-    steps:
-      - name: Add reaction
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          token: ${{ secrets.PAT }}
-          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
-          comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
-          reactions: hooray
