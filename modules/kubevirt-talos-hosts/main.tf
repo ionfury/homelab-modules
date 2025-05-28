@@ -235,3 +235,5 @@ resource "kubernetes_service" "lb" {
     type = "ClusterIP"
   }
 }
+
+#asdf
