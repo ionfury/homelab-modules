@@ -56,8 +56,6 @@ EOT
       }
     ]
 
-    bootstrap_charts = []
-
     on_destroy = {
       graceful = false
       reboot   = false
