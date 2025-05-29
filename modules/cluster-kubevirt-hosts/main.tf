@@ -70,6 +70,12 @@ resource "kubernetes_manifest" "talos_vm" {
               }
             }
             devices = {
+              consoles = [
+                {
+                  name   = "serial0"
+                  serial = {}
+                }
+              ]
               disks = [
                 {
                   name      = "${each.key}-disk-vda-root"
