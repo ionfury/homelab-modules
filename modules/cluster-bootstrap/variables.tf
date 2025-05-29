@@ -68,6 +68,7 @@ variable "cloudflare" {
     account         = string
     email           = string
     api_token_store = string
+    zone_id         = optional(string, "799905ff93d585a9a0633949275cbf98")
   })
 }
 
