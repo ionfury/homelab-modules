@@ -158,7 +158,6 @@ run "upgrade_test" {
   }
 }
 */
-
 run "scale_up" {
   variables {
     talos_version = "v1.10.1"
