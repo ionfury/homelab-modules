@@ -52,7 +52,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws"></a> [aws](#input\_aws) | The AWS account to use. | <pre>object({<br/>    region = string<br/>  })</pre> | n/a | yes |
-| <a name="input_cloudflare"></a> [cloudflare](#input\_cloudflare) | The Cloudflare account to use. | <pre>object({<br/>    account         = string<br/>    email           = string<br/>    api_token_store = string<br/>  })</pre> | n/a | yes |
+| <a name="input_cloudflare"></a> [cloudflare](#input\_cloudflare) | The Cloudflare account to use. | <pre>object({<br/>    account         = string<br/>    email           = string<br/>    api_token_store = string<br/>    zone_id         = optional(string, "799905ff93d585a9a0633949275cbf98")<br/>  })</pre> | n/a | yes |
 | <a name="input_cloudflare_tunnel_secret_annotations"></a> [cloudflare\_tunnel\_secret\_annotations](#input\_cloudflare\_tunnel\_secret\_annotations) | Annotations to add to the secret for the Cloudflare Tunnel. For https://github.com/mittwald/kubernetes-replicator?tab=readme-ov-file#pull-based-replication | `map(string)` | <pre>{<br/>  "replicator.v1.mittwald.de/replication-allowed": "true",<br/>  "replicator.v1.mittwald.de/replication-allowed-namespaces": "network"<br/>}</pre> | no |
 | <a name="input_cluster_env_vars"></a> [cluster\_env\_vars](#input\_cluster\_env\_vars) | Environment variables to add to the cluster git repository root directory, to be consumed by flux. See: https://fluxcd.io/flux/components/kustomize/kustomizations/#post-build-variable-substitution | `map(string)` | `{}` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the cluster | `string` | n/a | yes |
