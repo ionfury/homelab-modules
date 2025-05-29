@@ -23,8 +23,8 @@ controlPlane:
   endpoint: https://${run.provision.lb.dns}:6443
 EOT
 
-    machines = {
-      vm1 = {
+    machines = [
+      {
         talos_config = <<EOT
 type: controlplane
 network:
@@ -33,8 +33,8 @@ network:
     - addresses:
       - ${run.provision.vms["cluster-talos-apply-talos-vm-1"].ip}
 EOT
-      }
-      vm2 = {
+      },
+      {
         talos_config = <<EOT
 type: controlplane
 network:
@@ -43,8 +43,8 @@ network:
     - addresses:
       - ${run.provision.vms["cluster-talos-apply-talos-vm-2"].ip}
 EOT
-      }
-      vm3 = {
+      },
+      {
         talos_config = <<EOT
 type: controlplane
 network:
@@ -54,7 +54,8 @@ network:
       - ${run.provision.vms["cluster-talos-apply-talos-vm-2"].ip}
 EOT        
       }
-    }
+    ]
+
     bootstrap_charts = []
 
     on_destroy = {
