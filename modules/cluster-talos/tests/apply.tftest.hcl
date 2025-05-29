@@ -55,13 +55,12 @@ network:
 EOT        
       }
     }
-  }
+    bootstrap_charts = []
 
-  bootstrap_charts = []
-
-  on_destroy = {
-    graceful = false
-    reboot   = false
-    reset    = false
+    on_destroy = {
+      graceful = false
+      reboot   = false
+      reset    = false
+    }
   }
 }
