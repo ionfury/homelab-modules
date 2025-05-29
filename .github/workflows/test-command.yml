@@ -55,8 +55,14 @@ jobs:
       - name: Detect changed modules
         id: detect
         run: |
-          MODULES=$(git diff --diff-filter=d --name-only origin/${{ github.event.inputs.base_ref }}...HEAD \
-            | grep '^modules/' | cut -d/ -f2 | sort -u | jq -R -s -c 'split("\n")[:-1]')
+          MODULES=$(
+            git diff --diff-filter=d --name-only origin/${{ github.event.inputs.base_ref }}...HEAD \
+              | grep '^modules/' \
+              | grep -v '\.md$' \
+              | cut -d/ -f2 \
+              | sort -u \
+              | jq -R -s -c 'split("\n")[:-1]'
+          )
           echo "modules=$MODULES" >> $GITHUB_OUTPUT
 
   test-modules:
