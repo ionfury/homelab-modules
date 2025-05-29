@@ -30,8 +30,10 @@ type: controlplane
 network:
   hostname: cluster-talos-apply-talos-vm-1
   interfaces:
-    - addresses:
-      - ${run.provision.vms["cluster-talos-apply-talos-vm-1"].ip}
+    - deviceSelector:
+        physical: true
+      addresses:
+        - ${run.provision.vms["cluster-talos-apply-talos-vm-1"].ip}
 EOT
       },
       {
@@ -40,8 +42,10 @@ type: controlplane
 network:
   hostname: cluster-talos-apply-talos-vm-2
   interfaces:
-    - addresses:
-      - ${run.provision.vms["cluster-talos-apply-talos-vm-2"].ip}
+    - deviceSelector:
+        physical: true
+      addresses:
+        - ${run.provision.vms["cluster-talos-apply-talos-vm-2"].ip}
 EOT
       },
       {
@@ -50,8 +54,10 @@ type: controlplane
 network:
   hostname: cluster-talos-apply-talos-vm-3
   interfaces:
-    - addresses:
-      - ${run.provision.vms["cluster-talos-apply-talos-vm-3"].ip}
+    - deviceSelector:
+        physical: true
+      addresses:
+        - ${run.provision.vms["cluster-talos-apply-talos-vm-3"].ip}
 EOT        
       }
     ]
