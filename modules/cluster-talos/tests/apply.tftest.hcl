@@ -33,7 +33,7 @@ network:
     - deviceSelector:
         physical: true
       addresses:
-        - ${run.provision.vms["cluster-talos-apply-talos-vm-1"].ip}
+        - ${run.provision.vms["cluster-talos-apply-talos-vm-1"].ip}/24
 EOT
       },
       {
@@ -45,7 +45,7 @@ network:
     - deviceSelector:
         physical: true
       addresses:
-        - ${run.provision.vms["cluster-talos-apply-talos-vm-2"].ip}
+        - ${run.provision.vms["cluster-talos-apply-talos-vm-2"].ip}/24
 EOT
       },
       {
@@ -57,7 +57,7 @@ network:
     - deviceSelector:
         physical: true
       addresses:
-        - ${run.provision.vms["cluster-talos-apply-talos-vm-3"].ip}
+        - ${run.provision.vms["cluster-talos-apply-talos-vm-3"].ip}/24
 EOT        
       }
     ]

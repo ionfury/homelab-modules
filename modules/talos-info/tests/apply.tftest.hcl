@@ -44,7 +44,7 @@ network:
     - deviceSelector:
         physical: true
       addresses:
-        - ${run.provision.vms["talos-info-talos-vm-1"].ip}
+        - ${run.provision.vms["talos-info-talos-vm-1"].ip}/24
 EOT
       }
     ]
