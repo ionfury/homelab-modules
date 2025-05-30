@@ -78,3 +78,15 @@ EOT
     }
   }
 }
+
+run "test" {
+  variables {
+    talos_config_path = run.init.talosconfig_filename
+    node              = "cluster-talos-apply-talos-vm-1"
+  }
+
+  assert {
+    condition     = output.talos_version == "v1.10.0"
+    error_message = "output.talos_version is not as expected"
+  }
+}

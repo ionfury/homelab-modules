@@ -12,7 +12,7 @@ run "provision" {
   }
 }
 
-run "init" {
+run "apply" {
   module {
     source = "../cluster-talos"
   }
@@ -57,7 +57,7 @@ EOT
 
 run "test" {
   variables {
-    talos_config_path = run.init.talosconfig_filename
+    talos_config_path = run.apply.talosconfig_filename
     node              = "talos-info-talos-vm-1"
   }
 
