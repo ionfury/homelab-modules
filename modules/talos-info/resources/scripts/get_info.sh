@@ -15,6 +15,8 @@ safe_talosctl() {
   echo "$output"
 }
 
+
+
 # Execute talosctl commands with error handling
 VERSION=$(safe_talosctl "talosctl --talosconfig \"$TALOS_CONFIG_PATH\" --nodes \"$NODE\" version --short | grep 'Tag:' | awk '{print \$2}'" "")
 SCHEMATIC_VERSION=$(safe_talosctl "talosctl --talosconfig \"$TALOS_CONFIG_PATH\" --nodes \"$NODE\" get extensions -o json | jq -s '.[] | select(.spec.metadata.name == \"schematic\") | .spec.metadata.version'" "") 
