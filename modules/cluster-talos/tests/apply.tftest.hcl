@@ -27,9 +27,6 @@ EOT
       {
         talos_config = <<EOT
 type: controlplane
-time:
-  servers:
-    - 0.pool.ntp.org
 features:
   hostDNS:
     enabled: true
@@ -37,8 +34,6 @@ features:
     resolveMemberNames: true
 network:
   hostname: cluster-talos-apply-talos-vm-1
-  nameservers:
-    - kube-dns.kube-system.svc.cluster.local
   interfaces:
     - deviceSelector:
         physical: true
@@ -52,9 +47,6 @@ EOT
       {
         talos_config = <<EOT
 type: controlplane
-time:
-  servers:
-    - 0.pool.ntp.org
 features:
   hostDNS:
     enabled: true
@@ -62,8 +54,6 @@ features:
     resolveMemberNames: true
 network:
   hostname: cluster-talos-apply-talos-vm-2
-  nameservers:
-    - kube-dns.kube-system.svc.cluster.local
   interfaces:
     - deviceSelector:
         physical: true
@@ -77,9 +67,6 @@ EOT
       {
         talos_config = <<EOT
 type: controlplane
-time:
-  servers:
-    - 0.pool.ntp.org
 features:
   hostDNS:
     enabled: true
@@ -87,8 +74,6 @@ features:
     resolveMemberNames: true
 network:
   hostname: cluster-talos-apply-talos-vm-3
-  nameservers:
-    - kube-dns.kube-system.svc.cluster.local
   interfaces:
     - deviceSelector:
         physical: true
