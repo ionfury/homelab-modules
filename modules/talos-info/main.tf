@@ -4,7 +4,7 @@ resource "null_resource" "talos_cluster_health" {
   }
 
   provisioner "local-exec" {
-    command = "sleep 300 && talosctl --talosconfig $TALOSCONFIG health --nodes $NODE --wait-timeout $TIMEOUT"
+    command = "talosctl --talosconfig $TALOSCONFIG health --nodes $NODE --wait-timeout $TIMEOUT"
 
     environment = {
       TALOSCONFIG = pathexpand(var.talos_config_path)
