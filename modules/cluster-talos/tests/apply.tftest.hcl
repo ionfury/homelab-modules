@@ -20,7 +20,7 @@ run "apply" {
 clusterName: cluster-talos-apply
 allowSchedulingOnControlPlanes: true
 controlPlane:
-  endpoint: https://${run.provision.lb.dns}:6443
+  endpoint: https://${run.provision.lb.ip}:6443
 EOT
 
     machines = [
@@ -68,48 +68,6 @@ network:
       addresses:
         - ${run.provision.vms["cluster-talos-apply-talos-vm-3"].ip}
 EOT        
-      }
-    ]
-
-    bootstrap_charts = [
-      {
-        repository = "https://helm.cilium.io/"
-        chart      = "cilium"
-        name       = "cilium"
-        version    = "1.16.5"
-        namespace  = "kube-system"
-        values     = <<EOT
-
-ipam:
-  mode: kubernetes
-kubeProxyReplacement: true
-cgroup:
-  autoMount:
-    enabled: false
-  hostRoot: /sys/fs/cgroup
-k8sServiceHost: 127.0.0.1
-k8sServicePort: 7445
-securityContext:
-  capabilities:
-    ciliumAgent:
-      - CHOWN
-      - KILL
-      - NET_ADMIN
-      - NET_RAW
-      - IPC_LOCK
-      - SYS_ADMIN
-      - SYS_RESOURCE
-      - PERFMON
-      - BPF
-      - DAC_OVERRIDE
-      - FOWNER
-      - SETGID
-      - SETUID
-    cleanCiliumState:
-      - NET_ADMIN
-      - SYS_ADMIN
-      - SYS_RESOURCE
-EOT
       }
     ]
 

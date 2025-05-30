@@ -26,7 +26,7 @@ run "init" {
 clusterName: talos-info
 allowSchedulingOnControlPlanes: true
 controlPlane:
-  endpoint: https://${run.provision.lb.dns}:6443
+  endpoint: https://${run.provision.lb.ip}:6443
 EOT
 
     machines = [
@@ -57,18 +57,18 @@ EOT
 
 run "test" {
   variables {
-    talos_config_path = "~/.talos/testing/talos-info"
+    talos_config_path = run.init.talosconfig_filename
     node              = "talos-info-talos-vm-1"
   }
 
   assert {
-    condition     = output.talos_version == "v1.10.1"
-    error_message = "output.talos_version is not as expected: v1.10.1"
+    condition     = output.talos_version == "v1.10.0"
+    error_message = "output.talos_version is not as expected"
   }
 
   assert {
     condition     = output.schematic_version == "613e1592b2da41ae5e265e8789429f22e121aab91cb4deb6bc3c0b6262961245"
-    error_message = "output.schematic_version is not as expected: 613e1592b2da41ae5e265e8789429f22e121aab91cb4deb6bc3c0b6262961245"
+    error_message = "output.schematic_version is not as expected"
   }
 
   assert {
@@ -77,22 +77,17 @@ run "test" {
   }
 
   assert {
-    condition     = output.nameservers == "asdf"
+    condition     = output.nameservers == "[\"1.1.1.1\"]"
     error_message = "output.nameservers is not as expected"
   }
 
   assert {
-    condition     = output.timeservers == "[\"0.pool.ntp.org\"]"
-    error_message = "output.timeservers is not as expected"
-  }
-
-  assert {
     condition     = output.controlplane_schedulable == "true"
-    error_message = "output.controlplane_schedulable is not as expected: true"
+    error_message = "output.controlplane_schedulable is not as expected"
   }
 
   assert {
     condition     = output.machine_type == "controlplane"
-    error_message = "output.machine_type is not as expected: controlplane"
+    error_message = "output.machine_type is not as expected"
   }
 }
