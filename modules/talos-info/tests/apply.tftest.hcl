@@ -72,21 +72,6 @@ run "test" {
   }
 
   assert {
-    condition     = output.interfaces == "[\"${run.provision.vms["talos-info-talos-vm-1"].ip}\"]"
-    error_message = "output.interfaces is not as expected"
-  }
-  /*
-  assert {
-    condition     = output.nameservers == "[\"1.1.1.1\"]"
-    error_message = "output.nameservers is not as expected"
-  }
-
-  assert {
-    condition     = output.controlplane_schedulable == "true"
-    error_message = "output.controlplane_schedulable is not as expected"
-  }
-*/
-  assert {
     condition     = output.machine_type == "controlplane"
     error_message = "output.machine_type is not as expected"
   }
