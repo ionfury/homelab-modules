@@ -36,6 +36,11 @@ type: controlplane
 time:
   servers:
     - 0.pool.ntp.org
+features:
+  hostDNS:
+    enabled: true
+    forwardKubeDNSToHost: true
+    resolveMemberNames: true
 network:
   hostname: talos-info-talos-vm-1
   nameservers:

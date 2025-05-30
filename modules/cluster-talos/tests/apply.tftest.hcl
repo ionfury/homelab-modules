@@ -27,6 +27,14 @@ EOT
       {
         talos_config = <<EOT
 type: controlplane
+time:
+  servers:
+    - 0.pool.ntp.org
+features:
+  hostDNS:
+    enabled: true
+    forwardKubeDNSToHost: true
+    resolveMemberNames: true
 network:
   hostname: cluster-talos-apply-talos-vm-1
   nameservers:
@@ -44,6 +52,14 @@ EOT
       {
         talos_config = <<EOT
 type: controlplane
+time:
+  servers:
+    - 0.pool.ntp.org
+features:
+  hostDNS:
+    enabled: true
+    forwardKubeDNSToHost: true
+    resolveMemberNames: true
 network:
   hostname: cluster-talos-apply-talos-vm-2
   nameservers:
@@ -61,6 +77,14 @@ EOT
       {
         talos_config = <<EOT
 type: controlplane
+time:
+  servers:
+    - 0.pool.ntp.org
+features:
+  hostDNS:
+    enabled: true
+    forwardKubeDNSToHost: true
+    resolveMemberNames: true
 network:
   hostname: cluster-talos-apply-talos-vm-3
   nameservers:
