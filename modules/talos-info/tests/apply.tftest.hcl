@@ -39,7 +39,7 @@ time:
 network:
   hostname: talos-info-talos-vm-1
   nameservers:
-    - asdf
+    - kube-dns.kube-system.svc.cluster.local
   interfaces:
     - deviceSelector:
         physical: true

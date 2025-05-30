@@ -29,6 +29,8 @@ EOT
 type: controlplane
 network:
   hostname: cluster-talos-apply-talos-vm-1
+  nameservers:
+    - kube-dns.kube-system.svc.cluster.local
   interfaces:
     - deviceSelector:
         physical: true
@@ -41,6 +43,8 @@ EOT
 type: controlplane
 network:
   hostname: cluster-talos-apply-talos-vm-2
+  nameservers:
+    - kube-dns.kube-system.svc.cluster.local
   interfaces:
     - deviceSelector:
         physical: true
@@ -53,6 +57,8 @@ EOT
 type: controlplane
 network:
   hostname: cluster-talos-apply-talos-vm-3
+  nameservers:
+    - kube-dns.kube-system.svc.cluster.local
   interfaces:
     - deviceSelector:
         physical: true
