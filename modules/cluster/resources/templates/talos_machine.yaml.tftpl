@@ -72,3 +72,4 @@ files:
     path: ${file.path}
     op: ${file.op}
 %{ endfor ~}
+talosctl --talosconfig ~/.talos/cluster-talos-apply.yaml -n 172.19.59.220 get logs
