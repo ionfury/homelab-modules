@@ -39,12 +39,12 @@ time:
 network:
   hostname: talos-info-talos-vm-1
   nameservers:
-    - 172.19.0.10
+    - kube-dns.kube-system.svc.cluster.local
   interfaces:
     - deviceSelector:
         physical: true
       addresses:
-        - ${run.provision.vms["talos-info-talos-vm-1"].ip}/24
+        - ${run.provision.vms["talos-info-talos-vm-1"].ip}
 EOT
       }
     ]
