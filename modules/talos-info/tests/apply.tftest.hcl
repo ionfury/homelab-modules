@@ -43,6 +43,9 @@ network:
   interfaces:
     - deviceSelector:
         physical: true
+      dhcp: true
+      dhcpOptions:
+        routeMetric: 1024
       addresses:
         - ${run.provision.vms["talos-info-talos-vm-1"].ip}
 EOT

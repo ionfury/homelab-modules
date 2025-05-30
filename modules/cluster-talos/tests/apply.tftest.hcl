@@ -34,8 +34,11 @@ network:
   interfaces:
     - deviceSelector:
         physical: true
+      dhcp: true
+      dhcpOptions:
+        routeMetric: 1024
       addresses:
-        - ${run.provision.vms["cluster-talos-apply-talos-vm-1"].ip}/24
+        - ${run.provision.vms["cluster-talos-apply-talos-vm-1"].ip}
 EOT
       },
       {
@@ -48,8 +51,11 @@ network:
   interfaces:
     - deviceSelector:
         physical: true
+      dhcp: true
+      dhcpOptions:
+        routeMetric: 1024
       addresses:
-        - ${run.provision.vms["cluster-talos-apply-talos-vm-2"].ip}/24
+        - ${run.provision.vms["cluster-talos-apply-talos-vm-2"].ip}
 EOT
       },
       {
@@ -62,8 +68,11 @@ network:
   interfaces:
     - deviceSelector:
         physical: true
+      dhcp: true
+      dhcpOptions:
+        routeMetric: 1024
       addresses:
-        - ${run.provision.vms["cluster-talos-apply-talos-vm-3"].ip}/24
+        - ${run.provision.vms["cluster-talos-apply-talos-vm-3"].ip}
 EOT        
       }
     ]
