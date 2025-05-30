@@ -39,6 +39,8 @@ network:
     - deviceSelector:
         physical: true
       dhcp: true
+      addresses:
+        - ${run.provision.vms["talos-info-talos-vm-1"].ip}
   nameservers:
     - 1.1.1.1
 EOT

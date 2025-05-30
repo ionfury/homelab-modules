@@ -35,6 +35,8 @@ network:
     - deviceSelector:
         physical: true
       dhcp: true
+      addresses:
+        - ${run.provision.vms["cluster-talos-apply-talos-vm-1"].ip}
 EOT
       },
       {
@@ -48,6 +50,8 @@ network:
     - deviceSelector:
         physical: true
       dhcp: true
+      addresses:
+        - ${run.provision.vms["cluster-talos-apply-talos-vm-2"].ip}
 EOT
       },
       {
@@ -61,6 +65,8 @@ network:
     - deviceSelector:
         physical: true
       dhcp: true
+      addresses:
+        - ${run.provision.vms["cluster-talos-apply-talos-vm-3"].ip}
 EOT        
       }
     ]
