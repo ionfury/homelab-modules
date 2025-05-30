@@ -84,7 +84,7 @@ run "test" {
     source = "../talos-info"
   }
   variables {
-    talos_config_path = run.init.talosconfig_filename
+    talos_config_path = run.apply.talosconfig_filename
     node              = "cluster-talos-apply-talos-vm-1"
   }
 
