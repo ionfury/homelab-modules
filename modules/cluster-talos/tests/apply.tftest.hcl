@@ -19,13 +19,6 @@ run "apply" {
     talos_cluster_config = <<EOT
 clusterName: cluster-talos-apply
 allowSchedulingOnControlPlanes: true
-network:
-  cni:
-    name: none
-proxy:
-  disabled: true
-coreDNS:
-  disabled: false
 controlPlane:
   endpoint: https://${run.provision.lb.dns}:6443
 EOT
@@ -36,12 +29,12 @@ EOT
 type: controlplane
 network:
   hostname: cluster-talos-apply-talos-vm-1
+  nameservers:
+    - 1.1.1.1
   interfaces:
     - deviceSelector:
         physical: true
       dhcp: true
-      addresses:
-        - ${run.provision.vms["cluster-talos-apply-talos-vm-1"].ip}
 EOT
       },
       {
@@ -49,12 +42,12 @@ EOT
 type: controlplane
 network:
   hostname: cluster-talos-apply-talos-vm-2
+  nameservers:
+    - 1.1.1.1
   interfaces:
     - deviceSelector:
         physical: true
       dhcp: true
-      addresses:
-        - ${run.provision.vms["cluster-talos-apply-talos-vm-2"].ip}
 EOT
       },
       {
@@ -62,12 +55,12 @@ EOT
 type: controlplane
 network:
   hostname: cluster-talos-apply-talos-vm-3
+  nameservers:
+    - 1.1.1.1
   interfaces:
     - deviceSelector:
         physical: true
       dhcp: true
-      addresses:
-        - ${run.provision.vms["cluster-talos-apply-talos-vm-3"].ip}
 EOT        
       }
     ]

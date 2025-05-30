@@ -33,24 +33,14 @@ EOT
       {
         talos_config = <<EOT
 type: controlplane
-time:
-  servers:
-    - 0.pool.ntp.org
-features:
-  hostDNS:
-    enabled: true
-    forwardKubeDNSToHost: true
-    resolveMemberNames: true
 network:
   hostname: talos-info-talos-vm-1
   interfaces:
     - deviceSelector:
         physical: true
       dhcp: true
-      dhcpOptions:
-        routeMetric: 1024
-      addresses:
-        - ${run.provision.vms["talos-info-talos-vm-1"].ip}
+  nameservers:
+    - 1.1.1.1
 EOT
       }
     ]
