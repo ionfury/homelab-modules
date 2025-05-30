@@ -72,7 +72,7 @@ run "test" {
   }
 
   assert {
-    condition     = output.interfaces == "asdf"
+    condition     = output.interfaces == "[\"${run.provision.vms["talos-info-talos-vm-1"].ip}\"]"
     error_message = "output.interfaces is not as expected"
   }
   /*
