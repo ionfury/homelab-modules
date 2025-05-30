@@ -80,6 +80,9 @@ EOT
 }
 
 run "test" {
+  module {
+    source = "../talos-info"
+  }
   variables {
     talos_config_path = run.init.talosconfig_filename
     node              = "cluster-talos-apply-talos-vm-1"
