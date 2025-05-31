@@ -16,8 +16,7 @@
 */
 
 data "external" "talos_info" {
-  depends_on = [null_resource.talos_cluster_health]
-  program    = ["bash", pathexpand("${path.module}/resources/scripts/get_info.sh")]
+  program = ["bash", pathexpand("${path.module}/resources/scripts/get_info.sh")]
 
   query = {
     talos_config_path = pathexpand(var.talos_config_path)
