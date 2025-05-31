@@ -198,6 +198,13 @@ resource "kubernetes_service" "this" {
       protocol    = "TCP"
     }
 
+    port {
+      name        = "kubectl"
+      port        = 6443
+      target_port = 6443
+      protocol    = "TCP"
+    }
+
     type = "ClusterIP"
   }
 }
@@ -229,6 +236,13 @@ resource "kubernetes_service" "lb" {
       name        = "https"
       port        = 443
       target_port = 443
+      protocol    = "TCP"
+    }
+
+    port {
+      name        = "kubectl"
+      port        = 6443
+      target_port = 6443
       protocol    = "TCP"
     }
 

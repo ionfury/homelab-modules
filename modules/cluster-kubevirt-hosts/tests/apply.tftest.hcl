@@ -1,6 +1,6 @@
 run "apply" {
   variables {
-    name                    = "homelab-modules"
+    name                    = "cluster-kubevirt-hosts"
     vm_count                = 3
     data_root_storage_class = "fast"
     data_disk_storage_class = "fast"
@@ -18,7 +18,7 @@ run "apply" {
   }
 
   assert {
-    condition     = kubernetes_service.this["homelab-modules-talos-vm-1"].metadata[0].name == "homelab-modules-talos-vm-1"
+    condition     = kubernetes_service.this["cluster-kubevirt-hosts-talos-vm-1"].metadata[0].name == "cluster-kubevirt-hosts-talos-vm-1"
     error_message = "Incorrect"
   }
 }
