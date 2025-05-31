@@ -1,4 +1,4 @@
-resource "null_resource" "talos_cluster_health" {
+/*resource "null_resource" "talos_cluster_health" {
   triggers = {
     always_run = timestamp()
   }
@@ -13,7 +13,7 @@ resource "null_resource" "talos_cluster_health" {
     }
   }
 }
-
+*/
 
 data "external" "talos_info" {
   depends_on = [null_resource.talos_cluster_health]
