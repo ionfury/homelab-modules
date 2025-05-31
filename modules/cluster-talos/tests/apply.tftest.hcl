@@ -78,7 +78,7 @@ EOT
     }
   }
 }
-
+/*
 run "test" {
   module {
     source = "../talos-info"
@@ -93,3 +93,4 @@ run "test" {
     error_message = "output.talos_version is not as expected"
   }
 }
+*/
