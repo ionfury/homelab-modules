@@ -20,7 +20,7 @@ jobs:
         run: brew bundle
 
       - name: Run tofuenv
-        run: tofuenv install latest && tofuenv use latest
+        run: tofuenv install latest:^1.8 && tofuenv use latest:^1.8
 
       #- name: Setup Taskfile
       #  uses: Illbjorn/setup-task@0.1.0
