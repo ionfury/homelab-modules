@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Run Brew Bundle
         run: brew bundle
@@ -27,4 +29,4 @@ jobs:
       - name: Commit & Push formatting changes
         uses: EndBug/add-and-commit@v9
         with:
-          add: "*"
+          add: "*.md"
