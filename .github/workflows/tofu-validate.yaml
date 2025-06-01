@@ -18,22 +18,6 @@ jobs:
 
       - name: Run Brew Bundle
         run: brew bundle
-
-      - name: Run tofuenv
-        run: tofuenv install latest:^1.8 && tofuenv use latest:^1.8
-
-      #- name: Setup Taskfile
-      #  uses: Illbjorn/setup-task@0.1.0
-
-      #- name: Setup Tofu
-      #  uses: opentofu/setup-opentofu@v1
-
-      #- name: Install a binary from GitHub releases
-      #  uses: jaxxstorm/action-install-gh-release@v2.1.0
-      #  with:
-      #    repo: terraform-docs/terraform-docs
-    
-      #- uses: terraform-linters/setup-tflint@v4
-      #  name: Setup TFLint
+        
       - name: Fix Tofu
         run: task tofu:check
