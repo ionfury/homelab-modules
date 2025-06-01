@@ -3,32 +3,30 @@
 name: Tofu Validate
 
 on:
-  workflow_dispatch:
   pull_request:
     branches: [ main ]
     paths:
       - 'modules/**'
 
+permissions:
+  contents: write
+
 jobs:
   tofu-validate:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Setup Taskfile
-        uses: Illbjorn/setup-task@0.1.0
-
-      - name: Setup Tofu
-        uses: opentofu/setup-opentofu@v1
-
-      - name: Install a binary from GitHub releases
-        uses: jaxxstorm/action-install-gh-release@v2.1.0
         with:
-          repo: terraform-docs/terraform-docs
-    
-      - uses: terraform-linters/setup-tflint@v4
-        name: Setup TFLint
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Run Brew Bundle
+        run: brew bundle
+        
       - name: Fix Tofu
-        shell: bash
-        run: task tofu:check
+        run: task tofu:fix
+
+      - name: Commit & Push formatting changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: "*.md"
