@@ -12,7 +12,6 @@
 | Name | Version |
 |------|---------|
 | <a name="provider_external"></a> [external](#provider\_external) | 2.3.4 |
-| <a name="provider_null"></a> [null](#provider\_null) | 3.2.3 |
 
 ## Modules
 
@@ -22,7 +21,6 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [null_resource.talos_cluster_health](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
 | [external_external.talos_info](https://registry.terraform.io/providers/hashicorp/external/2.3.4/docs/data-sources/external) | data source |
 
 ## Inputs
