@@ -14,16 +14,8 @@ locals {
       ip  = split("/", details.interfaces[0].addresses[0])[0]
     }
   })
-
-  params_get = toset([
-    var.unifi.api_key_store,
-  ])
 }
 
-data "aws_ssm_parameter" "params_get" {
-  for_each = local.params_get
-  name     = each.value
-}
 
 resource "unifi_dns_record" "record" {
   for_each = local.unifi_dns_records

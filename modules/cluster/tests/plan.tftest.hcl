@@ -1,130 +1,181 @@
 run "plan" {
   command = plan
-
-  module {
-    source = "./resources/modules/talos-cluster"
-  }
-
   variables {
-    talos_version      = "v1.9.0"
+    cluster_name           = "cluster_name"
+    cluster_tld            = "cluster_tld"
+    cluster_vip            = "1.2.3.4"
+    cluster_node_subnet    = "1.2.3.4/24"
+    cluster_pod_subnet     = "1.2.3.4/24"
+    cluster_service_subnet = "1.2.3.4/24"
+    cluster_on_destroy = {
+      graceful = false
+      reboot   = false
+      reset    = false
+    }
+
+    cilium_helm_values = <<EOT
+ipam:
+  mode: kubernetes
+kubeProxyReplacement: true
+cgroup:
+  autoMount:
+    enabled: false
+  hostRoot: /sys/fs/cgroup
+k8sServiceHost: 127.0.0.1
+k8sServicePort: 7445
+securityContext:
+  capabilities:
+    ciliumAgent:
+      - CHOWN
+      - KILL
+      - NET_ADMIN
+      - NET_RAW
+      - IPC_LOCK
+      - SYS_ADMIN
+      - SYS_RESOURCE
+      - PERFMON
+      - BPF
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETGID
+      - SETUID
+    cleanCiliumState:
+      - NET_ADMIN
+      - SYS_ADMIN
+      - SYS_RESOURCE
+EOT
+    cilium_version     = "1.16.5"
     kubernetes_version = "1.32.0"
+    talos_version      = "v1.10.0"
+    prometheus_version = "20.0.0"
+    flux_version       = "v2.4.0"
 
-    talos_cluster_config = <<EOT
-clusterName: talos.local
+    nameservers = ["1.1.1.1"]
+    timeservers = ["2.2.2.2"]
+
+    talos_config_path      = "~/.talos"
+    kubernetes_config_path = "~/.kube"
+
+    machines = {
+      node44 = {
+        type    = "controlplane"
+        install = { disk = "/dev/sda" }
+        interfaces = [{
+          hardwareAddr = "aa:bb:cc:dd:ee:ff"
+          addresses    = ["1.2.3.4"]
+        }]
+      }
+    }
+
+    ssm_output_path = "/homelab/integration/accounts/cluster/plan"
+
+    unifi = {
+      address       = "https://192.168.1.1"
+      site          = "default"
+      api_key_store = "/homelab/integration/accounts/unifi/api-key"
+    }
+
+    github = {
+      org             = "ionfury"
+      repository      = "homelab-integration"
+      repository_path = "kubernetes/clusters"
+      token_store     = "/homelab/integration/accounts/github/token"
+    }
+
+    cloudflare = {
+      account         = "homelab"
+      email           = "ionfury@gmail.com"
+      api_token_store = "/homelab/integration/accounts/cloudflare/token"
+      zone_id         = "zone_id"
+    }
+
+    external_secrets = {
+      id_store     = "/homelab/integration/accounts/external-secrets/id"
+      secret_store = "/homelab/integration/accounts/external-secrets/secret"
+    }
+
+    healthchecksio = {
+      api_key_store = "/homelab/integration/accounts/healthchecksio/api-key"
+    }
+  }
+
+  assert {
+    condition     = local.cluster_endpoint == "cluster_name.cluster_tld"
+    error_message = "local cluster_endpoint error"
+  }
+
+  assert {
+    condition     = local.cluster_endpoint_address == "https://cluster_name.cluster_tld:6443"
+    error_message = "local cluster_endpoint_address error"
+  }
+
+  assert {
+    condition     = local.talos_cluster_config == <<EOT
 controlPlane:
-  endpoint: https://talos.local:6443
-EOT
-    machines = [
-      {
-        talos_config = <<EOT
-type: controlplane
+  endpoint: https://cluster_name.cluster_tld:6443
+allowSchedulingOnControlPlanes: true
+clusterName: cluster_name
 network:
-  hostname: host1
-  interfaces:
-    - addresses:
-      - 192.168.10.1/24
+  cni:
+    name: none
+  podSubnets:
+    - 1.2.3.4/24
+  serviceSubnets:
+    - 1.2.3.4/24
+apiServer:
+  disablePodSecurityPolicy: true
+proxy:
+  disabled: true
+coreDNS:
+  disabled: false
+extraManifests:
+  - https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-20.0.0/charts/kube-prometheus-stack/charts/crds/crds/crd-podmonitors.yaml
+  - https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-20.0.0/charts/kube-prometheus-stack/charts/crds/crds/crd-servicemonitors.yaml
+  - https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-20.0.0/charts/kube-prometheus-stack/charts/crds/crds/crd-probes.yaml
+  - https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-20.0.0/charts/kube-prometheus-stack/charts/crds/crds/crd-prometheusrules.yaml
 EOT
-      }
-    ]
-    bootstrap_charts = [
-      {
-        repository = "https://charts.bitnami.com/bitnami"
-        chart      = "nginx"
-        name       = "test-nginx"
-        version    = "15.6.0"
-        namespace  = "default"
-        values     = <<EOF
-service:
-  type: ClusterIP
-  port: 80
-EOF
-      }
-    ]
+    error_message = "local talos_cluster_config error"
   }
 
   assert {
-    condition     = talos_machine_configuration_apply.machines["host1"].endpoint == "192.168.10.1"
-    error_message = "Incorrect endpoint set for talos machine configuration apply"
-  }
-
-  assert {
-    condition     = talos_machine_bootstrap.this.endpoint == "192.168.10.1"
-    error_message = "Talos bootstrap endpoint incorrect: ${talos_machine_bootstrap.this.endpoint}"
-  }
-
-  assert {
-    condition     = talos_machine_bootstrap.this.node == "host1"
-    error_message = "Incorrect host for talos machine bootstrap node"
-  }
-
-  assert {
-    condition     = data.talos_client_configuration.this.endpoints[0] == "192.168.10.1"
-    error_message = "Talos client configuration controlplane ip incorrect: ${talos_machine_bootstrap.this.endpoint}"
-  }
-
-  assert {
-    condition     = data.talos_client_configuration.this.nodes[0] == "host1"
-    error_message = "Incorrect talos client configuration nodes"
-  }
-
-  assert {
-    condition     = data.talos_machine_configuration.this["host1"].talos_version == "v1.9.0"
-    error_message = "Incorrect Talos version set for host1: ${data.talos_machine_configuration.this["host1"].talos_version}"
-  }
-
-  assert {
-    condition     = data.talos_machine_configuration.this["host1"].kubernetes_version == "1.32.0"
-    error_message = "Incorrect Kubernetes version set for host1: ${data.talos_machine_configuration.this["host1"].kubernetes_version}"
-  }
-
-  assert {
-    condition     = data.talos_machine_configuration.this["host1"].machine_type == "controlplane"
-    error_message = "Incorrect machine type set for host1: ${data.talos_machine_configuration.this["host1"].machine_type}"
-  }
-
-  assert {
-    condition     = data.talos_machine_configuration.this["host1"].cluster_name == "talos.local"
-    error_message = "Incorrect cluster name set for host1: ${data.talos_machine_configuration.this["host1"].cluster_name}"
-  }
-
-  assert {
-    condition     = data.talos_machine_configuration.this["host1"].cluster_endpoint == "https://talos.local:6443"
-    error_message = "Incorrect cluster endpoint set for host1: ${data.talos_machine_configuration.this["host1"].cluster_endpoint}"
-  }
-
-  assert {
-    condition     = length(data.talos_machine_configuration.this) == 1
-    error_message = "Incorrect number of talos machines configured: ${length(data.talos_machine_configuration.this)}"
-  }
-
-  assert {
-    condition     = length(data.talos_image_factory_urls.machine_image_url_metal) == 1
-    error_message = "Incorrect length of returned metal machine image urls: ${length(data.talos_image_factory_urls.machine_image_url_metal)}"
-  }
-
-  assert {
-    condition     = length(data.talos_image_factory_urls.machine_image_url_sbc) == 0
-    error_message = "Incorrect length of returned sbc machine image urls: ${length(data.talos_image_factory_urls.machine_image_url_sbc)}"
-  }
-
-  assert {
-    condition     = strcontains(data.talos_machine_configuration.this["host1"].config_patches[0], "clusterName: talos.local")
-    error_message = "ClusterName missing from host1 cluster.yaml.tftpl patch!"
-  }
-
-  assert {
-    condition     = strcontains(data.talos_machine_configuration.this["host1"].config_patches[1], "test-nginx")
-    error_message = "test-nginx missing from host1 inline_manifests.yaml.tftpl patch!"
-  }
-
-  # talos_image_factory_schematic.machine_schematic.id is not evaluated during a plan
-  #assert {
-  #  condition     = strcontains(data.talos_machine_configuration.this["host1"].config_patches[2], "asdf")
-  #  error_message = length(data.talos_image_factory_urls.machine_image_url_metal)
-  #}
-
-  assert {
-    condition     = strcontains(data.talos_machine_configuration.this["host1"].config_patches[3], "hostname: host1")
-    error_message = "hostname missing from host1 machine.yaml.tftpl patch!"
+    condition     = local.machines[0].talos_config == <<EOT
+type: controlplane
+kubelet:
+  nodeIP:
+    validSubnets:
+      - 1.2.3.4/24
+network:
+  hostname: node44
+  interfaces:
+    - deviceSelector:
+        physical: true
+      addresses:
+        - 1.2.3.4
+      mtu: 1500
+      dhcp: true
+      dhcpOptions:
+        routeMetric: 100
+      vip:
+        ip: 1.2.3.4
+      vlans:
+  nameservers:
+    - 1.1.1.1
+time:
+  servers:
+    - 2.2.2.2
+install:
+  disk: /dev/sda
+  extraKernelArgs:
+  wipe: true
+features:
+  hostDNS:
+    enabled: true
+    forwardKubeDNSToHost: true
+    resolveMemberNames: true
+nodeLabels:
+nodeAnnotations:
+files:
+EOT
+    error_message = "local machines[0].talos_config error"
   }
 }

@@ -1,8 +1,3 @@
-provider "aws" {
-  region = var.aws.region
-  #profile = var.aws.profile
-}
-
 provider "flux" {
   kubernetes = {
     host                   = var.kubeconfig.host
@@ -14,7 +9,7 @@ provider "flux" {
     url = "https://github.com/${var.github.org}/${var.github.repository}.git"
     http = {
       username = "git" # This can be any string when using a personal access token
-      password = data.aws_ssm_parameter.params_get[var.github.token_store].value
+      password = var.github.token
     }
   }
 }
@@ -28,14 +23,14 @@ provider "kubernetes" {
 
 provider "github" {
   owner = var.github.org
-  token = data.aws_ssm_parameter.params_get[var.github.token_store].value
+  token = var.github.token
 }
 
 provider "cloudflare" {
   email     = var.cloudflare.email
-  api_token = data.aws_ssm_parameter.params_get[var.cloudflare.api_token_store].value
+  api_token = var.cloudflare.api_token
 }
 
 provider "healthchecksio" {
-  api_key = data.aws_ssm_parameter.params_get[var.healthchecksio.api_key_store].value
+  api_key = var.healthchecksio.api_key
 }
