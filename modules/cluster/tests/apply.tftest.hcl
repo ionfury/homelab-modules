@@ -17,7 +17,7 @@ variables {
   talos_config_path      = "~/.talos/testing"
   kubernetes_config_path = "~/.kube/testing"
 
-  ssm_output_path = "/homelab/integration/clusters"
+  ssm_output_path = "/homelab/infrastructure/clusters/integration"
 
   cilium_helm_values = <<EOT
 autoDirectNodeRoutes: true
