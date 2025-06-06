@@ -81,9 +81,9 @@ run "apply" {
 
     kubeconfig = {
       host                   = run.provision_cluster.kubeconfig_host
-      client_certificate     = run.provision_cluster.client_certificate
-      client_key             = run.provision_cluster.client_key
-      cluster_ca_certificate = run.provision_cluster.cluster_ca_certificate
+      client_certificate     = run.provision_cluster.kubeconfig_client_certificate
+      client_key             = run.provision_cluster.kubeconfig_client_key
+      cluster_ca_certificate = run.provision_cluster.kubeconfig_cluster_ca_certificate
     }
 
     github = {
