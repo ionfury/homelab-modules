@@ -92,6 +92,12 @@ variable "kubernetes_config_path" {
   type        = string
 }
 
+variable "ssm_output_path" {
+  description = "The aws ssm parameter path to store config in."
+  type        = string
+  default     = "/homelab/infrastructure/clusters"
+}
+
 variable "machines" {
   description = "A list of machines to create the talos cluster from."
   type = map(object({
@@ -131,12 +137,6 @@ variable "machines" {
       })), [])
     }))
   }))
-}
-
-variable "ssm_output_path" {
-  description = "The aws ssm parameter path to store config in."
-  type        = string
-  default     = "/homelab/infrastructure/clusters"
 }
 
 variable "unifi" {

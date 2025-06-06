@@ -45,7 +45,6 @@ variable "kubeconfig" {
   })
 }
 
-
 variable "github" {
   description = "The GitHub repository to use."
   type = object({

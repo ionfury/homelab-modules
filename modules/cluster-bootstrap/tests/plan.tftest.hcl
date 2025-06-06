@@ -1,3 +1,19 @@
+run "get" {
+  module {
+    source = "./tests/harness/aws_ssm_params_get"
+  }
+
+  variables {
+    parameters = [
+      "/homelab/integration/accounts/github/token",
+      "/homelab/integration/accounts/cloudflare/token",
+      "/homelab/integration/accounts/external-secrets/id",
+      "/homelab/integration/accounts/external-secrets/secret",
+      "/homelab/integration/accounts/healthchecksio/api-key"
+    ]
+  }
+}
+
 run "plan" {
   command = plan
   variables {
@@ -10,37 +26,64 @@ run "plan" {
     }
 
     kubeconfig = {
+      # These are not real credentials, and were generated specifically to meet the validation requirements on the kubernetes provider input to do a plan.
       host                   = "https://127.0.0.1:6443"
-      client_certificate     = "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJoVENDQVN1Z0F3SUJBZ0lSQU1nWUJ4d0tOUm5sMjdKN1pablE5UDR3Q2dZSUtvWkl6ajBFQXdJd0ZURVQKTUJFR0ExVUVDaE1LYTNWaVpYSnVaWFJsY3pBZUZ3MHlOVEF4TXpFd05ETTVNVFphRncweU5qQXhNekV3TkRNNQpNalphTUNreEZ6QVZCZ05WQkFvVERuTjVjM1JsYlRwdFlYTjBaWEp6TVE0d0RBWURWUVFERXdWaFpHMXBiakJaCk1CTUdCeXFHU000OUFnRUdDQ3FHU000OUF3RUhBMElBQkhreXBkL0NiOW1JSnUraE1XMEY1UFVkMEF4cGl5aWQKTy9sbXphR2NsamlPSFBaM0lna2lheFQ3bHdOUHErTWhsMmwyZVNKcE9VcGpkbWlaUmVGdlZhZWpTREJHTUE0RwpBMVVkRHdFQi93UUVBd0lGb0RBVEJnTlZIU1VFRERBS0JnZ3JCZ0VGQlFjREFqQWZCZ05WSFNNRUdEQVdnQlNRCmlyUmsrbXF6ODUxQWgwVDY2amhIejdIMm1UQUtCZ2dxaGtqT1BRUURBZ05JQURCRkFpQnVrZ01JeHpTU1p3eTEKRmZJTWY0d3ZTN0tsOXYwSWVXTXNsT1RROVc3SElRSWhBSitvdmNZaXZsdEdITE5hejVMV0txVlJBZE9sUTBXZwpLbFYrSnEvZ2k5ekEKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo="
-      client_key             = "LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSUk4L2FjUEVMWTZoUE9Vcmh4Y2hSSm12QzN5MDNnYUZmVUl0UjczdFREUURvQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFZVRLbDM4SnYyWWdtNzZFeGJRWGs5UjNRREdtTEtKMDcrV2JOb1p5V09JNGM5bmNpQ1NKcgpGUHVYQTArcjR5R1hhWFo1SW1rNVNtTjJhSmxGNFc5VnB3PT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo="
-      cluster_ca_certificate = "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpVENDQVRDZ0F3SUJBZ0lSQUtMVnNmN0Q4MW5qSmI5eXkyU3RUTDh3Q2dZSUtvWkl6ajBFQXdJd0ZURVQKTUJFR0ExVUVDaE1LYTNWaVpYSnVaWFJsY3pBZUZ3MHlOVEF4TXpFd05ETTRNemxhRncwek5UQXhNamt3TkRNNApNemxhTUJVeEV6QVJCZ05WQkFvVENtdDFZbVZ5Ym1WMFpYTXdXVEFUQmdjcWhrak9QUUlCQmdncWhrak9QUU1CCkJ3TkNBQVJldlJQYkVBT1Y1Wk5PRDRjaDZ2eDAyUjMzR3J0WHBSbXR5QUxrV3R6eHZsMjRqaVJ0VGtzUk9qWFIKN3BhUVVkQ1Iwekg1TjVSWTNXY0l4S1UxSlNwcW8yRXdYekFPQmdOVkhROEJBZjhFQkFNQ0FvUXdIUVlEVlIwbApCQll3RkFZSUt3WUJCUVVIQXdFR0NDc0dBUVVGQndNQ01BOEdBMVVkRXdFQi93UUZNQU1CQWY4d0hRWURWUjBPCkJCWUVGSkNLdEdUNmFyUHpuVUNIUlBycU9FZlBzZmFaTUFvR0NDcUdTTTQ5QkFNQ0EwY0FNRVFDSUVJYWJGU04KYTZZZjc2cWRMU0ZDd1JMM3dYZG1JZEVFK3RucElnSGV4NkVzQWlCT2Y2UWtPT0E2Y2NUSFFnMmJML1lML3ZaVApVK2Rtc3dJanFRM2lZaWhpOVE9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
-    }
-
-    aws = {
-      region = "us-east-2"
+      client_certificate     = <<EOT
+-----BEGIN CERTIFICATE-----
+MIIBhTCCASugAwIBAgIRAMgYBxwKNRnl27J7ZZnQ9P4wCgYIKoZIzj0EAwIwFTET
+MBEGA1UEChMKa3ViZXJuZXRlczAeFw0yNTAxMzEwNDM5MTZaFw0yNjAxMzEwNDM5
+MjZaMCkxFzAVBgNVBAoTDnN5c3RlbTptYXN0ZXJzMQ4wDAYDVQQDEwVhZG1pbjBZ
+MBMGByqGSM49AgEGCCqGSM49AwEHA0IABHkypd/Cb9mIJu+hMW0F5PUd0Axpiyid
+O/lmzaGcljiOHPZ3IgkiaxT7lwNPq+Mhl2l2eSJpOUpjdmiZReFvVaejSDBGMA4G
+A1UdDwEB/wQEAwIFoDATBgNVHSUEDDAKBggrBgEFBQcDAjAfBgNVHSMEGDAWgBSQ
+irRk+mqz851Ah0T66jhHz7H2mTAKBggqhkjOPQQDAgNIADBFAiBukgMIxzSSZwy1
+FfIMf4wvS7Kl9v0IeWMslOTQ9W7HIQIhAJ+ovcYivltGHLNaz5LWKqVRAdOlQ0Wg
+KlV+Jq/gi9zA
+-----END CERTIFICATE-----
+EOT
+      client_key             = <<EOT
+-----BEGIN EC PRIVATE KEY-----
+MHcCAQEEII8/acPELY6hPOUrhxchRJmvC3y03gaFfUItR73tTDQDoAoGCCqGSM49
+AwEHoUQDQgAEeTKl38Jv2Ygm76ExbQXk9R3QDGmLKJ07+WbNoZyWOI4c9nciCSJr
+FPuXA0+r4yGXaXZ5Imk5SmN2aJlF4W9Vpw==
+-----END EC PRIVATE KEY-----
+EOT
+      cluster_ca_certificate = <<EOT
+-----BEGIN CERTIFICATE-----
+MIIBiTCCATCgAwIBAgIRAKLVsf7D81njJb9yy2StTL8wCgYIKoZIzj0EAwIwFTET
+MBEGA1UEChMKa3ViZXJuZXRlczAeFw0yNTAxMzEwNDM4MzlaFw0zNTAxMjkwNDM4
+MzlaMBUxEzARBgNVBAoTCmt1YmVybmV0ZXMwWTATBgcqhkjOPQIBBggqhkjOPQMB
+BwNCAARevRPbEAOV5ZNOD4ch6vx02R33GrtXpRmtyALkWtzxvl24jiRtTksROjXR
+7paQUdCR0zH5N5RY3WcIxKU1JSpqo2EwXzAOBgNVHQ8BAf8EBAMCAoQwHQYDVR0l
+BBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0O
+BBYEFJCKtGT6arPznUCHRPrqOEfPsfaZMAoGCCqGSM49BAMCA0cAMEQCIEIabFSN
+a6Yf76qdLSFCwRL3wXdmIdEE+tnpIgHex6EsAiBOf6QkOOA6ccTHQg2bL/YL/vZT
+U+dmswIjqQ3iYihi9Q==
+-----END CERTIFICATE-----
+EOT
     }
 
     github = {
       org             = "ionfury"
       repository      = "homelab"
       repository_path = "kubernetes/clusters"
-      token           = "/homelab/integration/accounts/github/token"
+      token           = run.get.values["/homelab/integration/accounts/github/token"]
     }
 
     cloudflare = {
       account   = "homelab"
       email     = "ionfury@gmail.com"
-      api_token = "/homelab/integration/accounts/cloudflare/token"
+      api_token = run.get.values["/homelab/integration/accounts/cloudflare/token"]
       zone_id   = "test"
     }
 
     external_secrets = {
-      id     = "/homelab/integration/accounts/external-secrets/id"
-      secret = "/homelab/integration/accounts/external-secrets/secret"
+      id     = run.get.values["/homelab/integration/accounts/external-secrets/id"]
+      secret = run.get.values["/homelab/integration/accounts/external-secrets/secret"]
     }
 
     healthchecksio = {
-      api_key = "/homelab/integration/accounts/healthchecksio/api-key"
+      api_key = run.get.values["/homelab/integration/accounts/healthchecksio/api-key"]
     }
   }
 }

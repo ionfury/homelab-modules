@@ -1,6 +1,12 @@
+mock_provider "kubernetes" {
+  alias = "mock"
+}
+
 run "plan" {
   command = plan
-
+  providers = {
+    kubernetes = kubernetes.mock
+  }
   variables {
     name                    = "homelab-modules"
     namespace               = run.create_namespace.name

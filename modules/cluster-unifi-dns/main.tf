@@ -16,7 +16,6 @@ locals {
   })
 }
 
-
 resource "unifi_dns_record" "record" {
   for_each = local.unifi_dns_records
 

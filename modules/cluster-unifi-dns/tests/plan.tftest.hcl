@@ -55,4 +55,14 @@ run "plan" {
     condition     = length(unifi_dns_record.record) == 2
     error_message = "DNS Record length not as expected!"
   }
+
+  assert {
+    condition     = length(unifi_user.user) == 3
+    error_message = "User length is not as expected!"
+  }
+
+  assert {
+    condition     = unifi_user.user["a"].name == "a" && unifi_user.user["a"].mac == "aa:aa:aa:aa:aa:aa" && unifi_user.user["a"].fixed_ip == "1.1.1.1"
+    error_message = "Unifi user[a] is not as expected!"
+  }
 }

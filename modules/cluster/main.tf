@@ -1,5 +1,5 @@
 locals {
-  cluster_endpoint         = "${var.cluster_name}.${var.cluster_tld}"
+  cluster_endpoint         = "${var.cluster_name}.k8s.${var.cluster_tld}"
   cluster_endpoint_address = "https://${local.cluster_endpoint}:6443"
 
   talos_cluster_config = templatefile("${path.module}/resources/templates/talos_cluster.yaml.tftpl", {
@@ -137,7 +137,7 @@ module "cluster_bootstrap" {
     host                   = module.cluster_talos.kubeconfig_host
     client_certificate     = module.cluster_talos.kubeconfig_client_certificate
     client_key             = module.cluster_talos.kubeconfig_client_key
-    cluster_ca_certificate = module.cluster_talos.kubeconfig_client_certificate
+    cluster_ca_certificate = module.cluster_talos.kubeconfig_cluster_ca_certificate
   }
 
   github = {

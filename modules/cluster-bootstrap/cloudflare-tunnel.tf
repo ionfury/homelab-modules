@@ -2,6 +2,7 @@ locals {
   account_id = data.cloudflare_accounts.this.result[0].id
   zone_id    = var.cloudflare.zone_id #lookup(data.cloudflare_zones.domain.zones[0], "id")
 }
+
 data "cloudflare_accounts" "this" {
   name = var.cloudflare.account
 }
