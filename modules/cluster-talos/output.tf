@@ -54,16 +54,19 @@ output "kubeconfig_host" {
 }
 
 output "kubeconfig_client_certificate" {
-  sensitive = true
-  value     = base64decode(talos_cluster_kubeconfig.this.kubernetes_client_configuration.client_certificate)
+  depends_on = [time_sleep.wait_60_seconds]
+  sensitive  = true
+  value      = base64decode(talos_cluster_kubeconfig.this.kubernetes_client_configuration.client_certificate)
 }
 
 output "kubeconfig_client_key" {
-  sensitive = true
-  value     = base64decode(talos_cluster_kubeconfig.this.kubernetes_client_configuration.client_key)
+  depends_on = [time_sleep.wait_60_seconds]
+  sensitive  = true
+  value      = base64decode(talos_cluster_kubeconfig.this.kubernetes_client_configuration.client_key)
 }
 
 output "kubeconfig_cluster_ca_certificate" {
-  sensitive = true
-  value     = base64decode(talos_cluster_kubeconfig.this.kubernetes_client_configuration.ca_certificate)
+  depends_on = [time_sleep.wait_60_seconds]
+  sensitive  = true
+  value      = base64decode(talos_cluster_kubeconfig.this.kubernetes_client_configuration.ca_certificate)
 }
