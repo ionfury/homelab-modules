@@ -13,6 +13,9 @@ run "provision_hosts" {
 }
 
 run "provision_cluster" {
+  module {
+    source = "../cluster-talos"
+  }
 
   variables {
     talos_version        = "v1.10.0"
