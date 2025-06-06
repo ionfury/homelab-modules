@@ -53,7 +53,7 @@ EOT
   }
 }
 
-run "get_secrets" {
+run "get" {
   module {
     source = "./tests/harness/aws_ssm_params_get"
   }
@@ -90,23 +90,23 @@ run "apply" {
       org             = "ionfury"
       repository      = "homelab-integration"
       repository_path = "kubernetes/clusters"
-      token_store     = "/homelab/integration/accounts/github/token"
+      token           = run.get.values["/homelab/integration/accounts/github/token"]
     }
 
     cloudflare = {
-      account         = "homelab"
-      email           = "ionfury@gmail.com"
-      api_token_store = "/homelab/integration/accounts/cloudflare/token"
-      zone_id         = "799905ff93d585a9a0633949275cbf98"
+      account   = "homelab"
+      email     = "ionfury@gmail.com"
+      api_token = run.get.values["/homelab/integration/accounts/cloudflare/token"]
+      zone_id   = "799905ff93d585a9a0633949275cbf98"
     }
 
     external_secrets = {
-      id_store     = "/homelab/integration/accounts/external-secrets/id"
-      secret_store = "/homelab/integration/accounts/external-secrets/secret"
+      id     = run.get.values["/homelab/integration/accounts/external-secrets/id"]
+      secret = run.get.values["/homelab/integration/accounts/external-secrets/secret"]
     }
 
     healthchecksio = {
-      api_key_store = "/homelab/integration/accounts/healthchecksio/api-key"
+      api_key = run.get.values["/homelab/integration/accounts/healthchecksio/api-key"]
     }
   }
 }
