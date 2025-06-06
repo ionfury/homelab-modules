@@ -127,6 +127,7 @@ module "cluster_talos" {
 }
 
 module "cluster_bootstrap" {
+  # depends_on = [module.cluster_talos]
   source = "../cluster-bootstrap"
 
   cluster_name     = var.cluster_name

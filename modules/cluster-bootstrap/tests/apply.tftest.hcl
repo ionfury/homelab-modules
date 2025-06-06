@@ -69,6 +69,12 @@ run "get" {
   }
 }
 
+run "wait" {
+  module {
+    source = "./tests/harness/wait"
+  }
+}
+
 run "apply" {
   variables {
     cluster_name = "plan"
