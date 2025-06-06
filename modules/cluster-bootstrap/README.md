@@ -20,7 +20,7 @@
 | <a name="provider_flux"></a> [flux](#provider\_flux) | 1.4.0 |
 | <a name="provider_github"></a> [github](#provider\_github) | 6.4.0 |
 | <a name="provider_healthchecksio"></a> [healthchecksio](#provider\_healthchecksio) | 2.0.0 |
-| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.36.0 |
+| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.35.1 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.6.3 |
 
 ## Modules
