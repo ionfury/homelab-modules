@@ -107,7 +107,7 @@ EOT
   unifi = {
     address       = "https://192.168.1.1"
     site          = "default"
-    api_key_store = "/homelab/infrastructure/accounts/unifi/api-key"
+    api_key_store = "/homelab/integration/accounts/unifi/api-key"
   }
 
   github = {
