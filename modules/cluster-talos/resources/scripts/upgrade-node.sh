@@ -7,7 +7,7 @@
 #   TALOS_NODE
 #   TIMEOUT
 
-MAX_RETRIES=6
+MAX_RETRIES=12
 SLEEP_INTERVAL=10
 
 wait_for_node_ready() {
