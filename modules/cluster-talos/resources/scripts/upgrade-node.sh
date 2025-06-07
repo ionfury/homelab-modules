@@ -7,6 +7,32 @@
 #   TALOS_NODE
 #   TIMEOUT
 
+MAX_RETRIES=6
+SLEEP_INTERVAL=10
+
+wait_for_node_ready() {
+  local config_path=$1
+  local node=$2
+
+  echo "Waiting for node '$node' to report ready (max $MAX_RETRIES tries)..."
+  for i in $(seq 1 "$MAX_RETRIES"); do
+    if talosctl --talosconfig "$config_path" \
+         get machinestatus --nodes "$node" -o json 2>/dev/null \
+       | jq -e '.spec.status.ready' >/dev/null 2>&1
+    then
+      echo "✅ Node '$node' is reporting ready!"
+      return 0
+    fi
+
+    echo "Attempt $i/$MAX_RETRIES: not ready yet, sleeping $SLEEP_INTERVAL s..."
+    if [ "$i" -eq "$MAX_RETRIES" ]; then
+      echo "⚠️ Timeout waiting for node readiness—giving up."
+      return 1
+    fi
+    sleep "$SLEEP_INTERVAL"
+  done
+}
+
 if [ -z "$DESIRED_TALOS_TAG" ] || [ -z "$DESIRED_TALOS_SCHEMATIC" ] || [ -z "$TALOS_CONFIG_PATH" ] || [ -z "$TALOS_NODE" ] || [ -z "$TIMEOUT" ]; then
   echo "⚠️ Missing required environment variables."
   exit 1
@@ -14,12 +40,10 @@ fi
 
 echo "config: $TALOS_CONFIG_PATH"
 echo "Upgrade check running on: $TALOS_NODE"
-echo "Waiting for this node to be available..."
-for i in {1..12}; do talosctl --talosconfig "$TALOS_CONFIG_PATH" get machinestatus --nodes "$TALOS_NODE" -o json 2>/dev/null | jq -e '.spec.status.ready' >/dev/null && break || sleep 10; done
-echo "✅ Node is repoprting ready!"
 
-#echo "Waiting for this cluster to be healthy..."
-#for i in {1..12}; do talosctl --talosconfig $TALOS_CONFIG_PATH health --nodes "$TALOS_NODE" && break || sleep 10; done
+if ! wait_for_node_ready "$TALOS_CONFIG_PATH" "$TALOS_NODE"; then
+  exit 1
+fi
 
 CURRENT_TALOS_SCHEMATIC=$(talosctl --talosconfig "$TALOS_CONFIG_PATH" --nodes "$TALOS_NODE" get extensions -o json 2>/dev/null | jq -s '.[] | select(.spec.metadata.name == "schematic") | .spec.metadata.version' | tr -d '"')
 CURRENT_TALOS_TAG=$(talosctl --talosconfig "$TALOS_CONFIG_PATH" --nodes "$TALOS_NODE" read /etc/os-release 2>/dev/null | awk -F= '/^VERSION_ID=/ {print $2}')
@@ -38,7 +62,6 @@ else
   fi
 fi
 
-echo "Waiting for node to be healthy..."
-for i in {1..12}; do talosctl --talosconfig "$TALOS_CONFIG_PATH" get machinestatus --nodes "$TALOS_NODE" -o json 2>/dev/null | jq -e '.spec.status.ready' >/dev/null && break || sleep 10; done
-echo "✅ Node is healthy!"
-
+if ! wait_for_node_ready "$TALOS_CONFIG_PATH" "$TALOS_NODE"; then
+  exit 1
+fi
