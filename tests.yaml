@@ -50,3 +50,9 @@ commandTests:
     expectedOutput:
       - "Client"
     exitCode: 1
+
+  - name: "Check sleep command"
+    command: "sleep"
+    expectedOutput: 
+      - "sleep"
+    exitCode: 0
