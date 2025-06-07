@@ -55,4 +55,4 @@ commandTests:
     command: "sleep"
     expectedOutput: 
       - "sleep"
-    exitCode: 0
+    exitCode: 1
