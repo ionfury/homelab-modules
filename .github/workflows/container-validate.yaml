@@ -9,6 +9,7 @@ on:
     paths:
       - 'Dockerfile'
       - 'docker-bake.hcl'
+      - 'tests.yaml'
 
 jobs:
   container-validate:
