@@ -14,16 +14,15 @@ wait_for_node_ready() {
   local config_path=$1
   local node=$2
 
-  echo "Waiting for node '$node' to report ready (max $MAX_RETRIES tries)..."
+  echo "Waiting for node '$node' @ '$config_path' to report ready (max $MAX_RETRIES tries)..."
   for i in $(seq 1 "$MAX_RETRIES"); do
-    if talosctl --talosconfig "$config_path" \
-         get machinestatus --nodes "$node" -o json 2>/dev/null \
-       | jq -e '.spec.status.ready' >/dev/null 2>&1
-    then
+    output=$(talosctl --talosconfig "$config_path" get machinestatus --nodes "$node" -o json )
+    ready=$(echo "$output" | jq -r '.spec.status.ready')
+    stage=$(echo "$output" | jq -r '.spec.stage')
+    if [[ "$ready" == "true" && "$stage" == "running" ]]; then
       echo "✅ Node '$node' is reporting ready!"
       return 0
     fi
-
     echo "Attempt $i/$MAX_RETRIES: not ready yet, sleeping $SLEEP_INTERVAL s..."
     if [ "$i" -eq "$MAX_RETRIES" ]; then
       echo "⚠️ Timeout waiting for node readiness—giving up."
@@ -34,11 +33,16 @@ wait_for_node_ready() {
 }
 
 if [ -z "$DESIRED_TALOS_TAG" ] || [ -z "$DESIRED_TALOS_SCHEMATIC" ] || [ -z "$TALOS_CONFIG_PATH" ] || [ -z "$TALOS_NODE" ] || [ -z "$TIMEOUT" ]; then
+  echo "DESIRED_TALOS_TAG: $DESIRED_TALOS_TAG"
+  echo "DESIRED_TALOS_SCHEMATIC: $DESIRED_TALOS_SCHEMATIC"
+  echo "TALOS_CONFIG_PATH: $TALOS_CONFIG_PATH"
+  echo "TALOS_NODE: $TALOS_NODE"
+  echo "TIMEOUT: $TIMEOUT"
   echo "⚠️ Missing required environment variables."
   exit 1
 fi
 
-echo "config: $TALOS_CONFIG_PATH"
+echo "Config: $TALOS_CONFIG_PATH"
 echo "Upgrade check running on: $TALOS_NODE"
 
 if ! wait_for_node_ready "$TALOS_CONFIG_PATH" "$TALOS_NODE"; then
