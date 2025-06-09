@@ -54,7 +54,7 @@ echo Current Tag: $CURRENT_TALOS_TAG Desired Tag: $DESIRED_TALOS_TAG
 if [ "$DESIRED_TALOS_TAG" = "$CURRENT_TALOS_TAG" ] && [ "$DESIRED_TALOS_SCHEMATIC" = "$CURRENT_TALOS_SCHEMATIC" ]; then
   echo "No Upgrade required."
 else
-  echo "Upgrade required."
+  echo "Commencing Upgrade to: $DESIRED_TALOS_SCHEMATIC:$DESIRED_TALOS_TAG"
   if ! talosctl --talosconfig "$TALOS_CONFIG_PATH" --nodes "$TALOS_NODE" upgrade --image="factory.talos.dev/installer/$DESIRED_TALOS_SCHEMATIC:$DESIRED_TALOS_TAG" --timeout=$TIMEOUT; then
     echo "⚠️ Upgrade RPC errored out (EOF / GOAWAY is expected during reboot), continuing…"
   else
