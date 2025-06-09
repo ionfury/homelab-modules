@@ -19,7 +19,7 @@ wait_for_node_ready() {
     output=$(talosctl --talosconfig "$config_path" get machinestatus --nodes "$node" -o json )
     ready=$(echo "$output" | jq -r '.spec.status.ready')
     stage=$(echo "$output" | jq -r '.spec.stage')
-    if [[ "$ready" == "true" && "$stage" == "running" ]]; then
+    if [ "$ready" = "true" ] && [ "$stage" = "running" ]; then  
       echo "✅ Node '$node' is reporting ready!"
       return 0
     fi

@@ -6,6 +6,9 @@ run "random" {
   module {
     source = "./tests/harness/random"
   }
+  providers = {
+    flux = flux.mock
+  }
 
   variables {
     length = 2
