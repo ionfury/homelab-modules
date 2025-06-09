@@ -34,7 +34,7 @@ network:
         physical: true
       dhcp: true
       routes:
-        - network: 172.18.0.0/16
+        - network: 172.19.0.0/16
           gateway: 10.0.2.1
       addresses:
         - ${run.provision.vms["node-1"].ip}/32
@@ -50,7 +50,7 @@ network:
         physical: true
       dhcp: true
       routes:
-        - network: 172.18.0.0/16
+        - network: 172.19.0.0/16
           gateway: 10.0.2.1
       addresses:
         - ${run.provision.vms["node-2"].ip}/32
@@ -66,7 +66,7 @@ network:
         physical: true
       dhcp: true
       routes:
-        - network: 172.18.0.0/16
+        - network: 172.19.0.0/16
           gateway: 10.0.2.1
       addresses:
         - ${run.provision.vms["node-3"].ip}/32
