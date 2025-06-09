@@ -29,8 +29,6 @@ EOT
 type: controlplane
 network:
   hostname: node-1
-  nameservers:
-    - 1.1.1.1
   interfaces:
     - deviceSelector:
         physical: true
@@ -44,8 +42,6 @@ EOT
 type: controlplane
 network:
   hostname: node-2
-  nameservers:
-    - 1.1.1.1
   interfaces:
     - deviceSelector:
         physical: true
@@ -59,8 +55,6 @@ EOT
 type: controlplane
 network:
   hostname: node-3
-  nameservers:
-    - 1.1.1.1
   interfaces:
     - deviceSelector:
         physical: true
