@@ -31,7 +31,6 @@ This is a generic terraform module for deploying and managing a talos cluster vi
 | <a name="provider_local"></a> [local](#provider\_local) | 2.5 |
 | <a name="provider_null"></a> [null](#provider\_null) | 3.2.3 |
 | <a name="provider_talos"></a> [talos](#provider\_talos) | 0.7.0 |
-| <a name="provider_time"></a> [time](#provider\_time) | 0.12.1 |
 
 ## Modules
 
@@ -52,7 +51,6 @@ No modules.
 | [talos_machine_bootstrap.this](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/resources/machine_bootstrap) | resource |
 | [talos_machine_configuration_apply.machines](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/resources/machine_configuration_apply) | resource |
 | [talos_machine_secrets.this](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/resources/machine_secrets) | resource |
-| [time_sleep.wait_60_seconds](https://registry.terraform.io/providers/hashicorp/time/0.12.1/docs/resources/sleep) | resource |
 | [helm_template.bootstrap_charts](https://registry.terraform.io/providers/hashicorp/helm/2.17.0/docs/data-sources/template) | data source |
 | [talos_client_configuration.this](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/data-sources/client_configuration) | data source |
 | [talos_image_factory_extensions_versions.machine_version](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/data-sources/image_factory_extensions_versions) | data source |
