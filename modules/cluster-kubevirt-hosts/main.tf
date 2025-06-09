@@ -60,9 +60,10 @@ resource "kubernetes_manifest" "talos_vm" {
           networks = [
             {
               name = "default"
-              pod = {}
-            }]
-          }
+              pod  = {}
+            }
+          ]
+
           domain = {
             machine = {
               type = "q35"
