@@ -36,7 +36,7 @@ network:
         physical: true
       dhcp: true
       addresses:
-        - ${run.provision.vms["node-1"].ip}
+        - ${run.provision.vms["node-1"].ip}/32
 EOT
       },
       {
@@ -51,7 +51,7 @@ network:
         physical: true
       dhcp: true
       addresses:
-        - ${run.provision.vms["node-2"].ip}
+        - ${run.provision.vms["node-2"].ip}/32
 EOT
       },
       {
@@ -66,7 +66,7 @@ network:
         physical: true
       dhcp: true
       addresses:
-        - ${run.provision.vms["node-3"].ip}
+        - ${run.provision.vms["node-3"].ip}/32
 EOT        
       }
     ]
