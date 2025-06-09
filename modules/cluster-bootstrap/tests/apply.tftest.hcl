@@ -1,10 +1,20 @@
+run "random" {
+  module {
+    source = "./tests/harness/random"
+  }
+
+  variables {
+    length = 2
+  }
+}
+
 run "provision_hosts" {
   module {
     source = "../cluster-kubevirt-hosts"
   }
 
   variables {
-    name                    = "cluster-bootstrap-apply"
+    name                    = "node"
     vm_count                = 1
     data_root_storage_class = "fast"
     data_disk_storage_class = "fast"
@@ -21,7 +31,7 @@ run "provision_cluster" {
     talos_version        = "v1.10.0"
     kubernetes_version   = "1.32.0"
     talos_cluster_config = <<EOT
-clusterName: cluster-bootstrap-apply
+clusterName: ${run.random.resource_name}
 allowSchedulingOnControlPlanes: true
 controlPlane:
   endpoint: https://${run.provision_hosts.lb.ip}:6443
@@ -32,7 +42,7 @@ EOT
         talos_config = <<EOT
 type: controlplane
 network:
-  hostname: cluster-bootstrap-apply-talos-vm-1
+  hostname: cluster-bootstrap-apply-1
   nameservers:
     - 1.1.1.1
   interfaces:
@@ -40,7 +50,7 @@ network:
         physical: true
       dhcp: true
       addresses:
-        - ${run.provision_hosts.vms["cluster-bootstrap-apply-talos-vm-1"].ip}
+        - ${run.provision_hosts.vms["node-1"].ip}
 EOT
       }
     ]
@@ -68,16 +78,10 @@ run "get" {
     ]
   }
 }
-/*
-run "wait" {
-  module {
-    source = "./tests/harness/wait"
-  }
-}
-*/
+
 run "apply" {
   variables {
-    cluster_name = "plan"
+    cluster_name = run.random.resource_name
     flux_version = "v2.4.0"
     tld          = "tomnowak.work"
 

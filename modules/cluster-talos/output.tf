@@ -40,33 +40,26 @@ output "kubeconfig_raw" {
   value     = talos_cluster_kubeconfig.this.kubeconfig_raw
 }
 
-resource "time_sleep" "wait_60_seconds" {
-  create_duration = "60s"
-}
-
 output "kubeconfig_host" {
   # Ensure the kubeconfig is written after the cluster is healthy.
   # Implicit dependencies will attempt to use the kubeconfig file before the cluster is healthy.
-  #depends_on = [null_resource.talos_cluster_health_upgrade]
-  depends_on = [time_sleep.wait_60_seconds]
-  sensitive  = true
-  value      = talos_cluster_kubeconfig.this.kubernetes_client_configuration.host
+  depends_on = [null_resource.talos_cluster_health_upgrade]
+  #depends_on = [time_sleep.wait_60_seconds]
+  sensitive = true
+  value     = talos_cluster_kubeconfig.this.kubernetes_client_configuration.host
 }
 
 output "kubeconfig_client_certificate" {
-  depends_on = [time_sleep.wait_60_seconds]
-  sensitive  = true
-  value      = base64decode(talos_cluster_kubeconfig.this.kubernetes_client_configuration.client_certificate)
+  sensitive = true
+  value     = base64decode(talos_cluster_kubeconfig.this.kubernetes_client_configuration.client_certificate)
 }
 
 output "kubeconfig_client_key" {
-  depends_on = [time_sleep.wait_60_seconds]
-  sensitive  = true
-  value      = base64decode(talos_cluster_kubeconfig.this.kubernetes_client_configuration.client_key)
+  sensitive = true
+  value     = base64decode(talos_cluster_kubeconfig.this.kubernetes_client_configuration.client_key)
 }
 
 output "kubeconfig_cluster_ca_certificate" {
-  depends_on = [time_sleep.wait_60_seconds]
-  sensitive  = true
-  value      = base64decode(talos_cluster_kubeconfig.this.kubernetes_client_configuration.ca_certificate)
+  sensitive = true
+  value     = base64decode(talos_cluster_kubeconfig.this.kubernetes_client_configuration.ca_certificate)
 }
