@@ -3,28 +3,28 @@ variable "cluster_name" {
   type        = string
 }
 
-variable "cluster_endpoint" {
-  description = "The endpoint for the cluster."
+variable "cluster_tld" {
+  description = "A tld for the cluster. Format: asdf.com"
   type        = string
 }
 
 variable "cluster_vip" {
-  description = "The VIP to use for the Talos cluster. Applied to the first interface of control plane machines."
+  description = "The VIP to use for the Talos cluster. Applied to the first interface of control plane machines. Format: 10.10.10.10"
   type        = string
 }
 
 variable "cluster_node_subnet" {
-  description = "The subnet to use for the Talos cluster nodes."
+  description = "The subnet to use for the Talos cluster nodes. Format: 10.10.10.10/16"
   type        = string
 }
 
 variable "cluster_pod_subnet" {
-  description = "The pod subnet to use for pods on the Talos cluster."
+  description = "The pod subnet to use for pods on the Talos cluster. Format: 10.10.10.10/16"
   type        = string
 }
 
 variable "cluster_service_subnet" {
-  description = "The pod subnet to use for services on the Talos cluster."
+  description = "The pod subnet to use for services on the Talos cluster. Format: 10.10.10.10/16"
   type        = string
 }
 
@@ -67,6 +67,11 @@ variable "prometheus_version" {
   type        = string
 }
 
+variable "flux_version" {
+  description = "The version of Flux to use."
+  type        = string
+}
+
 variable "nameservers" {
   description = "The nameservers to use for the cluster."
   type        = list(string)
@@ -85,6 +90,12 @@ variable "talos_config_path" {
 variable "kubernetes_config_path" {
   description = "The path to output the Kubernetes configuration file."
   type        = string
+}
+
+variable "ssm_output_path" {
+  description = "The aws ssm parameter path to store config in."
+  type        = string
+  default     = "/homelab/infrastructure/clusters"
 }
 
 variable "machines" {
@@ -117,6 +128,7 @@ variable "machines" {
     })), [])
     interfaces = list(object({
       addresses        = list(string)
+      hardwareAddr     = string
       dhcp_routeMetric = optional(number, 100)
       vlans = optional(list(object({
         vlanId           = number
@@ -127,8 +139,46 @@ variable "machines" {
   }))
 }
 
-variable "ssm_output_path" {
-  description = "The aws ssm parameter path to store config in."
-  type        = string
-  default     = "/homelab/infrastructure/clusters"
+variable "unifi" {
+  description = "The Unifi controller to use."
+  type = object({
+    address       = string
+    site          = string
+    api_key_store = string
+  })
+}
+
+variable "github" {
+  description = "The GitHub repository to use."
+  type = object({
+    org             = string
+    repository      = string
+    repository_path = string
+    token_store     = string
+  })
+}
+
+variable "cloudflare" {
+  description = "The Cloudflare account to use."
+  type = object({
+    account         = string
+    email           = string
+    api_token_store = string
+    zone_id         = optional(string, "799905ff93d585a9a0633949275cbf98")
+  })
+}
+
+variable "external_secrets" {
+  description = "The external secret store."
+  type = object({
+    id_store     = string
+    secret_store = string
+  })
+}
+
+variable "healthchecksio" {
+  description = "The healthchecks.io account to use."
+  type = object({
+    api_key_store = string
+  })
 }

@@ -1,3 +1,18 @@
+run "get" {
+  module {
+    source = "./tests/harness/aws_ssm_params_get"
+  }
+
+  variables {
+    parameters = [
+      "/homelab/integration/accounts/github/token",
+      "/homelab/integration/accounts/cloudflare/token",
+      "/homelab/integration/accounts/external-secrets/id",
+      "/homelab/integration/accounts/external-secrets/secret",
+      "/homelab/integration/accounts/healthchecksio/api-key"
+    ]
+  }
+}
 
 run "plan" {
   command = plan
@@ -5,39 +20,70 @@ run "plan" {
     cluster_name = "plan"
     flux_version = "v2.4.0"
     tld          = "tomnowak.work"
+
     cluster_env_vars = {
       hello = "world"
     }
+
     kubeconfig = {
-      host                   = "host"
-      client_certificate     = "client"
-      client_key             = "key"
-      cluster_ca_certificate = "ca"
-    }
-    aws = {
-      region = "us-east-2"
+      # These are not real credentials, and were generated specifically to meet the validation requirements on the kubernetes provider input to do a plan.
+      host                   = "https://127.0.0.1:6443"
+      client_certificate     = <<EOT
+-----BEGIN CERTIFICATE-----
+MIIBhTCCASugAwIBAgIRAMgYBxwKNRnl27J7ZZnQ9P4wCgYIKoZIzj0EAwIwFTET
+MBEGA1UEChMKa3ViZXJuZXRlczAeFw0yNTAxMzEwNDM5MTZaFw0yNjAxMzEwNDM5
+MjZaMCkxFzAVBgNVBAoTDnN5c3RlbTptYXN0ZXJzMQ4wDAYDVQQDEwVhZG1pbjBZ
+MBMGByqGSM49AgEGCCqGSM49AwEHA0IABHkypd/Cb9mIJu+hMW0F5PUd0Axpiyid
+O/lmzaGcljiOHPZ3IgkiaxT7lwNPq+Mhl2l2eSJpOUpjdmiZReFvVaejSDBGMA4G
+A1UdDwEB/wQEAwIFoDATBgNVHSUEDDAKBggrBgEFBQcDAjAfBgNVHSMEGDAWgBSQ
+irRk+mqz851Ah0T66jhHz7H2mTAKBggqhkjOPQQDAgNIADBFAiBukgMIxzSSZwy1
+FfIMf4wvS7Kl9v0IeWMslOTQ9W7HIQIhAJ+ovcYivltGHLNaz5LWKqVRAdOlQ0Wg
+KlV+Jq/gi9zA
+-----END CERTIFICATE-----
+EOT
+      client_key             = <<EOT
+-----BEGIN EC PRIVATE KEY-----
+MHcCAQEEII8/acPELY6hPOUrhxchRJmvC3y03gaFfUItR73tTDQDoAoGCCqGSM49
+AwEHoUQDQgAEeTKl38Jv2Ygm76ExbQXk9R3QDGmLKJ07+WbNoZyWOI4c9nciCSJr
+FPuXA0+r4yGXaXZ5Imk5SmN2aJlF4W9Vpw==
+-----END EC PRIVATE KEY-----
+EOT
+      cluster_ca_certificate = <<EOT
+-----BEGIN CERTIFICATE-----
+MIIBiTCCATCgAwIBAgIRAKLVsf7D81njJb9yy2StTL8wCgYIKoZIzj0EAwIwFTET
+MBEGA1UEChMKa3ViZXJuZXRlczAeFw0yNTAxMzEwNDM4MzlaFw0zNTAxMjkwNDM4
+MzlaMBUxEzARBgNVBAoTCmt1YmVybmV0ZXMwWTATBgcqhkjOPQIBBggqhkjOPQMB
+BwNCAARevRPbEAOV5ZNOD4ch6vx02R33GrtXpRmtyALkWtzxvl24jiRtTksROjXR
+7paQUdCR0zH5N5RY3WcIxKU1JSpqo2EwXzAOBgNVHQ8BAf8EBAMCAoQwHQYDVR0l
+BBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0O
+BBYEFJCKtGT6arPznUCHRPrqOEfPsfaZMAoGCCqGSM49BAMCA0cAMEQCIEIabFSN
+a6Yf76qdLSFCwRL3wXdmIdEE+tnpIgHex6EsAiBOf6QkOOA6ccTHQg2bL/YL/vZT
+U+dmswIjqQ3iYihi9Q==
+-----END CERTIFICATE-----
+EOT
     }
 
     github = {
       org             = "ionfury"
       repository      = "homelab"
       repository_path = "kubernetes/clusters"
-      token_store     = "/homelab/integration/accounts/github/token"
+      token           = run.get.values["/homelab/integration/accounts/github/token"]
     }
 
     cloudflare = {
-      account         = "homelab"
-      email           = "ionfury@gmail.com"
-      api_token_store = "/homelab/integration/accounts/cloudflare/token"
+      account   = "homelab"
+      email     = "ionfury@gmail.com"
+      api_token = run.get.values["/homelab/integration/accounts/cloudflare/token"]
+      zone_id   = "test"
     }
 
     external_secrets = {
-      id_store     = "/homelab/integration/accounts/external-secrets/id"
-      secret_store = "/homelab/integration/accounts/external-secrets/secret"
+      id     = run.get.values["/homelab/integration/accounts/external-secrets/id"]
+      secret = run.get.values["/homelab/integration/accounts/external-secrets/secret"]
     }
 
     healthchecksio = {
-      api_key_store = "/homelab/integration/accounts/healthchecksio/api-key"
+      api_key = run.get.values["/homelab/integration/accounts/healthchecksio/api-key"]
     }
   }
 }

@@ -1,5 +1,5 @@
 locals {
-  vm_names = [for i in range(var.vm_count) : "${var.name}-talos-vm-${format("%s", i + 1)}"]
+  vm_names = [for i in range(var.vm_count) : "${var.name}-${format("%s", i + 1)}"]
 }
 
 resource "kubernetes_namespace" "this" {

@@ -1,8 +1,14 @@
+mock_provider "kubernetes" {
+  alias = "mock"
+}
+
 run "plan" {
   command = plan
-
+  providers = {
+    kubernetes = kubernetes.mock
+  }
   variables {
-    name                    = "homelab-modules"
+    name                    = "node"
     namespace               = run.create_namespace.name
     vm_count                = 3
     data_root_storage_class = "fast"

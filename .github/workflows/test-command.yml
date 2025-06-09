@@ -73,7 +73,7 @@ jobs:
       fail-fast: false 
       matrix:
         module: ${{ fromJson(needs.changed-modules.outputs.modules) }}
-        test: ["plan", "apply", "integration"]
+        test: ["plan", "apply"]
     steps:
       - name: Checkout PR head
         uses: actions/checkout@v4

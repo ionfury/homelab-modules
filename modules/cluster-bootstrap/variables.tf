@@ -45,44 +45,37 @@ variable "kubeconfig" {
   })
 }
 
-variable "aws" {
-  description = "The AWS account to use."
-  type = object({
-    region = string
-  })
-}
-
 variable "github" {
   description = "The GitHub repository to use."
   type = object({
     org             = string
     repository      = string
     repository_path = string
-    token_store     = string
+    token           = string
   })
 }
 
 variable "cloudflare" {
   description = "The Cloudflare account to use."
   type = object({
-    account         = string
-    email           = string
-    api_token_store = string
-    zone_id         = optional(string, "799905ff93d585a9a0633949275cbf98")
+    account   = string
+    email     = string
+    api_token = string
+    zone_id   = string
   })
 }
 
 variable "external_secrets" {
   description = "The external secret store."
   type = object({
-    id_store     = string
-    secret_store = string
+    id     = string
+    secret = string
   })
 }
 
 variable "healthchecksio" {
   description = "The healthchecks.io account to use."
   type = object({
-    api_key_store = string
+    api_key = string
   })
 }

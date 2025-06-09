@@ -4,7 +4,7 @@ run "provision" {
   }
 
   variables {
-    name                    = "cluster-talos-apply"
+    name                    = "node"
     vm_count                = 3
     data_root_storage_class = "fast"
     data_disk_storage_class = "fast"
@@ -28,7 +28,7 @@ EOT
         talos_config = <<EOT
 type: controlplane
 network:
-  hostname: cluster-talos-apply-talos-vm-1
+  hostname: node-1
   nameservers:
     - 1.1.1.1
   interfaces:
@@ -36,14 +36,14 @@ network:
         physical: true
       dhcp: true
       addresses:
-        - ${run.provision.vms["cluster-talos-apply-talos-vm-1"].ip}
+        - ${run.provision.vms["node-1"].ip}/32
 EOT
       },
       {
         talos_config = <<EOT
 type: controlplane
 network:
-  hostname: cluster-talos-apply-talos-vm-2
+  hostname: node-2
   nameservers:
     - 1.1.1.1
   interfaces:
@@ -51,14 +51,14 @@ network:
         physical: true
       dhcp: true
       addresses:
-        - ${run.provision.vms["cluster-talos-apply-talos-vm-2"].ip}
+        - ${run.provision.vms["node-2"].ip}/32
 EOT
       },
       {
         talos_config = <<EOT
 type: controlplane
 network:
-  hostname: cluster-talos-apply-talos-vm-3
+  hostname: node-3
   nameservers:
     - 1.1.1.1
   interfaces:
@@ -66,7 +66,7 @@ network:
         physical: true
       dhcp: true
       addresses:
-        - ${run.provision.vms["cluster-talos-apply-talos-vm-3"].ip}
+        - ${run.provision.vms["node-3"].ip}/32
 EOT        
       }
     ]
@@ -85,7 +85,7 @@ run "test" {
   }
   variables {
     talos_config_path = run.apply.talosconfig_filename
-    node              = "cluster-talos-apply-talos-vm-1"
+    node              = "cluster-talos-apply-1"
   }
 
   assert {

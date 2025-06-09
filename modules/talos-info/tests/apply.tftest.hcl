@@ -4,7 +4,7 @@ run "provision" {
   }
 
   variables {
-    name                    = "talos-info"
+    name                    = "node"
     vm_count                = 1
     data_root_storage_class = "fast"
     data_disk_storage_class = "fast"
@@ -34,13 +34,13 @@ EOT
         talos_config = <<EOT
 type: controlplane
 network:
-  hostname: talos-info-talos-vm-1
+  hostname: node-1
   interfaces:
     - deviceSelector:
         physical: true
       dhcp: true
       addresses:
-        - ${run.provision.vms["talos-info-talos-vm-1"].ip}
+        - ${run.provision.vms["node-1"].ip}
   nameservers:
     - 1.1.1.1
 EOT
@@ -58,7 +58,7 @@ EOT
 run "test" {
   variables {
     talos_config_path = run.apply.talosconfig_filename
-    node              = "talos-info-talos-vm-1"
+    node              = "node-1"
   }
 
   assert {
