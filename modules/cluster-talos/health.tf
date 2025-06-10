@@ -55,7 +55,7 @@ resource "null_resource" "talos_cluster_health_upgrade" {
   }
 
   provisioner "local-exec" {
-    command = "talosctl --talosconfig $TALOSCONFIG health --nodes $NODE --wait-timeout $TIMEOUT"
+    command = "talosctl --talosconfig $TALOSCONFIG health --nodes $NODE --run-e2e --wait-timeout $TIMEOUT"
 
     environment = {
       TALOSCONFIG = local_sensitive_file.talosconfig.filename
