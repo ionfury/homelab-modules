@@ -4,14 +4,14 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.8.8 |
-| <a name="requirement_external"></a> [external](#requirement\_external) | 2.3.4 |
+| <a name="requirement_external"></a> [external](#requirement\_external) | 2.3.5 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | 3.2.3 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_external"></a> [external](#provider\_external) | 2.3.4 |
+| <a name="provider_external"></a> [external](#provider\_external) | 2.3.5 |
 
 ## Modules
 
@@ -21,7 +21,7 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [external_external.talos_info](https://registry.terraform.io/providers/hashicorp/external/2.3.4/docs/data-sources/external) | data source |
+| [external_external.talos_info](https://registry.terraform.io/providers/hashicorp/external/2.3.5/docs/data-sources/external) | data source |
 
 ## Inputs
 
