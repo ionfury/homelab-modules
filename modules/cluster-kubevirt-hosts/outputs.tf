@@ -2,8 +2,8 @@ output "vmi" {
   description = "KubeVirt VirtualMachineInstances -> { ip, dns }"
   value = {
     for vmi_name, vmi in data.kubernetes_resource.talos_vmi : vmi_name => {
-      ip  = vmi.object.status[0].interfaces[0].ip_address
-      mac = vmi.object.status[0].interfaces[0].mac
+      ip  = vmi.object.status.interfaces[0].ipAddress
+      mac = vmi.object.status.interfaces[0].mac
     }
   }
 }
