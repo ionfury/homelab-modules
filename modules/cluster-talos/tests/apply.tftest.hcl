@@ -5,7 +5,7 @@ run "provision" {
 
   variables {
     name                    = "node"
-    vm_count                = 3
+    vm_count                = 1
     data_root_storage_class = "fast"
     data_disk_storage_class = "fast"
     talos_version           = "1.10.0"
@@ -29,45 +29,15 @@ EOT
 type: controlplane
 network:
   hostname: node-1
+  nameservers:
+    - 1.1.1.1
   interfaces:
     - deviceSelector:
         physical: true
       dhcp: true
-      routes:
-        - network: 172.19.0.0/16
       addresses:
         - ${run.provision.vms["node-1"].ip}/32
 EOT
-      },
-      {
-        talos_config = <<EOT
-type: controlplane
-network:
-  hostname: node-2
-  interfaces:
-    - deviceSelector:
-        physical: true
-      dhcp: true
-      routes:
-        - network: 172.19.0.0/16
-      addresses:
-        - ${run.provision.vms["node-2"].ip}/32
-EOT
-      },
-      {
-        talos_config = <<EOT
-type: controlplane
-network:
-  hostname: node-3
-  interfaces:
-    - deviceSelector:
-        physical: true
-      dhcp: true
-      routes:
-        - network: 172.19.0.0/16
-      addresses:
-        - ${run.provision.vms["node-3"].ip}/32
-EOT        
       }
     ]
 
