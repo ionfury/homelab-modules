@@ -18,6 +18,10 @@ brew bundle
 task
 ```
 
+## Workflow
+
+![Workflow](https://github.com/ionfury/homelab-modules/blob/main/docs/images/workflow.png)
+
 ## License
 
 This project is licensed under the Unlicense. See the [LICENSE](LICENSE) file for details.
