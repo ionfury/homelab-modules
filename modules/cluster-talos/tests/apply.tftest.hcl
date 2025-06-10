@@ -20,7 +20,7 @@ run "apply" {
 clusterName: cluster-talos-apply
 allowSchedulingOnControlPlanes: true
 controlPlane:
-  endpoint: https://${run.provision.lb.ip}:6443
+  endpoint: https://${run.provision.vms["node-1"].ip}:6443
 EOT
 
     machines = [
