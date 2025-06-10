@@ -21,21 +21,21 @@ run "plan" {
         type = "controlplane"
         interfaces = [{
           hardwareAddr = "aa:aa:aa:aa:aa:aa"
-          addresses    = ["1.1.1.1/16"]
+          addresses    = [{ ip = "1.1.1.1" }]
         }]
       }
       b = {
         type = "controlplane"
         interfaces = [{
           hardwareAddr = "bb:bb:bb:bb:bb:bb"
-          addresses    = ["2.2.2.2/16"]
+          addresses    = [{ ip = "2.2.2.2" }]
         }]
       }
       c = {
         type = "worker"
         interfaces = [{
           hardwareAddr = "cc:cc:cc:cc:cc:cc"
-          addresses    = ["3.3.3.3/16"]
+          addresses    = [{ ip = "3.3.3.3" }]
         }]
       }
     }
