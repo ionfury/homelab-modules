@@ -57,6 +57,13 @@ resource "kubernetes_manifest" "talos_vm" {
         }
         spec = {
           terminationGracePeriodSeconds = 0
+          networks = [
+            {
+              name = "default"
+              pod  = {}
+            }
+          ]
+
           domain = {
             machine = {
               type = "q35"
@@ -70,6 +77,12 @@ resource "kubernetes_manifest" "talos_vm" {
               }
             }
             devices = {
+              interfaces = [
+                {
+                  name       = "default"
+                  masquerade = {}
+                }
+              ]
               disks = [
                 {
                   name      = "${each.key}-disk-vda-root"
