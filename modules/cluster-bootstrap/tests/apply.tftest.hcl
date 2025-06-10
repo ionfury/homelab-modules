@@ -1,13 +1,6 @@
-mock_provider "flux" {
-  alias = "mock"
-}
-
 run "random" {
   module {
     source = "./tests/harness/random"
-  }
-  providers = {
-    flux = flux.mock
   }
 
   variables {
@@ -18,9 +11,6 @@ run "random" {
 run "provision_hosts" {
   module {
     source = "../cluster-kubevirt-hosts"
-  }
-  providers = {
-    flux = flux.mock
   }
 
   variables {
@@ -35,9 +25,6 @@ run "provision_hosts" {
 run "provision_cluster" {
   module {
     source = "../cluster-talos"
-  }
-  providers = {
-    flux = flux.mock
   }
 
   variables {
@@ -80,9 +67,6 @@ run "get" {
   module {
     source = "./tests/harness/aws_ssm_params_get"
   }
-  providers = {
-    flux = flux.mock
-  }
 
   variables {
     parameters = [
@@ -96,10 +80,6 @@ run "get" {
 }
 
 run "apply" {
-  providers = {
-    flux = flux.mock
-  }
-
   variables {
     cluster_name = run.random.resource_name
     flux_version = "v2.4.0"
