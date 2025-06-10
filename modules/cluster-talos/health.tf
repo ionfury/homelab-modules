@@ -1,4 +1,5 @@
 # This completes when the cluster is ready to be upgraded.
+/*
 resource "null_resource" "talos_cluster_health" {
   depends_on = [talos_machine_bootstrap.this, talos_machine_configuration_apply.machines]
   for_each   = toset(local.control_plane_ips)
@@ -8,7 +9,7 @@ resource "null_resource" "talos_cluster_health" {
   }
 
   provisioner "local-exec" {
-    command = "talosctl --talosconfig $TALOSCONFIG health --nodes $NODE --wait-timeout $TIMEOUT"
+    command = "talosctl --talosconfig $TALOSCONFIG health -n $NODE -e $NODE --wait-timeout $TIMEOUT"
 
     environment = {
       TALOSCONFIG = local_sensitive_file.talosconfig.filename
@@ -17,11 +18,14 @@ resource "null_resource" "talos_cluster_health" {
     }
   }
 }
+*/
 
 # Hack: https://github.com/siderolabs/terraform-provider-talos/issues/140
 # This upgrades the cluster
 resource "null_resource" "talos_upgrade_trigger" {
-  depends_on = [null_resource.talos_cluster_health]
+  #depends_on = [null_resource.talos_cluster_health]
+
+  depends_on = [talos_machine_bootstrap.this, talos_machine_configuration_apply.machines]
   for_each   = local.machines
 
   triggers = {
@@ -55,7 +59,7 @@ resource "null_resource" "talos_cluster_health_upgrade" {
   }
 
   provisioner "local-exec" {
-    command = "talosctl --talosconfig $TALOSCONFIG health --nodes $NODE --run-e2e --wait-timeout $TIMEOUT"
+    command = "talosctl --talosconfig $TALOSCONFIG health -n $NODE -e $NODE--run-e2e --wait-timeout $TIMEOUT"
 
     environment = {
       TALOSCONFIG = local_sensitive_file.talosconfig.filename
