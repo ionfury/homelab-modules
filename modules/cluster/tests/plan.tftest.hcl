@@ -62,7 +62,7 @@ EOT
         install = { disk = "/dev/sda" }
         interfaces = [{
           hardwareAddr = "aa:bb:cc:dd:ee:ff"
-          addresses    = ["1.2.3.4/24"]
+          addresses    = [{ ip = "1.2.3.4" }]
         }]
       }
     }

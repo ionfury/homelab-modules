@@ -127,12 +127,18 @@ variable "machines" {
       content     = string
     })), [])
     interfaces = list(object({
-      addresses        = list(string)
+      addresses = list(object({
+        ip   = string
+        cidr = optional(string, "24")
+      }))
       hardwareAddr     = string
       dhcp_routeMetric = optional(number, 100)
       vlans = optional(list(object({
-        vlanId           = number
-        addresses        = list(string)
+        vlanId = number
+        addresses = list(object({
+          ip   = string
+          cidr = optional(string, "24")
+        }))
         dhcp_routeMetric = optional(number, 100)
       })), [])
     }))
