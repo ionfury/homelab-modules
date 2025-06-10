@@ -96,6 +96,7 @@ tasks:
       MODULES:
         sh: 'ls {{.MODULES_DIR}}'
     cmds:
+      - task: use-pinned-version
       - for: { var: MODULES }
         task: lint-{{.ITEM}}
       - for: { var: MODULES }
@@ -109,6 +110,7 @@ tasks:
       MODULES:
         sh: 'ls {{.MODULES_DIR}}'
     cmds:
+      - task: use-pinned-version
       - for: { var: MODULES }
         task: lint-{{.ITEM}}
         vars:

@@ -1,5 +1,5 @@
 locals {
-  vm_names = [for i in range(var.vm_count) : "${var.name}-talos-vm-${format("%s", i + 1)}"]
+  vm_names = [for i in range(var.vm_count) : "${var.name}-${format("%s", i + 1)}"]
 }
 
 resource "kubernetes_namespace" "this" {
@@ -198,6 +198,13 @@ resource "kubernetes_service" "this" {
       protocol    = "TCP"
     }
 
+    port {
+      name        = "kubectl"
+      port        = 6443
+      target_port = 6443
+      protocol    = "TCP"
+    }
+
     type = "ClusterIP"
   }
 }
@@ -229,6 +236,13 @@ resource "kubernetes_service" "lb" {
       name        = "https"
       port        = 443
       target_port = 443
+      protocol    = "TCP"
+    }
+
+    port {
+      name        = "kubectl"
+      port        = 6443
+      target_port = 6443
       protocol    = "TCP"
     }
 
