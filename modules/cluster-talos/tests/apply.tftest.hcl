@@ -78,7 +78,9 @@ EOT
 }
 
 run "apply" {
-  talos_version = "v1.10.0"
+  variables {
+    talos_version = "v1.10.0"
+  }
 }
 
 run "apply_test" {
@@ -98,7 +100,9 @@ run "apply_test" {
 }
 
 run "upgrade" {
-  talos_version = "v1.10.1"
+  variables {
+    talos_version = "v1.10.1"
+  }
 }
 
 run "upgrade_test" {
