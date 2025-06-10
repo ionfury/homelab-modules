@@ -15,6 +15,7 @@ resource "flux_bootstrap_git" "this" {
 }
 
 resource "github_repository_file" "this" {
+  depends_on = [flux_bootstrap_git.this] # https://github.com/fluxcd/terraform-provider-flux/issues/662
   repository = data.github_repository.this.name
   file       = "${local.github_repository_cluster_directory}/generated-cluster-vars.env"
   content = templatefile("${path.module}/resources/generated-cluster-vars.env.tftpl", {
