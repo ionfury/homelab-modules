@@ -1,7 +1,7 @@
 # This completes when the cluster is ready to be upgraded.
 resource "null_resource" "talos_cluster_health" {
   depends_on = [talos_machine_bootstrap.this, talos_machine_configuration_apply.machines]
-  for_each   = { for k, v in var.machines : k => v if yamldecode(v.talos_config) == "controlplane" }
+  for_each   = toset(local.control_plane_ips)
 
   triggers = {
     always_run = timestamp()
@@ -11,7 +11,7 @@ resource "null_resource" "talos_cluster_health" {
     command = "talosctl --talosconfig $TALOSCONFIG health --nodes $NODE --wait-timeout $TIMEOUT"
 
     environment = {
-      TALOSCONFIG = pathexpand(var.talos_config_path)
+      TALOSCONFIG = local_sensitive_file.talosconfig.filename
       NODE        = each.key
       TIMEOUT     = var.timeout
     }
@@ -39,7 +39,7 @@ resource "null_resource" "talos_upgrade_trigger" {
       DESIRED_TALOS_TAG       = self.triggers.desired_talos_tag
       DESIRED_TALOS_SCHEMATIC = self.triggers.desired_schematic_id
       TALOS_CONFIG_PATH       = local_sensitive_file.talosconfig.filename
-      TALOS_NODE              = split("/", yamldecode(each.value.talos_config).network.interfaces[0].addresses[0])[0] #each.key
+      TALOS_NODE              = local.addresses[each.key]
       TIMEOUT                 = var.timeout
     }
   }
@@ -48,7 +48,7 @@ resource "null_resource" "talos_upgrade_trigger" {
 # This completes when the upgrade is complete.
 resource "null_resource" "talos_cluster_health_upgrade" {
   depends_on = [null_resource.talos_upgrade_trigger]
-  for_each   = { for k, v in var.machines : k => v if yamldecode(v.talos_config) == "controlplane" }
+  for_each   = toset(local.control_plane_ips)
 
   triggers = {
     always_run = timestamp()
@@ -58,7 +58,7 @@ resource "null_resource" "talos_cluster_health_upgrade" {
     command = "talosctl --talosconfig $TALOSCONFIG health --nodes $NODE --wait-timeout $TIMEOUT"
 
     environment = {
-      TALOSCONFIG = pathexpand(var.talos_config_path)
+      TALOSCONFIG = local_sensitive_file.talosconfig.filename
       NODE        = each.key
       TIMEOUT     = var.timeout
     }

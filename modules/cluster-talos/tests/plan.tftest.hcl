@@ -2,8 +2,9 @@ run "plan" {
   command = plan
 
   variables {
-    talos_version      = "v1.9.0"
-    kubernetes_version = "1.32.0"
+    talos_version       = "v1.9.0"
+    kubernetes_version  = "1.32.0"
+    talos_api_endpoints = ["10.10.10.10"]
 
     talos_cluster_config = <<EOT
 clusterName: talos.local
@@ -18,7 +19,7 @@ network:
   hostname: host1
   interfaces:
     - addresses:
-      - 192.168.10.1/24
+      - 10.10.10.5/24
 EOT
       }
     ]
@@ -39,27 +40,27 @@ EOF
   }
 
   assert {
-    condition     = talos_machine_configuration_apply.machines["host1"].endpoint == "192.168.10.1"
+    condition     = talos_machine_configuration_apply.machines["host1"].endpoint == "10.10.10.10"
     error_message = "Incorrect endpoint set for talos machine configuration apply"
   }
 
   assert {
-    condition     = talos_machine_bootstrap.this.endpoint == "192.168.10.1"
+    condition     = talos_machine_bootstrap.this.endpoint == "10.10.10.10"
     error_message = "Talos bootstrap endpoint incorrect: ${talos_machine_bootstrap.this.endpoint}"
   }
 
   assert {
-    condition     = talos_machine_bootstrap.this.node == "host1"
+    condition     = talos_machine_bootstrap.this.node == "10.10.10.5"
     error_message = "Incorrect host for talos machine bootstrap node"
   }
 
   assert {
-    condition     = data.talos_client_configuration.this.endpoints[0] == "192.168.10.1"
+    condition     = data.talos_client_configuration.this.endpoints[0] == "10.10.10.10"
     error_message = "Talos client configuration controlplane ip incorrect: ${talos_machine_bootstrap.this.endpoint}"
   }
 
   assert {
-    condition     = data.talos_client_configuration.this.nodes[0] == "host1"
+    condition     = data.talos_client_configuration.this.nodes[0] == "10.10.10.5"
     error_message = "Incorrect talos client configuration nodes"
   }
 
