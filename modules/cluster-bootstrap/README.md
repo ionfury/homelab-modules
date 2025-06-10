@@ -17,7 +17,7 @@
 | Name | Version |
 |------|---------|
 | <a name="provider_cloudflare"></a> [cloudflare](#provider\_cloudflare) | 5.5.0 |
-| <a name="provider_flux"></a> [flux](#provider\_flux) | 1.4.0 |
+| <a name="provider_flux"></a> [flux](#provider\_flux) | 1.6.0 |
 | <a name="provider_github"></a> [github](#provider\_github) | 6.4.0 |
 | <a name="provider_healthchecksio"></a> [healthchecksio](#provider\_healthchecksio) | 2.0.0 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.36.0 |
