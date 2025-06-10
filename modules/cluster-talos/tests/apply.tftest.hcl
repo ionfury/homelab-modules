@@ -20,7 +20,7 @@ run "apply" {
 clusterName: cluster-talos-apply
 allowSchedulingOnControlPlanes: true
 controlPlane:
-  endpoint: https://${run.provision.vms["node-1"].ip}:6443
+  endpoint: https://${run.provision.vmi["node-1"].ip}:6443
 EOT
 
     machines = [
@@ -33,10 +33,10 @@ network:
     - 1.1.1.1
   interfaces:
     - deviceSelector:
-        physical: true
+        hardwareAddr: ${run.provision.vmi["node-1"].mac}
       dhcp: true
       addresses:
-        - ${run.provision.vms["node-1"].ip}/32
+        - ${run.provision.vmi["node-1"].ip}/32
 EOT
       },
       {
@@ -48,10 +48,10 @@ network:
     - 1.1.1.1
   interfaces:
     - deviceSelector:
-        physical: true
+        hardwareAddr: ${run.provision.vmi["node-2"].mac}
       dhcp: true
       addresses:
-        - ${run.provision.vms["node-2"].ip}/32
+        - ${run.provision.vmi["node-2"].ip}/32
 EOT
       },
       {
@@ -63,10 +63,10 @@ network:
     - 1.1.1.1
   interfaces:
     - deviceSelector:
-        physical: true
+        hardwareAddr: ${run.provision.vmi["node-3"].mac}
       dhcp: true
       addresses:
-        - ${run.provision.vms["node-3"].ip}/32
+        - ${run.provision.vmi["node-3"].ip}/32
 EOT
       }
     ]
