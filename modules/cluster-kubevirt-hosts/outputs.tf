@@ -3,7 +3,6 @@ output "vmi" {
   value = {
     for vmi_name, vmi in data.kubernetes_resource.talos_vmi : vmi_name => {
       ip  = vmi.object.status[0].interfaces[0].ip_address
-      dns = "${vmi.metadata[0].name}.${vmi.metadata[0].namespace}.svc.cluster.local"
       mac = vmi.object.status[0].interfaces[0].mac
     }
   }
