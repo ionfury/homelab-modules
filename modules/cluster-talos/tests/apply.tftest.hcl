@@ -35,7 +35,6 @@ network:
       dhcp: true
       routes:
         - network: 172.19.0.0/16
-          gateway: 172.18.2.3
       addresses:
         - ${run.provision.vms["node-1"].ip}/32
 EOT
@@ -51,7 +50,6 @@ network:
       dhcp: true
       routes:
         - network: 172.19.0.0/16
-          gateway: 172.18.2.3
       addresses:
         - ${run.provision.vms["node-2"].ip}/32
 EOT
@@ -67,7 +65,6 @@ network:
       dhcp: true
       routes:
         - network: 172.19.0.0/16
-          gateway: 172.18.2.3
       addresses:
         - ${run.provision.vms["node-3"].ip}/32
 EOT        
