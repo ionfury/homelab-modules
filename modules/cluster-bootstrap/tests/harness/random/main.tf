@@ -1,6 +1,7 @@
 resource "random_pet" "this" {
   length = var.length
 }
+
 output "resource_name" {
   value = random_pet.this.id
 }

@@ -12,7 +12,7 @@ variable "vm_count" {
 variable "data_root_size" {
   description = "Size of the root diskof each VM."
   type        = string
-  default     = "32G"
+  default     = "10G"
 }
 
 variable "data_root_storage_class" {
@@ -23,7 +23,7 @@ variable "data_root_storage_class" {
 variable "data_disk_size" {
   description = "Size of the data diskof each VM."
   type        = string
-  default     = "64G"
+  default     = "10G"
 }
 
 variable "data_disk_storage_class" {
@@ -45,7 +45,7 @@ variable "cores" {
 variable "memory" {
   description = "Amount of memory to allocate to each VM."
   type        = string
-  default     = "4G"
+  default     = "2G"
 }
 /*
 variable "kubernetes_config" {

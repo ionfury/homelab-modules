@@ -28,14 +28,13 @@ This is a generic terraform module for deploying and managing a talos cluster vi
 | Name | Version |
 |------|---------|
 | <a name="provider_helm"></a> [helm](#provider\_helm) | 2.17.0 |
-| <a name="provider_local"></a> [local](#provider\_local) | 2.5.0 |
+| <a name="provider_local"></a> [local](#provider\_local) | 2.5 |
+| <a name="provider_null"></a> [null](#provider\_null) | 3.2.3 |
 | <a name="provider_talos"></a> [talos](#provider\_talos) | 0.7.0 |
 
 ## Modules
 
-| Name | Source | Version |
-|------|--------|---------|
-| <a name="module_talos_cluster_upgrade"></a> [talos\_cluster\_upgrade](#module\_talos\_cluster\_upgrade) | ../talos-cluster-upgrade | n/a |
+No modules.
 
 ## Resources
 
@@ -44,6 +43,9 @@ This is a generic terraform module for deploying and managing a talos cluster vi
 | [local_sensitive_file.kubeconfig](https://registry.terraform.io/providers/hashicorp/local/2.5/docs/resources/sensitive_file) | resource |
 | [local_sensitive_file.machineconf](https://registry.terraform.io/providers/hashicorp/local/2.5/docs/resources/sensitive_file) | resource |
 | [local_sensitive_file.talosconfig](https://registry.terraform.io/providers/hashicorp/local/2.5/docs/resources/sensitive_file) | resource |
+| [null_resource.talos_cluster_health](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
+| [null_resource.talos_cluster_health_upgrade](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
+| [null_resource.talos_upgrade_trigger](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
 | [talos_cluster_kubeconfig.this](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/resources/cluster_kubeconfig) | resource |
 | [talos_image_factory_schematic.machine_schematic](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/resources/image_factory_schematic) | resource |
 | [talos_machine_bootstrap.this](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/resources/machine_bootstrap) | resource |
