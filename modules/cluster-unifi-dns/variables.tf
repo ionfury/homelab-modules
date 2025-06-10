@@ -9,7 +9,10 @@ variable "machines" {
     type = string
     interfaces = list(object({
       hardwareAddr = string
-      addresses    = list(string)
+      addresses = list(object({
+        ip   = string
+        cidr = optional(string, "24")
+      }))
     }))
   }))
 }

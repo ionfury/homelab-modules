@@ -11,7 +11,7 @@ network:
         physical: true
       addresses:
 %{ for address in interface.addresses ~}
-        - ${address}
+        - ${address.ip}/${address.cidr}
 %{ endfor ~}
       mtu: 1500
       dhcp: true
@@ -27,8 +27,8 @@ network:
 %{ for vlan in interface.vlans ~}
         - vlanId: ${vlan.vlanId}
           addresses:
-%{ for ip in vlan.addresses ~}
-            - ${ip}
+%{ for address in vlan.addresses ~}
+            - ${address.ip}/${address.cidr}
 %{ endfor ~}
           dhcp: true
           dhcpOptions:

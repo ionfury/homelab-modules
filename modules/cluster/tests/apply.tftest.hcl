@@ -99,7 +99,7 @@ EOT
       install = { disk = "/dev/sda" }
       interfaces = [{
         hardwareAddr = "ac:1f:6b:2d:ba:1e"
-        addresses    = ["192.168.10.218/24"]
+        addresses    = [{ ip = "192.168.10.218" }]
       }]
     }
   }
@@ -187,7 +187,7 @@ run "scale" {
         install = { disk = "/dev/sda" }
         interfaces = [{
           hardwareAddr = "ac:1f:6b:2d:ba:1e"
-          addresses    = ["192.168.10.218/24"]
+          addresses    = [{ ip = "192.168.10.218" }]
         }]
       }
       node45 = {
@@ -195,7 +195,7 @@ run "scale" {
         install = { disk = "/dev/sda" }
         interfaces = [{
           hardwareAddr = "ac:1f:6b:2d:bf:ce"
-          addresses    = ["192.168.10.222/24"]
+          addresses    = [{ ip = "192.168.10.222" }]
         }]
       }
     }

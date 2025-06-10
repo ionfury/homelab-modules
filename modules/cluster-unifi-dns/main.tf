@@ -3,7 +3,7 @@ locals {
     for machine, details in var.machines :
     machine => {
       name   = var.cluster_endpoint
-      record = split("/", details.interfaces[0].addresses[0])[0]
+      record = details.interfaces[0].addresses[0].ip
     }
     if details.type == "controlplane"
   })
@@ -11,7 +11,7 @@ locals {
   unifi_users = tomap({
     for machine, details in var.machines : machine => {
       mac = details.interfaces[0].hardwareAddr
-      ip  = split("/", details.interfaces[0].addresses[0])[0]
+      ip  = details.interfaces[0].addresses[0].ip
     }
   })
 }
