@@ -1,27 +1,31 @@
 # This completes when the cluster is ready to be upgraded.
+/*
 resource "null_resource" "talos_cluster_health" {
   depends_on = [talos_machine_bootstrap.this, talos_machine_configuration_apply.machines]
-  for_each   = { for k, v in var.machines : k => v if yamldecode(v.talos_config) == "controlplane" }
+  for_each   = toset(local.control_plane_ips)
 
   triggers = {
     always_run = timestamp()
   }
 
   provisioner "local-exec" {
-    command = "talosctl --talosconfig $TALOSCONFIG health --nodes $NODE --wait-timeout $TIMEOUT"
+    command = "talosctl --talosconfig $TALOSCONFIG health -n $NODE -e $NODE --wait-timeout $TIMEOUT"
 
     environment = {
-      TALOSCONFIG = pathexpand(var.talos_config_path)
+      TALOSCONFIG = local_sensitive_file.talosconfig.filename
       NODE        = each.key
       TIMEOUT     = var.timeout
     }
   }
 }
+*/
 
 # Hack: https://github.com/siderolabs/terraform-provider-talos/issues/140
 # This upgrades the cluster
 resource "null_resource" "talos_upgrade_trigger" {
-  depends_on = [null_resource.talos_cluster_health]
+  #depends_on = [null_resource.talos_cluster_health]
+
+  depends_on = [talos_machine_bootstrap.this, talos_machine_configuration_apply.machines]
   for_each   = local.machines
 
   triggers = {
@@ -39,7 +43,7 @@ resource "null_resource" "talos_upgrade_trigger" {
       DESIRED_TALOS_TAG       = self.triggers.desired_talos_tag
       DESIRED_TALOS_SCHEMATIC = self.triggers.desired_schematic_id
       TALOS_CONFIG_PATH       = local_sensitive_file.talosconfig.filename
-      TALOS_NODE              = split("/", yamldecode(each.value.talos_config).network.interfaces[0].addresses[0])[0] #each.key
+      TALOS_NODE              = local.addresses[each.key]
       TIMEOUT                 = var.timeout
     }
   }
@@ -48,18 +52,18 @@ resource "null_resource" "talos_upgrade_trigger" {
 # This completes when the upgrade is complete.
 resource "null_resource" "talos_cluster_health_upgrade" {
   depends_on = [null_resource.talos_upgrade_trigger]
-  for_each   = { for k, v in var.machines : k => v if yamldecode(v.talos_config) == "controlplane" }
+  #for_each   = toset(local.control_plane_ips)
 
   triggers = {
     always_run = timestamp()
   }
 
   provisioner "local-exec" {
-    command = "talosctl --talosconfig $TALOSCONFIG health --nodes $NODE --wait-timeout $TIMEOUT"
+    command = "talosctl --talosconfig $TALOSCONFIG health -n $NODE -e $NODE --run-e2e --wait-timeout $TIMEOUT"
 
     environment = {
-      TALOSCONFIG = pathexpand(var.talos_config_path)
-      NODE        = each.key
+      TALOSCONFIG = local_sensitive_file.talosconfig.filename
+      NODE        = local.bootstrap_ip
       TIMEOUT     = var.timeout
     }
   }

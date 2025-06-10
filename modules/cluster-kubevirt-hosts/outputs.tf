@@ -1,5 +1,15 @@
-output "vms" {
-  description = "Map of Talos services -> { ip, dns }"
+output "vmi" {
+  description = "KubeVirt VirtualMachineInstances -> { ip, dns }"
+  value = {
+    for vmi_name, vmi in data.kubernetes_resource.talos_vmi : vmi_name => {
+      ip  = vmi.object.status.interfaces[0].ipAddress
+      mac = vmi.object.status.interfaces[0].mac
+    }
+  }
+}
+
+output "svc" {
+  description = "Kubernetes services -> { ip, dns }"
   value = {
     for svc_name, svc in kubernetes_service.this : svc_name => {
       ip  = svc.spec[0].cluster_ip

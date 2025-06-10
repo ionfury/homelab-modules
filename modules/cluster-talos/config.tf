@@ -1,14 +1,13 @@
 locals {
-  machines = { for v in var.machines : yamldecode(v.talos_config).network.hostname => v }
-
-  bootstrap_node     = [for k, v in local.machines : k if yamldecode(v.talos_config).type == "controlplane"][0]
-  bootstrap_endpoint = [for k, v in local.machines : split("/", yamldecode(v.talos_config).network.interfaces[0].addresses[0])[0] if yamldecode(v.talos_config).type == "controlplane"][0]
-
-  nodes            = [for k, v in local.machines : k]
-  controlplane_ips = [for k, v in local.machines : split("/", yamldecode(v.talos_config).network.interfaces[0].addresses[0])[0] if yamldecode(v.talos_config).type == "controlplane"]
-
   cluster_name     = try(yamldecode(var.talos_cluster_config).clusterName, "talos.local")
   cluster_endpoint = yamldecode(var.talos_cluster_config).controlPlane.endpoint
+
+  machines          = { for v in var.machines : yamldecode(v.talos_config).network.hostname => v }
+  addresses         = { for k, v in local.machines : k => split("/", yamldecode(v.talos_config).network.interfaces[0].addresses[0])[0] }
+  machine_ips       = [for k, v in local.machines : local.addresses[k]]
+  control_plane_ips = [for k, v in local.machines : local.addresses[k] if yamldecode(v.talos_config).type == "controlplane"]
+  #worker_ips        = [for k, v in local.machines : local.addresses[k] if yamldecode(v.talos_config).type == "worker"]
+  bootstrap_ip = local.control_plane_ips[0]
 }
 
 data "helm_template" "bootstrap_charts" {
@@ -58,6 +57,6 @@ data "talos_machine_configuration" "this" {
 data "talos_client_configuration" "this" {
   cluster_name         = local.cluster_name
   client_configuration = talos_machine_secrets.this.client_configuration
-  endpoints            = local.controlplane_ips
-  nodes                = local.nodes
+  endpoints            = local.control_plane_ips
+  nodes                = local.machine_ips
 }

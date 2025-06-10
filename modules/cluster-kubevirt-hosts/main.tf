@@ -158,6 +158,18 @@ resource "kubernetes_manifest" "talos_vm" {
   }
 }
 
+data "kubernetes_resource" "talos_vmi" {
+  for_each   = toset(local.vm_names)
+  depends_on = [kubernetes_manifest.talos_vm]
+
+  api_version = "kubevirt.io/v1"
+  kind        = "VirtualMachineInstance"
+  metadata {
+    name      = each.key
+    namespace = kubernetes_namespace.this.metadata[0].name
+  }
+}
+
 resource "kubernetes_service" "this" {
   for_each = toset(local.vm_names)
 

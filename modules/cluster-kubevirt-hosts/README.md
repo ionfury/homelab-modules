@@ -27,6 +27,7 @@ No modules.
 | [kubernetes_service.lb](https://registry.terraform.io/providers/hashicorp/kubernetes/2.36.0/docs/resources/service) | resource |
 | [kubernetes_service.this](https://registry.terraform.io/providers/hashicorp/kubernetes/2.36.0/docs/resources/service) | resource |
 | [talos_image_factory_schematic.this](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/resources/image_factory_schematic) | resource |
+| [kubernetes_resource.talos_vmi](https://registry.terraform.io/providers/hashicorp/kubernetes/2.36.0/docs/data-sources/resource) | data source |
 | [talos_image_factory_urls.this](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/data-sources/image_factory_urls) | data source |
 
 ## Inputs
@@ -48,5 +49,6 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_lb"></a> [lb](#output\_lb) | Loadbalancer service for VMs -> { ip, dns} |
-| <a name="output_vms"></a> [vms](#output\_vms) | Map of Talos services -> { ip, dns } |
+| <a name="output_svc"></a> [svc](#output\_svc) | Kubernetes services -> { ip, dns } |
+| <a name="output_vmi"></a> [vmi](#output\_vmi) | KubeVirt VirtualMachineInstances -> { ip, dns } |
 <!-- END_TF_DOCS -->
