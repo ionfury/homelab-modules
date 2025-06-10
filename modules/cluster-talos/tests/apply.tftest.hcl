@@ -16,7 +16,6 @@ run "apply" {
   variables {
     talos_version        = "v1.10.0"
     kubernetes_version   = "1.32.0"
-    talos_api_endpoints  = [run.provision.lb.ip]
     talos_cluster_config = <<EOT
 clusterName: cluster-talos-apply
 allowSchedulingOnControlPlanes: true

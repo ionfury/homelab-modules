@@ -57,6 +57,6 @@ data "talos_machine_configuration" "this" {
 data "talos_client_configuration" "this" {
   cluster_name         = local.cluster_name
   client_configuration = talos_machine_secrets.this.client_configuration
-  endpoints            = var.talos_api_endpoints
+  endpoints            = local.control_plane_ips
   nodes                = local.machine_ips
 }

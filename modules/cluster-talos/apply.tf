@@ -4,7 +4,7 @@ resource "talos_machine_configuration_apply" "machines" {
   client_configuration        = talos_machine_secrets.this.client_configuration
   machine_configuration_input = data.talos_machine_configuration.this[each.key].machine_configuration
   node                        = local.addresses[each.key]
-  endpoint                    = var.talos_api_endpoints[0]
+  endpoint                    = local.bootstrap_ip
 
   on_destroy = {
     graceful = var.on_destroy.graceful
@@ -18,7 +18,7 @@ resource "talos_machine_bootstrap" "this" {
 
   client_configuration = talos_machine_secrets.this.client_configuration
   node                 = local.bootstrap_ip
-  endpoint             = var.talos_api_endpoints[0]
+  endpoint             = local.bootstrap_ip
 }
 
 resource "talos_cluster_kubeconfig" "this" {
@@ -26,5 +26,5 @@ resource "talos_cluster_kubeconfig" "this" {
 
   client_configuration = talos_machine_secrets.this.client_configuration
   node                 = local.bootstrap_ip
-  endpoint             = var.talos_api_endpoints[0]
+  endpoint             = local.bootstrap_ip
 }

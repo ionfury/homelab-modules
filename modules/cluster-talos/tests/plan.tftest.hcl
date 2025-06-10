@@ -2,9 +2,8 @@ run "plan" {
   command = plan
 
   variables {
-    talos_version       = "v1.9.0"
-    kubernetes_version  = "1.32.0"
-    talos_api_endpoints = ["10.10.10.10"]
+    talos_version      = "v1.9.0"
+    kubernetes_version = "1.32.0"
 
     talos_cluster_config = <<EOT
 clusterName: talos.local
@@ -19,7 +18,7 @@ network:
   hostname: host1
   interfaces:
     - addresses:
-      - 10.10.10.5/24
+      - 10.10.10.10/24
 EOT
       }
     ]
@@ -50,7 +49,7 @@ EOF
   }
 
   assert {
-    condition     = talos_machine_bootstrap.this.node == "10.10.10.5"
+    condition     = talos_machine_bootstrap.this.node == "10.10.10.10"
     error_message = "Incorrect host for talos machine bootstrap node"
   }
 
@@ -60,7 +59,7 @@ EOF
   }
 
   assert {
-    condition     = data.talos_client_configuration.this.nodes[0] == "10.10.10.5"
+    condition     = data.talos_client_configuration.this.nodes[0] == "10.10.10.10"
     error_message = "Incorrect talos client configuration nodes"
   }
 

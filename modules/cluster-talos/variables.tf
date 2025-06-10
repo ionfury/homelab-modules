@@ -8,11 +8,6 @@ variable "kubernetes_version" {
   type        = string
 }
 
-variable "talos_api_endpoints" {
-  description = "The Talos API endpoint to use for the cluster."
-  type        = list(string)
-}
-
 variable "talos_cluster_config" {
   description = "The config for the talos cluster.  This will be applied to each controlplane node. See: https://www.talos.dev/v1.10/reference/configuration/v1alpha1/config/#Config.cluster"
   type        = string
