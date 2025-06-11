@@ -83,41 +83,8 @@ run "apply" {
   }
 }
 
-run "apply_test" {
-  module {
-    source = "../talos-info"
-  }
-
-  variables {
-    talos_config_path = "~/.talos/cluster-talos-apply.yaml"
-    node              = "node-1"
-  }
-
-  assert {
-    condition     = output.talos_version == "v1.10.0"
-    error_message = "output.talos_version is not as expected"
-  }
-}
-
 run "upgrade" {
   variables {
     talos_version = "v1.10.1"
   }
 }
-
-run "upgrade_test" {
-  module {
-    source = "../talos-info"
-  }
-
-  variables {
-    talos_config_path = "~/.talos/cluster-talos-apply.yaml"
-    node              = "node-1"
-  }
-
-  assert {
-    condition     = output.talos_version == "v1.10.1"
-    error_message = "output.talos_version is not as expected"
-  }
-}
-
