@@ -52,14 +52,13 @@ resource "null_resource" "talos_upgrade_trigger" {
 # This completes when the upgrade is complete.
 resource "null_resource" "talos_cluster_health_upgrade" {
   depends_on = [null_resource.talos_upgrade_trigger]
-  #for_each   = toset(local.control_plane_ips)
 
   triggers = {
     always_run = timestamp()
   }
 
   provisioner "local-exec" {
-    command = "talosctl --talosconfig $TALOSCONFIG health -n $NODE -e $NODE --run-e2e --wait-timeout $TIMEOUT"
+    command = "talosctl --talosconfig $TALOSCONFIG health -n $NODE -e $NODE --wait-timeout $TIMEOUT"
 
     environment = {
       TALOSCONFIG = local_sensitive_file.talosconfig.filename
