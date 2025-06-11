@@ -50,9 +50,8 @@ resource "null_resource" "talos_upgrade_trigger" {
 }
 
 # This completes when the upgrade is complete.
-resource "null_resource" "talos_cluster_health_upgrade" {
+resource "null_resource" "talos_cluster_health_e2e" {
   depends_on = [null_resource.talos_upgrade_trigger]
-  #for_each   = toset(local.control_plane_ips)
 
   triggers = {
     always_run = timestamp()
@@ -63,7 +62,6 @@ resource "null_resource" "talos_cluster_health_upgrade" {
 
     environment = {
       TALOSCONFIG = local_sensitive_file.talosconfig.filename
-      NODE        = local.bootstrap_ip
       TIMEOUT     = var.timeout
     }
   }
