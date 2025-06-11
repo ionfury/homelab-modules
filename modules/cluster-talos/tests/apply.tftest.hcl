@@ -82,14 +82,14 @@ run "apply" {
     talos_version = "v1.10.0"
   }
 }
-/*
+
 run "apply_test" {
   module {
     source = "../talos-info"
   }
 
   variables {
-    talos_config_path = run.apply.talosconfig_filename
+    talos_config_path = "~/.talos/cluster-talos-apply.yaml"
     node              = "node-1"
   }
 
@@ -98,20 +98,20 @@ run "apply_test" {
     error_message = "output.talos_version is not as expected"
   }
 }
-*/
+
 run "upgrade" {
   variables {
     talos_version = "v1.10.1"
   }
 }
-/*
+
 run "upgrade_test" {
   module {
     source = "../talos-info"
   }
 
   variables {
-    talos_config_path = run.apply.talosconfig_filename
+    talos_config_path = "~/.talos/cluster-talos-apply.yaml"
     node              = "node-1"
   }
 
@@ -120,4 +120,4 @@ run "upgrade_test" {
     error_message = "output.talos_version is not as expected"
   }
 }
-*/
+
