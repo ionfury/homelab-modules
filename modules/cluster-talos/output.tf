@@ -43,7 +43,7 @@ output "kubeconfig_raw" {
 output "kubeconfig_host" {
   # Ensure the kubeconfig is written after the cluster is healthy.
   # Implicit dependencies will attempt to use the kubeconfig file before the cluster is healthy.
-  depends_on = [null_resource.talos_cluster_health_e2e]
+  depends_on = [null_resource.talos_cluster_health_upgrade]
   sensitive  = true
   value      = talos_cluster_kubeconfig.this.kubernetes_client_configuration.host
 }
