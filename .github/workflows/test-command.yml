@@ -1,6 +1,7 @@
 ---
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 name: Tofu Test
+
 on:
   workflow_dispatch:
     inputs:
@@ -38,8 +39,8 @@ jobs:
           details_url: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
   changed-modules:
-    runs-on: ubuntu-latest
     needs: start-check
+    runs-on: ubuntu-latest
     outputs:
       modules: ${{ steps.detect.outputs.modules }}
     steps:
@@ -65,15 +66,41 @@ jobs:
           )
           echo "modules=$MODULES" >> $GITHUB_OUTPUT
 
-  test-modules:
+  build-matrix:
     needs: changed-modules
-    if: ${{ needs.changed-modules.outputs.modules != '[]' }}
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.head_ref }}
+          fetch-depth: 0
+
+      - name: Build test-matrix
+        id: set-matrix
+        run: |
+          modules=$(echo '${{ needs.changed-modules.outputs.modules }}' | jq -r '.[]')
+          entries=()
+          for m in $modules; do
+            for f in modules/$m/tests/*.tftest.hcl; do
+              [ -e "$f" ] || continue
+              name=$(basename "$f" .tftest.hcl)
+              entries+=("{\"module\":\"$m\",\"test\":\"$name\"}")
+            done
+          done
+          matrix_json="[$(IFS=,; echo "${entries[*]}")]"
+          echo "matrix=$matrix_json" >> $GITHUB_OUTPUT
+
+  test-modules:
+    needs: [changed-modules, build-matrix]
+    if: ${{ needs.build-matrix.outputs.matrix != '[]' }}
     runs-on: homelab-modules-runner-app
     strategy:
-      fail-fast: false 
+      fail-fast: false
       matrix:
-        module: ${{ fromJson(needs.changed-modules.outputs.modules) }}
-        test: ["plan", "apply"]
+        include: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
     steps:
       - name: Checkout PR head
         uses: actions/checkout@v4
@@ -95,8 +122,10 @@ jobs:
         run: tofu -chdir=modules/${{ matrix.module }} init
 
       - name: Run Tofu Tests
-        run: tofu -chdir=modules/${{ matrix.module }} test -filter=tests/${{ matrix.test }}.tftest.hcl
-  
+        run: |
+          tofu -chdir=modules/${{ matrix.module }} \
+          test -filter=tests/${{ matrix.test }}.tftest.hcl
+
   complete-check:
     needs: [test-modules, start-check]
     if: always()
