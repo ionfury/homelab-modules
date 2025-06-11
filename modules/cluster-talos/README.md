@@ -43,7 +43,7 @@ No modules.
 | [local_sensitive_file.kubeconfig](https://registry.terraform.io/providers/hashicorp/local/2.5/docs/resources/sensitive_file) | resource |
 | [local_sensitive_file.machineconf](https://registry.terraform.io/providers/hashicorp/local/2.5/docs/resources/sensitive_file) | resource |
 | [local_sensitive_file.talosconfig](https://registry.terraform.io/providers/hashicorp/local/2.5/docs/resources/sensitive_file) | resource |
-| [null_resource.talos_cluster_health_upgrade](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
+| [null_resource.talos_cluster_health_e2e](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
 | [null_resource.talos_upgrade_trigger](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
 | [talos_cluster_kubeconfig.this](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/resources/cluster_kubeconfig) | resource |
 | [talos_image_factory_schematic.machine_schematic](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/resources/image_factory_schematic) | resource |
