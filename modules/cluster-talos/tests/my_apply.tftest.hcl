@@ -83,7 +83,7 @@ run "apply" {
   }
 }
 
-run "upgrade" {
+run "upgrade_talos" {
   variables {
     talos_version = "v1.10.1"
   }
