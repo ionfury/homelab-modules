@@ -12,20 +12,19 @@ run "provision" {
   }
 }
 
-run "apply" {
-  variables {
-    talos_version        = "v1.10.0"
-    kubernetes_version   = "1.32.0"
-    talos_cluster_config = <<EOT
+variables {
+  talos_version        = "v1.10.0"
+  kubernetes_version   = "1.32.0"
+  talos_cluster_config = <<EOT
 clusterName: cluster-talos-apply
 allowSchedulingOnControlPlanes: true
 controlPlane:
   endpoint: https://${run.provision.vmi["node-1"].ip}:6443
 EOT
 
-    machines = [
-      {
-        talos_config = <<EOT
+  machines = [
+    {
+      talos_config = <<EOT
 type: controlplane
 network:
   hostname: node-1
@@ -38,9 +37,9 @@ network:
       addresses:
         - ${run.provision.vmi["node-1"].ip}/32
 EOT
-      },
-      {
-        talos_config = <<EOT
+    },
+    {
+      talos_config = <<EOT
 type: controlplane
 network:
   hostname: node-2
@@ -53,9 +52,9 @@ network:
       addresses:
         - ${run.provision.vmi["node-2"].ip}/32
 EOT
-      },
-      {
-        talos_config = <<EOT
+    },
+    {
+      talos_config = <<EOT
 type: controlplane
 network:
   hostname: node-3
@@ -68,29 +67,24 @@ network:
       addresses:
         - ${run.provision.vmi["node-3"].ip}/32
 EOT
-      }
-    ]
-
-    on_destroy = {
-      graceful = false
-      reboot   = false
-      reset    = false
     }
-  }
-}
-/*
-run "test" {
-  module {
-    source = "../talos-info"
-  }
-  variables {
-    talos_config_path = run.apply.talosconfig_filename
-    node              = "cluster-talos-apply-1"
-  }
+  ]
 
-  assert {
-    condition     = output.talos_version == "v1.10.0"
-    error_message = "output.talos_version is not as expected"
+  on_destroy = {
+    graceful = false
+    reboot   = false
+    reset    = false
   }
 }
-*/
+
+run "apply" {
+  variables {
+    talos_version = "v1.10.0"
+  }
+}
+
+run "upgrade" {
+  variables {
+    talos_version = "v1.10.1"
+  }
+}
