@@ -30,6 +30,7 @@ variable "cluster_service_subnet" {
 variable "cluster_env_vars" {
   description = "Arbitrary map of values to pass to cluster via the generated-cluster-vars.env."
   type        = map(string)
+  default     = {}
 }
 
 variable "cluster_on_destroy" {
