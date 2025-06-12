@@ -34,6 +34,7 @@
 | <a name="input_cilium_helm_values"></a> [cilium\_helm\_values](#input\_cilium\_helm\_values) | The Helm values to use for Cilium. | `string` | n/a | yes |
 | <a name="input_cilium_version"></a> [cilium\_version](#input\_cilium\_version) | The version of Cilium to use. | `string` | n/a | yes |
 | <a name="input_cloudflare"></a> [cloudflare](#input\_cloudflare) | The Cloudflare account to use. | <pre>object({<br/>    account         = string<br/>    email           = string<br/>    api_token_store = string<br/>    zone_id         = optional(string, "799905ff93d585a9a0633949275cbf98")<br/>  })</pre> | n/a | yes |
+| <a name="input_cluster_env_vars"></a> [cluster\_env\_vars](#input\_cluster\_env\_vars) | Arbitrary map of values to pass to cluster via the generated-cluster-vars.env. | `map(string)` | n/a | yes |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | A name to provide for the cluster. | `string` | n/a | yes |
 | <a name="input_cluster_node_subnet"></a> [cluster\_node\_subnet](#input\_cluster\_node\_subnet) | The subnet to use for the Talos cluster nodes. Format: 10.10.10.10/16 | `string` | n/a | yes |
 | <a name="input_cluster_on_destroy"></a> [cluster\_on\_destroy](#input\_cluster\_on\_destroy) | How to preform node destruction | <pre>object({<br/>    graceful = string<br/>    reboot   = string<br/>    reset    = string<br/>  })</pre> | <pre>{<br/>  "graceful": false,<br/>  "reboot": true,<br/>  "reset": true<br/>}</pre> | no |
