@@ -5,9 +5,9 @@ brew "flock"
 brew "jq"
 
 # OpenTofu
-#brew "opentofu"
 tap "tofuutils/tap"
 brew "tofuenv"
+brew "tgenv"
 brew "tflint"
 brew "terraform-docs"
 brew "go-task"
