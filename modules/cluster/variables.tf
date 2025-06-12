@@ -27,6 +27,10 @@ variable "cluster_service_subnet" {
   description = "The pod subnet to use for services on the Talos cluster. Format: 10.10.10.10/16"
   type        = string
 }
+variable "cluster_env_vars" {
+  description = "Arbitrary map of values to pass to cluster via the generated-cluster-vars.env."
+  type        = map(string)
+}
 
 variable "cluster_on_destroy" {
   description = "How to preform node destruction"

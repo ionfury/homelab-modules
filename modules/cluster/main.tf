@@ -54,7 +54,7 @@ locals {
     "https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-${var.prometheus_version}/charts/kube-prometheus-stack/charts/crds/crds/crd-prometheusrules.yaml",
   ]
 
-  cluster_env_vars = {
+  generated_cluster_env_vars = {
     cluster_name           = var.cluster_name
     cluster_tld            = var.cluster_tld
     cluster_endpoint       = local.cluster_endpoint
@@ -70,6 +70,8 @@ locals {
     kubernetes_version     = var.kubernetes_version
     default_replica_count  = min(3, length(var.machines))
   }
+
+  cluster_env_vars = merge(var.cluster_env_vars, local.generated_cluster_env_vars)
 
   params_get = toset([
     var.unifi.api_key_store,
