@@ -20,15 +20,16 @@ locals {
         cluster_node_subnet = var.cluster_node_subnet
         cluster_vip         = var.cluster_vip
 
-        machine_hostname    = name
-        machine_type        = machine.type
-        machine_interfaces  = machine.interfaces
-        machine_nameservers = var.nameservers
-        machine_timeservers = var.timeservers
-        machine_install     = machine.install
-        machine_labels      = machine.labels
-        machine_annotations = machine.annotations
-        machine_files       = machine.files
+        machine_hostname            = name
+        machine_type                = machine.type
+        machine_interfaces          = machine.interfaces
+        machine_nameservers         = var.nameservers
+        machine_timeservers         = var.timeservers
+        machine_install             = machine.install
+        machine_labels              = machine.labels
+        machine_annotations         = machine.annotations
+        machine_files               = machine.files
+        machine_kubelet_extraMounts = machine.kubelet_extraMounts
       })
       extensions        = machine.install.extensions
       extra_kernel_args = machine.install.extra_kernel_args

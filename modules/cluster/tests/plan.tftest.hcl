@@ -72,6 +72,12 @@ EOT
       node44 = {
         type    = "controlplane"
         install = { disk = "/dev/sda" }
+        kubelet_extraMounts = [{
+          destination = "destination"
+          type        = "type"
+          source      = "source"
+          options     = ["option1", "option2"]
+        }]
         interfaces = [{
           hardwareAddr = "aa:bb:cc:dd:ee:ff"
           addresses    = [{ ip = "1.2.3.4" }]
@@ -165,6 +171,13 @@ kubelet:
   nodeIP:
     validSubnets:
       - 1.2.3.4/24
+  extraMounts:
+    - destination: destination
+      type: type
+      source: source
+      options:
+        - option1
+        - option2
 network:
   hostname: node44
   interfaces:

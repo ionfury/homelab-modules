@@ -161,6 +161,12 @@ variable "machines" {
       permissions = string
       content     = string
     })), [])
+    kubelet_extraMounts = optional(list(object({
+      destination = string
+      type        = string
+      source      = string
+      options     = list(string)
+    })), [])
     interfaces = list(object({
       addresses = list(object({
         ip   = string
