@@ -85,9 +85,10 @@ run "apply" {
     flux_version = "v2.4.0"
     tld          = "tomnowak.work"
 
-    cluster_env_vars = {
-      hello = "world"
-    }
+    cluster_env_vars = [{
+      name  = "hello"
+      value = "world"
+    }]
 
     kubeconfig = {
       host                   = run.provision_cluster.kubeconfig_host
