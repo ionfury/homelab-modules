@@ -19,6 +19,8 @@ run "provision" {
     data_root_storage_class = "fast"
     data_disk_storage_class = "fast"
     talos_version           = "1.10.0"
+
+    memory = "4G"
   }
 }
 
