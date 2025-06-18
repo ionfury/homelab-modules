@@ -28,9 +28,39 @@ variable "cluster_service_subnet" {
   type        = string
 }
 variable "cluster_env_vars" {
-  description = "Arbitrary map of values to pass to cluster via the generated-cluster-vars.env."
-  type        = map(string)
-  default     = {}
+  description = "List of key value pairs to pass to cluster via the generated-cluster-vars.env."
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  default = []
+}
+
+variable "cluster_etcd_extraArgs" {
+  description = "List of key value pairs to pass to the etcd service."
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  default = []
+}
+
+variable "cluster_controllerManager_extraArgs" {
+  description = "List of key value pairs to pass to the controller manager service."
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  default = []
+}
+
+variable "cluster_scheduler_extraArgs" {
+  description = "List of key value pairs to pass to the scheduler service."
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  default = []
 }
 
 variable "cluster_on_destroy" {
@@ -130,6 +160,12 @@ variable "machines" {
       op          = string
       permissions = string
       content     = string
+    })), [])
+    kubelet_extraMounts = optional(list(object({
+      destination = string
+      type        = string
+      source      = string
+      options     = list(string)
     })), [])
     interfaces = list(object({
       addresses = list(object({

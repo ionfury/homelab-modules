@@ -8,7 +8,7 @@ run "random" {
   }
 }
 
-run "provision_hosts" {
+run "provision" {
   module {
     source = "../cluster-kubevirt-hosts"
   }
@@ -19,6 +19,8 @@ run "provision_hosts" {
     data_root_storage_class = "fast"
     data_disk_storage_class = "fast"
     talos_version           = "1.10.0"
+
+    memory = "4G"
   }
 }
 
@@ -34,7 +36,7 @@ run "provision_cluster" {
 clusterName: ${run.random.resource_name}
 allowSchedulingOnControlPlanes: true
 controlPlane:
-  endpoint: https://${run.provision_hosts.lb.ip}:6443
+  endpoint: https://${run.provision.vmi["node-1"].ip}:6443
 EOT
 
     machines = [
@@ -47,10 +49,10 @@ network:
     - 1.1.1.1
   interfaces:
     - deviceSelector:
-        physical: true
+        hardwareAddr: ${run.provision.vmi["node-1"].mac}
       dhcp: true
       addresses:
-        - ${run.provision_hosts.vms["node-1"].ip}
+        - ${run.provision.vmi["node-1"].ip}/32
 EOT
       }
     ]
@@ -85,9 +87,10 @@ run "apply" {
     flux_version = "v2.4.0"
     tld          = "tomnowak.work"
 
-    cluster_env_vars = {
-      hello = "world"
-    }
+    cluster_env_vars = [{
+      name  = "hello"
+      value = "world"
+    }]
 
     kubeconfig = {
       host                   = run.provision_cluster.kubeconfig_host

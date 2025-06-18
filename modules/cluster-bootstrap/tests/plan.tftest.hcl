@@ -21,9 +21,10 @@ run "plan" {
     flux_version = "v2.4.0"
     tld          = "tomnowak.work"
 
-    cluster_env_vars = {
-      hello = "world"
-    }
+    cluster_env_vars = [{
+      name  = "hello"
+      value = "world"
+    }]
 
     kubeconfig = {
       # These are not real credentials, and were generated specifically to meet the validation requirements on the kubernetes provider input to do a plan.

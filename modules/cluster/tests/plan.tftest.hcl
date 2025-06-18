@@ -7,6 +7,18 @@ run "plan" {
     cluster_node_subnet    = "1.2.3.4/24"
     cluster_pod_subnet     = "1.2.3.4/24"
     cluster_service_subnet = "1.2.3.4/24"
+    cluster_env_vars = [
+      { name = "a", value = "b" }
+    ]
+    cluster_etcd_extraArgs = [
+      { name = "c", value = "d" }
+    ]
+    cluster_controllerManager_extraArgs = [
+      { name = "e", value = "f" }
+    ]
+    cluster_scheduler_extraArgs = [
+      { name = "g", value = "h" }
+    ]
     cluster_on_destroy = {
       graceful = false
       reboot   = false
@@ -60,6 +72,12 @@ EOT
       node44 = {
         type    = "controlplane"
         install = { disk = "/dev/sda" }
+        kubelet_extraMounts = [{
+          destination = "destination"
+          type        = "type"
+          source      = "source"
+          options     = ["option1", "option2"]
+        }]
         interfaces = [{
           hardwareAddr = "aa:bb:cc:dd:ee:ff"
           addresses    = [{ ip = "1.2.3.4" }]
@@ -124,6 +142,15 @@ network:
     - 1.2.3.4/24
 apiServer:
   disablePodSecurityPolicy: true
+controllerManager:
+  extraArgs:
+    "e": "f"
+scheduler:
+  extraArgs:
+    "g": "h"
+etcd:
+  extraArgs:
+    "c": "d"
 proxy:
   disabled: true
 coreDNS:
@@ -144,6 +171,13 @@ kubelet:
   nodeIP:
     validSubnets:
       - 1.2.3.4/24
+  extraMounts:
+    - destination: destination
+      type: type
+      source: source
+      options:
+        - option1
+        - option2
 network:
   hostname: node44
   interfaces:

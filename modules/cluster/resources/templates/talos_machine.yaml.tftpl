@@ -3,6 +3,16 @@ kubelet:
   nodeIP:
     validSubnets:
       - ${cluster_node_subnet}
+  extraMounts:
+%{ for mount in machine_kubelet_extraMounts ~}
+    - destination: ${mount.destination}
+      type: ${mount.type}
+      source: ${mount.source}
+      options:
+%{ for option in mount.options ~}
+        - ${option}
+%{ endfor ~}
+%{ endfor ~}
 network:
   hostname: ${machine_hostname}
   interfaces:
