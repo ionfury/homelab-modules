@@ -11,6 +11,21 @@ network:
     - ${cluster_service_subnet}
 apiServer:
   disablePodSecurityPolicy: true
+controllerManager:
+  extraArgs:
+%{ for arg in cluster_controllerManager_extraArgs ~}
+    "${arg.name}": "${arg.value}"
+%{ endfor ~}
+scheduler:
+  extraArgs:
+%{ for arg in cluster_scheduler_extraArgs ~}
+    "${arg.name}": "${arg.value}"
+%{ endfor ~}
+etcd:
+  extraArgs:
+%{ for arg in cluster_etcd_extraArgs ~}
+    "${arg.name}": "${arg.value}"
+%{ endfor ~}
 proxy:
   disabled: true
 coreDNS:

@@ -1,13 +1,17 @@
 locals {
   cluster_endpoint         = "${var.cluster_name}.k8s.${var.cluster_tld}"
   cluster_endpoint_address = "https://${local.cluster_endpoint}:6443"
+  cluster_path             = "${var.github.repository_path}/${var.cluster_name}"
 
   talos_cluster_config = templatefile("${path.module}/resources/templates/talos_cluster.yaml.tftpl", {
-    cluster_endpoint       = local.cluster_endpoint_address
-    cluster_name           = var.cluster_name
-    cluster_pod_subnet     = var.cluster_pod_subnet
-    cluster_service_subnet = var.cluster_service_subnet
-    cluster_extraManifests = local.prometheus_extraManifests
+    cluster_endpoint                    = local.cluster_endpoint_address
+    cluster_name                        = var.cluster_name
+    cluster_pod_subnet                  = var.cluster_pod_subnet
+    cluster_service_subnet              = var.cluster_service_subnet
+    cluster_etcd_extraArgs              = var.cluster_etcd_extraArgs
+    cluster_controllerManager_extraArgs = var.cluster_controllerManager_extraArgs
+    cluster_scheduler_extraArgs         = var.cluster_scheduler_extraArgs
+    cluster_extraManifests              = local.prometheus_extraManifests
   })
 
   machines = [
@@ -54,24 +58,66 @@ locals {
     "https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-${var.prometheus_version}/charts/kube-prometheus-stack/charts/crds/crds/crd-prometheusrules.yaml",
   ]
 
-  generated_cluster_env_vars = {
-    cluster_name           = var.cluster_name
-    cluster_tld            = var.cluster_tld
-    cluster_endpoint       = local.cluster_endpoint
-    cluster_vip            = var.cluster_vip
-    cluster_node_subnet    = var.cluster_node_subnet
-    cluster_pod_subnet     = var.cluster_pod_subnet
-    cluster_service_subnet = var.cluster_service_subnet
-    cluster_path           = "${var.github.repository_path}/${var.cluster_name}"
-    talos_version          = var.talos_version
-    cilium_version         = var.cilium_version
-    flux_version           = var.flux_version
-    prometheus_version     = var.prometheus_version
-    kubernetes_version     = var.kubernetes_version
-    default_replica_count  = min(3, length(var.machines))
-  }
+  generated_cluster_env_vars = [
+    {
+      name  = "cluster_name"
+      value = var.cluster_name
+    },
+    {
+      name  = "cluster_tld"
+      value = var.cluster_tld
+    },
+    {
+      name  = "cluster_endpoint"
+      value = local.cluster_endpoint_address
+    },
+    {
+      name  = "cluster_vip"
+      value = var.cluster_vip
+    },
+    {
+      name  = "cluster_node_subnet"
+      value = var.cluster_node_subnet
+    },
+    {
+      name  = "cluster_pod_subnet"
+      value = var.cluster_pod_subnet
+    },
+    {
+      name  = "cluster_service_subnet"
+      value = var.cluster_service_subnet
+    },
+    {
+      name  = "cluster_path"
+      value = local.cluster_path
+    },
+    {
+      name  = "talos_version"
+      value = var.talos_version
+    },
+    {
+      name  = "cilium_version"
+      value = var.cilium_version
+    },
+    {
+      name  = "flux_version"
+      value = var.flux_version
+    },
+    {
+      name  = "prometheus_version"
+      value = var.prometheus_version
+    },
+    {
+      name  = "kubernetes_version"
+      value = var.kubernetes_version
+    },
+    {
+      name  = "default_replica_count"
+      value = tostring(min(3, length(var.machines)))
+    }
+  ]
 
-  cluster_env_vars = merge(var.cluster_env_vars, local.generated_cluster_env_vars)
+  cluster_env_vars = concat(var.cluster_env_vars, local.generated_cluster_env_vars)
 
   params_get = toset([
     var.unifi.api_key_store,
