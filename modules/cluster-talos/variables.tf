@@ -16,13 +16,14 @@ variable "talos_cluster_config" {
 variable "machines" {
   description = "A list of machines to create the talos cluster from."
   type = list(object({
-    talos_config      = string # https://www.talos.dev/v1.10/reference/configuration/v1alpha1/config/#Config.machine
-    extensions        = optional(list(string), [])
-    extra_kernel_args = optional(list(string), [])
-    secureboot        = optional(bool, false)
-    architecture      = optional(string, "amd64")
-    platform          = optional(string, "metal")
-    sbc               = optional(string, "")
+    talos_config         = string # https://www.talos.dev/v1.10/reference/configuration/v1alpha1/config/#Config.machine
+    install_disk_filters = map(string)
+    extensions           = optional(list(string), [])
+    extra_kernel_args    = optional(list(string), [])
+    secureboot           = optional(bool, false)
+    architecture         = optional(string, "amd64")
+    platform             = optional(string, "metal")
+    sbc                  = optional(string, "")
   }))
 
   validation {

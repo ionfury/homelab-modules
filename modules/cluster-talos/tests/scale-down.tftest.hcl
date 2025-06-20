@@ -31,9 +31,10 @@ EOT
 
 run "apply" {
   variables {
-        machines = [
-    {
-      talos_config = <<EOT
+    machines = [
+      {
+        install_disk_filters = { size = "> 1GB" }
+        talos_config         = <<EOT
 type: controlplane
 network:
   hostname: node-1
@@ -46,9 +47,10 @@ network:
       addresses:
         - ${run.provision.vmi["node-1"].ip}/32
 EOT
-    },
-    {
-      talos_config = <<EOT
+      },
+      {
+        install_disk_filters = { size = "> 1GB" }
+        talos_config         = <<EOT
 type: controlplane
 network:
   hostname: node-2
@@ -61,9 +63,10 @@ network:
       addresses:
         - ${run.provision.vmi["node-2"].ip}/32
 EOT
-    },
-    {
-      talos_config = <<EOT
+      },
+      {
+        install_disk_filters = { size = "> 1GB" }
+        talos_config         = <<EOT
 type: controlplane
 network:
   hostname: node-3
@@ -76,16 +79,17 @@ network:
       addresses:
         - ${run.provision.vmi["node-3"].ip}/32
 EOT
-    }
-  ]
+      }
+    ]
   }
 }
 
 run "scale" {
   variables {
     machines = [
-    {
-      talos_config = <<EOT
+      {
+        install_disk_filters = { size = "> 1GB" }
+        talos_config         = <<EOT
 type: controlplane
 network:
   hostname: node-1
@@ -98,7 +102,7 @@ network:
       addresses:
         - ${run.provision.vmi["node-1"].ip}/32
 EOT
-    }
-  ]
+      }
+    ]
   }
 }

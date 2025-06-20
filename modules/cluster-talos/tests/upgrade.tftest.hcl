@@ -24,7 +24,8 @@ EOT
 
   machines = [
     {
-      talos_config = <<EOT
+      install_disk_filters = { size = "> 1GB" }
+      talos_config         = <<EOT
 type: controlplane
 network:
   hostname: node-1
@@ -39,7 +40,8 @@ network:
 EOT
     },
     {
-      talos_config = <<EOT
+      install_disk_filters = { size = "> 1GB" }
+      talos_config         = <<EOT
 type: controlplane
 network:
   hostname: node-2
@@ -54,7 +56,8 @@ network:
 EOT
     },
     {
-      talos_config = <<EOT
+      install_disk_filters = { size = "> 1GB" }
+      talos_config         = <<EOT
 type: controlplane
 network:
   hostname: node-3

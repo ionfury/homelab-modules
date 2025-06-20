@@ -12,7 +12,8 @@ controlPlane:
 EOT
     machines = [
       {
-        talos_config = <<EOT
+        install_disk_filters = { size = "> 1GB" }
+        talos_config         = <<EOT
 type: controlplane
 network:
   hostname: host1

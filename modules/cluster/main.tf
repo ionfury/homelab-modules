@@ -17,9 +17,8 @@ locals {
   machines = [
     for name, machine in var.machines : {
       talos_config = templatefile("${path.module}/resources/templates/talos_machine.yaml.tftpl", {
-        cluster_node_subnet = var.cluster_node_subnet
-        cluster_vip         = var.cluster_vip
-
+        cluster_node_subnet         = var.cluster_node_subnet
+        cluster_vip                 = var.cluster_vip
         machine_hostname            = name
         machine_type                = machine.type
         machine_interfaces          = machine.interfaces
@@ -31,12 +30,13 @@ locals {
         machine_files               = machine.files
         machine_kubelet_extraMounts = machine.kubelet_extraMounts
       })
-      extensions        = machine.install.extensions
-      extra_kernel_args = machine.install.extra_kernel_args
-      secureboot        = machine.install.secureboot
-      architecture      = machine.install.architecture
-      platform          = machine.install.platform
-      sbc               = machine.install.sbc
+      install_disk_filters = machine.install.disk_filters
+      extensions           = machine.install.extensions
+      extra_kernel_args    = machine.install.extra_kernel_args
+      secureboot           = machine.install.secureboot
+      architecture         = machine.install.architecture
+      platform             = machine.install.platform
+      sbc                  = machine.install.sbc
     }
   ]
 

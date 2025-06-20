@@ -96,7 +96,7 @@ EOT
   machines = {
     node44 = {
       type    = "controlplane"
-      install = { disk = "/dev/sda" }
+      install = { disk_filters = { size = "> 1GB" } }
       interfaces = [{
         hardwareAddr = "ac:1f:6b:2d:ba:1e"
         addresses    = [{ ip = "192.168.10.218" }]
