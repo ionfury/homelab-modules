@@ -27,6 +27,7 @@ variable "cluster_service_subnet" {
   description = "The pod subnet to use for services on the Talos cluster. Format: 10.10.10.10/16"
   type        = string
 }
+
 variable "cluster_env_vars" {
   description = "List of key value pairs to pass to cluster via the generated-cluster-vars.env."
   type = list(object({
@@ -138,7 +139,7 @@ variable "machines" {
   type = map(object({
     type = string
     install = object({
-      disk              = string
+      disk_filters      = map(string)
       extensions        = optional(list(string), [])
       extra_kernel_args = optional(list(string), [])
       secureboot        = optional(bool, false)

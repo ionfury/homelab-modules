@@ -71,7 +71,7 @@ EOT
     machines = {
       node44 = {
         type    = "controlplane"
-        install = { disk = "/dev/sda" }
+        install = { disk_filters = { size = "> 1GB" } }
         kubelet_extraMounts = [{
           destination = "destination"
           type        = "type"
@@ -198,7 +198,6 @@ time:
   servers:
     - 2.2.2.2
 install:
-  disk: /dev/sda
   extraKernelArgs:
   wipe: true
 features:
