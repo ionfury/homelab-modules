@@ -156,6 +156,10 @@ variable "machines" {
       key   = string
       value = string
     })), [])
+    disks = optional(list(object({
+      device     = string
+      mountpoint = string
+    })), [])
     files = optional(list(object({
       path        = string
       op          = string

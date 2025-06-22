@@ -72,6 +72,10 @@ EOT
       node44 = {
         type    = "controlplane"
         install = { disk_filters = { size = "> 1GB" } }
+        disks = [{
+          device     = "device"
+          mountpoint = "mountpoint"
+        }]
         kubelet_extraMounts = [{
           destination = "destination"
           type        = "type"
@@ -197,6 +201,10 @@ network:
 time:
   servers:
     - 2.2.2.2
+disks:
+  - device: device
+    partitions:
+      - mountpoint: mountpoint
 install:
   extraKernelArgs:
   wipe: true
