@@ -115,7 +115,7 @@ locals {
     },
     {
       name  = "default_replica_count"
-      value = tostring(min(3, length(var.machines)))
+      value = "\"${tostring(min(3, length(var.machines)))}\""
     }
   ]
 
