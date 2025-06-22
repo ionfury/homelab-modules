@@ -54,6 +54,12 @@ time:
 %{ for timeserver in machine_timeservers ~}
     - ${timeserver}
 %{ endfor ~}
+disks:
+%{ for disk in machine_disks ~}
+  - device: ${disk.device}
+    partitions:
+      - mountpoint: ${disk.mountpoint}
+%{ endfor ~}
 install:
   extraKernelArgs:
 %{ for arg in machine_install.extra_kernel_args ~}

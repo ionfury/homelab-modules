@@ -25,6 +25,7 @@ locals {
         machine_nameservers         = var.nameservers
         machine_timeservers         = var.timeservers
         machine_install             = machine.install
+        machine_disks               = machine.disks
         machine_labels              = machine.labels
         machine_annotations         = machine.annotations
         machine_files               = machine.files
