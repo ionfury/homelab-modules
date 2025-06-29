@@ -4,13 +4,13 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.8.8 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 5.80.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 6.1.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.80.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 6.1.0 |
 
 ## Modules
 
@@ -24,8 +24,8 @@
 
 | Name | Type |
 |------|------|
-| [aws_ssm_parameter.params_put](https://registry.terraform.io/providers/hashicorp/aws/5.80.0/docs/resources/ssm_parameter) | resource |
-| [aws_ssm_parameter.params_get](https://registry.terraform.io/providers/hashicorp/aws/5.80.0/docs/data-sources/ssm_parameter) | data source |
+| [aws_ssm_parameter.params_put](https://registry.terraform.io/providers/hashicorp/aws/6.1.0/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.params_get](https://registry.terraform.io/providers/hashicorp/aws/6.1.0/docs/data-sources/ssm_parameter) | data source |
 
 ## Inputs
 
