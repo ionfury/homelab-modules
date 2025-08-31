@@ -4,14 +4,14 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.8.8 |
-| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | 2.36.0 |
+| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | 2.38.0 |
 | <a name="requirement_talos"></a> [talos](#requirement\_talos) | 0.7.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.36.0 |
+| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.38.0 |
 | <a name="provider_talos"></a> [talos](#provider\_talos) | 0.7.0 |
 
 ## Modules
@@ -22,12 +22,12 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [kubernetes_manifest.talos_vm](https://registry.terraform.io/providers/hashicorp/kubernetes/2.36.0/docs/resources/manifest) | resource |
-| [kubernetes_namespace.this](https://registry.terraform.io/providers/hashicorp/kubernetes/2.36.0/docs/resources/namespace) | resource |
-| [kubernetes_service.lb](https://registry.terraform.io/providers/hashicorp/kubernetes/2.36.0/docs/resources/service) | resource |
-| [kubernetes_service.this](https://registry.terraform.io/providers/hashicorp/kubernetes/2.36.0/docs/resources/service) | resource |
+| [kubernetes_manifest.talos_vm](https://registry.terraform.io/providers/hashicorp/kubernetes/2.38.0/docs/resources/manifest) | resource |
+| [kubernetes_namespace.this](https://registry.terraform.io/providers/hashicorp/kubernetes/2.38.0/docs/resources/namespace) | resource |
+| [kubernetes_service.lb](https://registry.terraform.io/providers/hashicorp/kubernetes/2.38.0/docs/resources/service) | resource |
+| [kubernetes_service.this](https://registry.terraform.io/providers/hashicorp/kubernetes/2.38.0/docs/resources/service) | resource |
 | [talos_image_factory_schematic.this](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/resources/image_factory_schematic) | resource |
-| [kubernetes_resource.talos_vmi](https://registry.terraform.io/providers/hashicorp/kubernetes/2.36.0/docs/data-sources/resource) | data source |
+| [kubernetes_resource.talos_vmi](https://registry.terraform.io/providers/hashicorp/kubernetes/2.38.0/docs/data-sources/resource) | data source |
 | [talos_image_factory_urls.this](https://registry.terraform.io/providers/siderolabs/talos/0.7.0/docs/data-sources/image_factory_urls) | data source |
 
 ## Inputs
