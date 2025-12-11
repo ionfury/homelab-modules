@@ -31,13 +31,13 @@ locals {
         machine_files               = machine.files
         machine_kubelet_extraMounts = machine.kubelet_extraMounts
       })
-      install_disk_filters = machine.install.disk_filters
-      extensions           = machine.install.extensions
-      extra_kernel_args    = machine.install.extra_kernel_args
-      secureboot           = machine.install.secureboot
-      architecture         = machine.install.architecture
-      platform             = machine.install.platform
-      sbc                  = machine.install.sbc
+      selector          = machine.install.selector
+      extensions        = machine.install.extensions
+      extra_kernel_args = machine.install.extra_kernel_args
+      secureboot        = machine.install.secureboot
+      architecture      = machine.install.architecture
+      platform          = machine.install.platform
+      sbc               = machine.install.sbc
     }
   ]
 

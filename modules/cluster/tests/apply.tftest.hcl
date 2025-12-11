@@ -1,15 +1,15 @@
 variables {
   cluster_name           = "integration"
-  cluster_tld            = "tomnowak.work"
-  cluster_vip            = "192.168.10.6"
+  cluster_tld            = "integration.tomnowak.work"
+  cluster_vip            = "192.168.10.30"
   cluster_node_subnet    = "192.168.10.0/24"
-  cluster_pod_subnet     = "172.30.0.0/16"
-  cluster_service_subnet = "172.31.0.0/16"
+  cluster_pod_subnet     = "172.20.0.0/16"
+  cluster_service_subnet = "172.21.0.0/16"
 
-  cilium_version     = "1.16.5"
-  kubernetes_version = "1.32.0"
+  cilium_version     = "1.18.4"
+  kubernetes_version = "1.34.2"
   prometheus_version = "20.0.0"
-  flux_version       = "v2.4.0"
+  flux_version       = "v2.7.5"
 
   nameservers = ["192.168.10.1"]
   timeservers = ["0.pool.ntp.org"]
@@ -21,7 +21,7 @@ variables {
 
   cilium_helm_values = <<EOT
 autoDirectNodeRoutes: true
-ipv4NativeRoutingCIDR: 172.30.0.0/16
+ipv4NativeRoutingCIDR: 172.20.0.0/16
 bandwidthManager:
   bbr: true
   enabled: true
@@ -94,12 +94,12 @@ securityContext:
 EOT
 
   machines = {
-    node44 = {
+    node45 = {
       type    = "controlplane"
-      install = { disk_filters = { size = "> 1GB" } }
+      install = { selector = "disk.size > 1u * GB" }
       interfaces = [{
-        hardwareAddr = "ac:1f:6b:2d:ba:1e"
-        addresses    = [{ ip = "192.168.10.218" }]
+        hardwareAddr = "ac:1f:6b:83:d3:2c"
+        addresses    = [{ ip = "192.168.10.251" }]
       }]
     }
   }
@@ -136,6 +136,6 @@ EOT
 
 run "provision" {
   variables {
-    talos_version = "v1.10.0"
+    talos_version = "v1.11.5"
   }
 }

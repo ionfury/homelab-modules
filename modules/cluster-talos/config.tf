@@ -31,7 +31,7 @@ data "talos_machine_disks" "this" {
 
   client_configuration = talos_machine_secrets.this.client_configuration
   node                 = local.addresses[each.key]
-  filters              = local.machines[each.key].install_disk_filters
+  selector             = local.machines[each.key].selector
 }
 
 data "talos_machine_configuration" "this" {
@@ -54,7 +54,7 @@ data "talos_machine_configuration" "this" {
       manifests = data.helm_template.bootstrap_charts
     }),
     templatefile("${path.module}/resources/talos-patches/machine_install.yaml.tftpl", {
-      machine_install_disk       = data.talos_machine_disks.this[each.key].disks[0].name
+      machine_install_disk       = data.talos_machine_disks.this[each.key].disks[0].dev_path
       machine_install_disk_image = each.value.secureboot ? local.machine_installer_secureboot[each.key] : local.machine_installer[each.key]
     }),
     templatefile("${path.module}/resources/talos-patches/machine.yaml.tftpl", {

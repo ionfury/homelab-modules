@@ -73,7 +73,7 @@ tasks:
       - '{{.MODULES_DIR}}/{{.MODULE}}/**/*.tf'
       - '{{.MODULES_DIR}}/{{.MODULE}}/**/*.tftpl'
       - '{{.MODULES_DIR}}/{{.MODULE}}/**/*.yaml'
-      - '{{.TEST_PATH}}/**/*.tftest.hcl'
+    #  - '{{.TEST_PATH}}/**/*.tftest.hcl' # Including this somehow creates an endless loop that hangs forever
 
   use-pinned-version:
     desc: Use the pinned version of Open Tofu.
