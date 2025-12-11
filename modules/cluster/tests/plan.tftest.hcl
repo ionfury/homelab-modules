@@ -71,7 +71,7 @@ EOT
     machines = {
       node44 = {
         type    = "controlplane"
-        install = { disk_filters = { size = "> 1GB" } }
+        install = { selector = "disk.size > 1u * GB" }
         disks = [{
           device     = "device"
           mountpoint = "mountpoint"

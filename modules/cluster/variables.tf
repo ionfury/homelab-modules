@@ -139,7 +139,7 @@ variable "machines" {
   type = map(object({
     type = string
     install = object({
-      disk_filters      = map(string)
+      selector          = string
       extensions        = optional(list(string), [])
       extra_kernel_args = optional(list(string), [])
       secureboot        = optional(bool, false)
