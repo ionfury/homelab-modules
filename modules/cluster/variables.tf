@@ -86,31 +86,37 @@ variable "cilium_helm_values" {
 variable "cilium_version" {
   description = "The version of Cilium to use."
   type        = string
+  default     = "1.18.4"
 }
 
 variable "kubernetes_version" {
   description = "The version of Kubernetes to use."
   type        = string
+  default     = "1.34.2"
 }
 
 variable "talos_version" {
   description = "The version of Talos to use."
   type        = string
+  default     = "v1.10.8"
 }
 
 variable "prometheus_version" {
   description = "The version of Prometheus to use."
   type        = string
+  default     = "20.0.0"
 }
 
 variable "gateway_api_version" {
   description = "The version of GatewayAPI to use."
   type        = string
+  default     = "v1.4.1"
 }
 
 variable "flux_version" {
   description = "The version of Flux to use."
   type        = string
+  default     = "v2.4.0"
 }
 
 variable "nameservers" {
