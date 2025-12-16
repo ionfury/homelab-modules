@@ -12,7 +12,7 @@
 | Name | Version |
 |------|---------|
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.36.0 |
-| <a name="provider_talos"></a> [talos](#provider\_talos) | 0.7.0 |
+| <a name="provider_talos"></a> [talos](#provider\_talos) | 0.9.0 |
 
 ## Modules
 

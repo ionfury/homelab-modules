@@ -47,6 +47,7 @@
 | <a name="input_cluster_vip"></a> [cluster\_vip](#input\_cluster\_vip) | The VIP to use for the Talos cluster. Applied to the first interface of control plane machines. Format: 10.10.10.10 | `string` | n/a | yes |
 | <a name="input_external_secrets"></a> [external\_secrets](#input\_external\_secrets) | The external secret store. | <pre>object({<br/>    id_store     = string<br/>    secret_store = string<br/>  })</pre> | n/a | yes |
 | <a name="input_flux_version"></a> [flux\_version](#input\_flux\_version) | The version of Flux to use. | `string` | n/a | yes |
+| <a name="input_gateway_api_version"></a> [gateway\_api\_version](#input\_gateway\_api\_version) | The version of GatewayAPI to use. | `string` | n/a | yes |
 | <a name="input_github"></a> [github](#input\_github) | The GitHub repository to use. | <pre>object({<br/>    org             = string<br/>    repository      = string<br/>    repository_path = string<br/>    token_store     = string<br/>  })</pre> | n/a | yes |
 | <a name="input_healthchecksio"></a> [healthchecksio](#input\_healthchecksio) | The healthchecks.io account to use. | <pre>object({<br/>    api_key_store = string<br/>  })</pre> | n/a | yes |
 | <a name="input_kubernetes_config_path"></a> [kubernetes\_config\_path](#input\_kubernetes\_config\_path) | The path to output the Kubernetes configuration file. | `string` | n/a | yes |
