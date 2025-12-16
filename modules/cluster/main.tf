@@ -11,7 +11,7 @@ locals {
     cluster_etcd_extraArgs              = var.cluster_etcd_extraArgs
     cluster_controllerManager_extraArgs = var.cluster_controllerManager_extraArgs
     cluster_scheduler_extraArgs         = var.cluster_scheduler_extraArgs
-    cluster_extraManifests              = local.prometheus_extraManifests
+    cluster_extraManifests              = concat(local.prometheus_extraManifests, local.gateway_api_extraManifests)
   })
 
   machines = [
@@ -58,6 +58,10 @@ locals {
     "https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-${var.prometheus_version}/charts/kube-prometheus-stack/charts/crds/crds/crd-servicemonitors.yaml",
     "https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-${var.prometheus_version}/charts/kube-prometheus-stack/charts/crds/crds/crd-probes.yaml",
     "https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-${var.prometheus_version}/charts/kube-prometheus-stack/charts/crds/crds/crd-prometheusrules.yaml",
+  ]
+
+  gateway_api_extraManifests = [
+    "https://github.com/kubernetes-sigs/gateway-api/releases/download/${var.gateway_api_version}/experimental-install.yaml"
   ]
 
   generated_cluster_env_vars = [

@@ -1,0 +1,69 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: '3'
+
+tasks:
+  run:
+    desc: Runs all tofu tests.
+    vars:
+      MODULES:
+        sh: 'ls {{.MODULES_DIR}}'
+    cmds:
+      - for: { var: MODULES }
+        task: run-{{.ITEM}}
+
+  plan:
+    desc: Runs all tofu plan tests.
+    vars:
+      MODULES:
+        sh: 'ls {{.MODULES_DIR}}'
+    cmds:
+      - for: { var: MODULES }
+        task: run_{{.ITEM}}_plan
+
+  run-*:
+    desc: Runs all the tofu tests for a specific module.
+    label: run-{{.MODULE}}
+    vars:
+      MODULE: "{{index .MATCH 0}}"
+      PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
+      TESTS:
+        sh: find {{.PATH}} -type f -name '*.tftest.hcl' | xargs -n1 basename | sed 's/.tftest.hcl//'
+    cmds:
+      - for: { var: TESTS }
+        task: run_{{.MODULE}}_{{.ITEM}}
+  
+  run_*_*:
+    desc: Runs a specific test for a specific module.  Follows the format test_<module>_<test>
+    label: run_{{.MODULE}}_{{.TEST}}
+    dotenv: ['{{.TEST_RESOURCES_DIR}}/.env']
+    env:
+      TF_IN_AUTOMATION: true
+    vars:
+      MODULE: "{{index .MATCH 0}}"
+      MODULE_PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
+      TEST: "{{index .MATCH 1}}"
+      TEST_FILE: "{{.TEST}}.tftest.hcl"
+      TEST_PATH:
+        sh: dirname $(find {{.MODULES_DIR}}/{{.MODULE}} -type f -name '{{.TEST_FILE}}')
+      MODULE_RELATIVE_TEST_PATH: 
+        sh: echo {{.TEST_PATH}} | sed 's|{{.MODULE_PATH}}||' | sed 's|^/\(.*\)$|\1/|'
+    cmds:
+      - task tofu:use-pinned-version
+      - task tofu:lint-{{.MODULE}}
+      - task tofu:format-{{.MODULE}}
+      - task tofu:docs-{{.MODULE}}
+      - task tofu:validate-{{.MODULE}}
+      - tofu -chdir={{.MODULE_PATH}} init -upgrade
+      - tofu -chdir={{.MODULE_PATH}} test -filter={{.MODULE_RELATIVE_TEST_PATH}}{{.TEST_FILE}}
+      - echo {{.MODULES_DIR}} {{.MODULE}} {{.TEST_PATH}}
+    preconditions:
+      - which tofu
+      - test -f {{.TEST_RESOURCES_DIR}}/.env
+      - test -d {{.TEST_PATH}}
+      - test -f {{.TEST_PATH}}/{{.TEST_FILE}}
+    sources:
+      - '{{.MODULES_DIR}}/{{.MODULE}}/**/*.tf'
+      - '{{.MODULES_DIR}}/{{.MODULE}}/**/*.tftpl'
+      - '{{.MODULES_DIR}}/{{.MODULE}}/**/*.yaml'
+    #  - '{{.TEST_PATH}}/**/*.tftest.hcl' # Including this somehow creates an endless loop that hangs forever

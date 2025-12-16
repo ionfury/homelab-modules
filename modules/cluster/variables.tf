@@ -103,6 +103,11 @@ variable "prometheus_version" {
   type        = string
 }
 
+variable "gateway_api_version" {
+  description = "The version of GatewayAPI to use."
+  type        = string
+}
+
 variable "flux_version" {
   description = "The version of Flux to use."
   type        = string
