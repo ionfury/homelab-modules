@@ -16,3 +16,16 @@ tasks:
     preconditions:
       - which brew
       - test -f {{.BREWFILE}}
+
+  reset-*:
+    desc: Resets the state of a specific machine.
+    label: reset-{{.MACHINE}}
+    vars:
+      MACHINE: "{{index .MATCH 0}}"
+      SCRIPT: "{{.TOFU_RESOURCES_DIR}}/reset_node.sh"
+      TALOS_CONFIG_PATH: "~/.talos/testing"
+    cmds:
+      - "{{.SCRIPT}} {{.TALOS_CONFIG_PATH}} {{.MACHINE}}"
+    preconditions:
+      - which tofu
+      - test -f {{.SCRIPT}}

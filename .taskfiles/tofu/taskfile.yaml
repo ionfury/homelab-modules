@@ -1,84 +1,13 @@
 ---
-version: "3"
-
-vars:
-  TOFU_RESOURCES_DIR: '{{.ROOT_DIR}}/.taskfiles/tofu/resources'
-  MODULES_DIR: '{{.ROOT_DIR}}/modules'
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: '3'
 
 tasks:
-  test:
-    desc: Runs all tofu tests.
-    vars:
-      MODULES:
-        sh: 'ls {{.MODULES_DIR}}'
-    cmds:
-      - for: { var: MODULES }
-        task: test-{{.ITEM}}
-
-  reset-*:
-    desc: Resets the state of a specific machine.
-    label: reset-{{.MACHINE}}
-    vars:
-      MACHINE: "{{index .MATCH 0}}"
-      SCRIPT: "{{.TOFU_RESOURCES_DIR}}/reset_node.sh"
-      TALOS_CONFIG_PATH: "~/.talos/testing"
-    cmds:
-      - "{{.SCRIPT}} {{.TALOS_CONFIG_PATH}} {{.MACHINE}}"
-    preconditions:
-      - which tofu
-      - test -f {{.SCRIPT}}
-
-  test-*:
-    desc: Runs all the tofu tests for a specific module.
-    label: test-{{.MODULE}}
-    vars:
-      MODULE: "{{index .MATCH 0}}"
-      PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
-      TESTS:
-        sh: find {{.PATH}} -type f -name '*.tftest.hcl' | xargs -n1 basename | sed 's/.tftest.hcl//'
-    cmds:
-      - for: { var: TESTS }
-        task: test_{{.MODULE}}_{{.ITEM}}
-  
-  test_*_*:
-    desc: Runs a specific test for a specific module.  Follows the format test_<module>_<test>
-    label: test_{{.MODULE}}_{{.TEST}}
-    dotenv: ['{{.TOFU_RESOURCES_DIR}}/test/.env']
-    env:
-      TF_IN_AUTOMATION: true
-    vars:
-      MODULE: "{{index .MATCH 0}}"
-      MODULE_PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
-      TEST: "{{index .MATCH 1}}"
-      TEST_FILE: "{{.TEST}}.tftest.hcl"
-      TEST_PATH:
-        sh: dirname $(find {{.MODULES_DIR}}/{{.MODULE}} -type f -name '{{.TEST_FILE}}')
-      MODULE_RELATIVE_TEST_PATH: 
-        sh: echo {{.TEST_PATH}} | sed 's|{{.MODULE_PATH}}||' | sed 's|^/\(.*\)$|\1/|'
-    cmds:
-      - task: use-pinned-version
-      - task: lint-{{.MODULE}}
-      - task: format-{{.MODULE}}
-      - task: docs-{{.MODULE}}
-      - task: validate-{{.MODULE}}
-      - tofu -chdir={{.MODULE_PATH}} init -upgrade
-      - tofu -chdir={{.MODULE_PATH}} test -filter={{.MODULE_RELATIVE_TEST_PATH}}{{.TEST_FILE}}
-      - echo {{.MODULES_DIR}} {{.MODULE}} {{.TEST_PATH}}
-    preconditions:
-      - which tofu
-      #- test -f {{.TOFU_RESOURCES_DIR}}/test/.env
-      - test -d {{.TEST_PATH}}
-      - test -f {{.TEST_PATH}}/{{.TEST_FILE}}
-    sources:
-      - '{{.MODULES_DIR}}/{{.MODULE}}/**/*.tf'
-      - '{{.MODULES_DIR}}/{{.MODULE}}/**/*.tftpl'
-      - '{{.MODULES_DIR}}/{{.MODULE}}/**/*.yaml'
-    #  - '{{.TEST_PATH}}/**/*.tftest.hcl' # Including this somehow creates an endless loop that hangs forever
 
   use-pinned-version:
     desc: Use the pinned version of Open Tofu.
     vars:
-      TOFU_PIN_FILE: '{{.TOFU_RESOURCES_DIR}}/.opentofu-version'
+      TOFU_PIN_FILE: '{{.ROOT_DIR}}/.opentofu-version'
       TOFU_VERSION:
         sh: cat {{.TOFU_PIN_FILE}}
     cmds:
@@ -125,7 +54,6 @@ tasks:
           FIX: "false"
 
   lint-*:
-    internal: true
     label: lint-{{.MODULE}}
     desc: Lints the tofu configuration files.
     vars:
@@ -141,7 +69,6 @@ tasks:
       - '{{.MODULE_PATH}}/**/*.tf'
   
   format-*:
-    internal: true
     desc: Formats the tofu configuration files.
     label: format-{{.MODULE}}
     vars:
@@ -149,7 +76,7 @@ tasks:
       MODULE_PATH: "{{.MODULES_DIR}}/{{.MODULE}}"
       FIX: '{{.FIX | default "true"}}'
     cmds:
-      - tofu --version
+      - task: use-pinned-version
       - tofu fmt {{if eq .FIX "false"}}-check{{end}} -recursive {{.MODULE_PATH}}   
     preconditions:
       - which tofu
@@ -157,7 +84,6 @@ tasks:
       - '{{.MODULE_PATH}}/**/*.tf'
     
   docs-*:
-    internal: true
     desc: Generates docs for tofu modules.
     label: docs-{{.MODULE}}
     vars:
@@ -174,12 +100,12 @@ tasks:
       - '{{.MODULE_PATH}}/README.md'
 
   validate-*:
-    internal: true
     desc: Validates the tofu configuration files for a specific module.
     label: validate-{{.MODULE}}
     vars:
       MODULE: "{{index .MATCH 0}}"
     cmds:
+      - task: use-pinned-version
       - tofu -chdir={{.MODULES_DIR}}/{{.MODULE}} init -upgrade
       - tofu -chdir={{.MODULES_DIR}}/{{.MODULE}} validate
     preconditions:

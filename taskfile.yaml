@@ -1,7 +1,14 @@
 version: "3"
 
+vars:
+  TEST_RESOURCES_DIR: '{{.ROOT_DIR}}/.taskfiles/test/resources'
+  WORKSTATION_RESOURCES_DIR: '{{.ROOT_DIR}}/.taskfiles/workstation/resources'
+  TOFU_RESOURCES_DIR: '{{.ROOT_DIR}}/.taskfiles/tofu/resources'
+  MODULES_DIR: '{{.ROOT_DIR}}/modules'
+
 includes:
   tofu: .taskfiles/tofu
+  test: .taskfiles/test
   github: .taskfiles/github
   workstation: .taskfiles/workstation
   

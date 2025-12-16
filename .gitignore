@@ -89,9 +89,6 @@ terraform.rc
 # Ignore Task checksum files
 .task
 
-# Ignore .env files, should be used for local configuration
-**/.env
-
 **/.upgrade-node.lock
 **/.local
 
