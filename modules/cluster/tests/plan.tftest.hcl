@@ -164,6 +164,7 @@ extraManifests:
   - https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-20.0.0/charts/kube-prometheus-stack/charts/crds/crds/crd-servicemonitors.yaml
   - https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-20.0.0/charts/kube-prometheus-stack/charts/crds/crds/crd-probes.yaml
   - https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/tags/prometheus-operator-crds-20.0.0/charts/kube-prometheus-stack/charts/crds/crds/crd-prometheusrules.yaml
+  - https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.1/experimental-install.yaml
 EOT
     error_message = "local talos_cluster_config error"
   }
