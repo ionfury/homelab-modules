@@ -84,7 +84,7 @@ resource "helm_release" "flux_instance" {
     },
     {
       name  = "instance.sync.path"
-      value = var.github.repository_path
+      value = "${var.github.repository_path}/${var.cluster_name}"
     },
     {
       name  = "instance.sync.ref"
