@@ -62,7 +62,7 @@ resource "helm_release" "flux_instance" {
   wait       = true
 
   values = [
-    file("resources/components.yaml")
+    file("${path.module}/resources/components.yaml")
   ]
 
   set = [
