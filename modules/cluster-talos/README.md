@@ -17,7 +17,7 @@ This is a generic terraform module for deploying and managing a talos cluster vi
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.8.8 |
-| <a name="requirement_helm"></a> [helm](#requirement\_helm) | 2.17.0 |
+| <a name="requirement_helm"></a> [helm](#requirement\_helm) | 3.1.0 |
 | <a name="requirement_local"></a> [local](#requirement\_local) | 2.5 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | 3.2.3 |
 | <a name="requirement_talos"></a> [talos](#requirement\_talos) | 0.9.0 |
@@ -28,7 +28,7 @@ This is a generic terraform module for deploying and managing a talos cluster vi
 | Name | Version |
 |------|---------|
 | <a name="provider_helm"></a> [helm](#provider\_helm) | 2.17.0 |
-| <a name="provider_local"></a> [local](#provider\_local) | 2.5 |
+| <a name="provider_local"></a> [local](#provider\_local) | 2.5.0 |
 | <a name="provider_null"></a> [null](#provider\_null) | 3.2.3 |
 | <a name="provider_talos"></a> [talos](#provider\_talos) | 0.9.0 |
 
@@ -50,7 +50,7 @@ No modules.
 | [talos_machine_bootstrap.this](https://registry.terraform.io/providers/siderolabs/talos/0.9.0/docs/resources/machine_bootstrap) | resource |
 | [talos_machine_configuration_apply.machines](https://registry.terraform.io/providers/siderolabs/talos/0.9.0/docs/resources/machine_configuration_apply) | resource |
 | [talos_machine_secrets.this](https://registry.terraform.io/providers/siderolabs/talos/0.9.0/docs/resources/machine_secrets) | resource |
-| [helm_template.bootstrap_charts](https://registry.terraform.io/providers/hashicorp/helm/2.17.0/docs/data-sources/template) | data source |
+| [helm_template.bootstrap_charts](https://registry.terraform.io/providers/hashicorp/helm/3.1.0/docs/data-sources/template) | data source |
 | [talos_client_configuration.this](https://registry.terraform.io/providers/siderolabs/talos/0.9.0/docs/data-sources/client_configuration) | data source |
 | [talos_image_factory_extensions_versions.machine_version](https://registry.terraform.io/providers/siderolabs/talos/0.9.0/docs/data-sources/image_factory_extensions_versions) | data source |
 | [talos_image_factory_urls.machine_image_url_metal](https://registry.terraform.io/providers/siderolabs/talos/0.9.0/docs/data-sources/image_factory_urls) | data source |

@@ -15,10 +15,93 @@ resource "github_repository_file" "this" {
   overwrite_on_create = true
 }
 
-resource "flux_bootstrap_git" "this" {
-  depends_on = [data.github_repository.this, github_repository_file.this]
+resource "kubernetes_namespace" "flux_system" {
+  metadata {
+    name = "flux-system"
+  }
 
-  version                = var.flux_version
-  path                   = local.github_repository_cluster_directory
-  kustomization_override = file("${path.module}/resources/kustomization.yaml")
+  lifecycle {
+    ignore_changes = [metadata]
+  }
+}
+
+resource "kubernetes_secret" "git_auth" {
+  depends_on = [kubernetes_namespace.flux_system]
+
+  metadata {
+    name      = "flux-system"
+    namespace = "flux-system"
+  }
+
+  data = {
+    username = "git"
+    password = var.github.token
+  }
+
+  type = "Opaque"
+}
+
+resource "helm_release" "flux_operator" {
+  depends_on = [kubernetes_namespace.flux_system, data.github_repository.this, github_repository_file.this]
+
+  name       = "flux-operator"
+  namespace  = "flux-system"
+  repository = "oci://ghcr.io/controlplaneio-fluxcd/charts"
+  chart      = "flux-operator"
+  wait       = true
+}
+
+
+resource "helm_release" "flux_instance" {
+  depends_on = [helm_release.flux_operator]
+
+  name       = "flux"
+  namespace  = "flux-system"
+  repository = "oci://ghcr.io/controlplaneio-fluxcd/charts"
+  chart      = "flux-instance"
+  wait       = true
+
+  values = [
+    file("resources/components.yaml")
+  ]
+
+  set = [
+    {
+      name  = "instance.distribution.version"
+      value = var.flux_version
+    },
+    {
+      name  = "instance.cluster.size"
+      value = "small"
+    },
+    {
+      name  = "instance.sync.kind"
+      value = "GitRepository"
+    },
+    {
+      name  = "instance.sync.url"
+      value = var.github.repository
+    },
+    {
+      name  = "instance.sync.path"
+      value = var.github.repository_path
+    },
+    {
+      name  = "instance.sync.ref"
+      value = "refs/heads/main"
+    },
+    {
+      name  = "instance.sync.provider"
+      value = "github"
+    },
+    {
+      name  = "instance.sync.pullSecret"
+      value = "flux-system"
+    },
+    {
+      name  = "healthcheck.enabled"
+      value = "true"
+      type  = "auto"
+    },
+  ]
 }
