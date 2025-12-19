@@ -1,9 +1,9 @@
 terraform {
   required_version = ">= 1.8.8"
   required_providers {
-    flux = {
-      source  = "fluxcd/flux"
-      version = "1.4.0"
+    helm = {
+      source  = "hashicorp/helm"
+      version = "3.1.0"
     }
     aws = {
       source  = "hashicorp/aws"
