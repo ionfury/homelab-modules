@@ -80,7 +80,7 @@ resource "helm_release" "flux_instance" {
     },
     {
       name  = "instance.sync.url"
-      value = var.github.repository
+      value = "https://github.com/${var.github.org}/${var.github.repository}"
     },
     {
       name  = "instance.sync.path"
@@ -92,7 +92,7 @@ resource "helm_release" "flux_instance" {
     },
     {
       name  = "instance.sync.provider"
-      value = "github"
+      value = "generic"
     },
     {
       name  = "instance.sync.pullSecret"
