@@ -87,4 +87,9 @@ EOT
       api_key = run.get.values["/homelab/integration/accounts/healthchecksio/api-key"]
     }
   }
+
+  assert {
+    condition     = helm_release.flux_instance.values[0] == "instance:\n  components:\n    - source-controller\n    - kustomize-controller\n    - helm-controller\n    - notification-controller\n    - image-reflector-controller\n    - image-automation-controller\n  distribution:\n    version: v2.4.0\n  cluster:\n    size: small\n  sync:\n    kind: GitRepository\n    url: https://github.com/ionfury/homelab\n    path: kubernetes/clusters/plan\n    ref: refs/heads/main\n    provider: generic\n    pullSecret: flux-system\nhealthcheck:\n  enabled: true"
+    error_message = "Incorrect helm flux instance values: ${helm_release.flux_instance.values[0]}"
+  }
 }
