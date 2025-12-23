@@ -51,7 +51,6 @@ resource "helm_release" "flux_operator" {
   wait       = true
 }
 
-
 resource "helm_release" "flux_instance" {
   depends_on = [helm_release.flux_operator]
 
@@ -62,46 +61,12 @@ resource "helm_release" "flux_instance" {
   wait       = true
 
   values = [
-    file("${path.module}/resources/components.yaml")
-  ]
-
-  set = [
-    {
-      name  = "instance.distribution.version"
-      value = var.flux_version
-    },
-    {
-      name  = "instance.cluster.size"
-      value = "small"
-    },
-    {
-      name  = "instance.sync.kind"
-      value = "GitRepository"
-    },
-    {
-      name  = "instance.sync.url"
-      value = "https://github.com/${var.github.org}/${var.github.repository}"
-    },
-    {
-      name  = "instance.sync.path"
-      value = "${var.github.repository_path}/${var.cluster_name}"
-    },
-    {
-      name  = "instance.sync.ref"
-      value = "refs/heads/main"
-    },
-    {
-      name  = "instance.sync.provider"
-      value = "generic"
-    },
-    {
-      name  = "instance.sync.pullSecret"
-      value = "flux-system"
-    },
-    {
-      name  = "healthcheck.enabled"
-      value = "true"
-      type  = "auto"
-    },
+    templatefile("${path.module}/resources/instance.yaml.tftpl", {
+      cluster_name           = var.cluster_name
+      github_org             = var.github.org
+      github_repository      = var.github.repository
+      github_repository_path = var.github.repository_path
+      flux_version           = var.flux_version
+    })
   ]
 }

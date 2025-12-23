@@ -24,9 +24,9 @@ target "image" {
 }
 
 target "image-local" {
-  inherits = ["image"]
-  platforms  = ["linux/amd64"]
-  output     = ["type=docker"]
+  inherits  = ["image"]
+  platforms = ["linux/amd64"]
+  output    = ["type=docker"]
 }
 
 target "image-all" {
