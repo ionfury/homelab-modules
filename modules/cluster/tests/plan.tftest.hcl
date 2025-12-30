@@ -122,19 +122,19 @@ EOT
   }
 
   assert {
-    condition     = local.cluster_endpoint == "cluster_name.k8s.cluster_tld"
+    condition     = local.cluster_endpoint == "k8s.cluster_tld"
     error_message = "local cluster_endpoint error"
   }
 
   assert {
-    condition     = local.cluster_endpoint_address == "https://cluster_name.k8s.cluster_tld:6443"
+    condition     = local.cluster_endpoint_address == "https://k8s.cluster_tld:6443"
     error_message = "local cluster_endpoint_address error"
   }
 
   assert {
     condition     = local.talos_cluster_config == <<EOT
 controlPlane:
-  endpoint: https://cluster_name.k8s.cluster_tld:6443
+  endpoint: https://k8s.cluster_tld:6443
 allowSchedulingOnControlPlanes: true
 clusterName: cluster_name
 network:
