@@ -1,5 +1,5 @@
 locals {
-  cluster_endpoint         = "${var.cluster_name}.k8s.${var.cluster_tld}"
+  cluster_endpoint         = "k8s.${var.cluster_tld}"
   cluster_endpoint_address = "https://${local.cluster_endpoint}:6443"
   cluster_path             = "${var.github.repository_path}/${var.cluster_name}"
 
