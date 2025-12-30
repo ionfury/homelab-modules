@@ -1,10 +1,9 @@
 locals {
-  cluster_endpoint         = "k8s.${var.cluster_tld}"
-  cluster_endpoint_address = "https://${local.cluster_endpoint}:6443"
-  cluster_path             = "${var.github.repository_path}/${var.cluster_name}"
+  cluster_endpoint = "k8s.${var.cluster_tld}"
+  cluster_path     = "${var.github.repository_path}/${var.cluster_name}"
 
   talos_cluster_config = templatefile("${path.module}/resources/templates/talos_cluster.yaml.tftpl", {
-    cluster_endpoint                    = local.cluster_endpoint_address
+    cluster_endpoint                    = cluster_unifi_dns.control_plane_url
     cluster_name                        = var.cluster_name
     cluster_pod_subnet                  = var.cluster_pod_subnet
     cluster_service_subnet              = var.cluster_service_subnet
@@ -75,7 +74,7 @@ locals {
     },
     {
       name  = "cluster_endpoint"
-      value = local.cluster_endpoint_address
+      value = cluster_unifi_dns.control_plane_url
     },
     {
       name  = "cluster_vip"
