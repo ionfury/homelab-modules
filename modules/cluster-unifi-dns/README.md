@@ -33,5 +33,7 @@ No modules.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_control_plane_url"></a> [control\_plane\_url](#output\_control\_plane\_url) | Full HTTPS URL for the Kubernetes Control Plane |
 <!-- END_TF_DOCS -->
