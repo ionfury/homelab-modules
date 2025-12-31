@@ -30,7 +30,7 @@ data "aws_ssm_parameter" "params_get" {
 }
 
 module "cluster_unifi_dns" {
-  source = "../../cluster-unifi-dns"
+  source = "../networking"
 
   cluster_endpoint   = var.cluster_endpoint
   dns_records       = var.dns_records
@@ -45,7 +45,7 @@ module "cluster_unifi_dns" {
 
 
 module "cluster_talos" {
-  source = "../../cluster-talos"
+  source = "../talos"
 
   talos_version          = var.versions.talos
   kubernetes_version     = var.versions.kubernetes
@@ -59,7 +59,7 @@ module "cluster_talos" {
 }
 
 module "cluster_bootstrap" {
-  source = "../../cluster-bootstrap"
+  source = "../bootstrap"
 
   cluster_name     = var.cluster_name
   flux_version     = var.versions.flux

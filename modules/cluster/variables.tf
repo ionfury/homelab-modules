@@ -59,14 +59,6 @@ variable "cilium" {
     helm_values = optional(string)
   })
   default = {}
-
-  validation {
-    condition = !(
-      contains(var.features, "cilium") &&
-      try(var.cilium.helm_values, null) == null
-    )
-    error_message = "Feature 'cilium' requires cilium.helm_values to be set."
-  }
 }
 
 variable "features" {
@@ -211,17 +203,6 @@ variable "machines" {
       contains(["controlplane", "worker"], m.type)
     ])
     error_message = "Machine type must be 'controlplane' or 'worker'."
-  }
-
-  validation {
-    condition = !(
-      contains(var.features, "longhorn") &&
-      anytrue([
-        for _, m in var.machines :
-        length(m.disks) == 0
-      ])
-    )
-    error_message = "Feature 'longhorn' requires at least one disk per machine."
   }
 }
 

@@ -1,0 +1,12 @@
+# https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.cluster.inlineManifests.
+---
+%{ if type == "controlplane" ~}
+cluster:
+  inlineManifests:
+%{ for content in manifests ~}
+    - name: ${content.name}
+      contents: |-
+        ${indent(8,content.manifest)}
+%{ endfor ~}
+%{ endif ~}
+

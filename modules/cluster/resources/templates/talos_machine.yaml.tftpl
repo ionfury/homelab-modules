@@ -56,10 +56,14 @@ time:
 %{ endfor ~}
 disks:
 %{ for disk in machine_disks ~}
-  -%{ if try(disk.device, null) != null ~} device: ${disk.device}
-%{ endif ~}
+%{ if try(disk.device, null) != null ~}
+  - device: ${disk.device}
     partitions:
       - mountpoint: ${disk.mountpoint}
+%{ else ~}
+  - partitions:
+      - mountpoint: ${disk.mountpoint}
+%{ endif ~}
 %{ endfor ~}
 install:
   extraKernelArgs:
