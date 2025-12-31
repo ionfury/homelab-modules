@@ -52,15 +52,6 @@ run "combined_features_do_not_conflict" {
     }
   }
 
-  #
-  # -------------------------------------------------------------------
-  # Assertions
-  # -------------------------------------------------------------------
-  #
-
-  #
-  # Longhorn annotation is present
-  #
   assert {
     condition = (
       length([
@@ -72,9 +63,6 @@ run "combined_features_do_not_conflict" {
     error_message = "Longhorn annotation missing when both features enabled."
   }
 
-  #
-  # Kernel-fast args are present
-  #
   assert {
     condition = (
       length(output.machines["node1"].install.extra_kernel_args) > 0
@@ -83,9 +71,6 @@ run "combined_features_do_not_conflict" {
     error_message = "kernel-fast did not inject kernel args when combined with longhorn."
   }
 
-  #
-  # Both behaviors coexist (no overwrite)
-  #
   assert {
     condition = (
       contains(

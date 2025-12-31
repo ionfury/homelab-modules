@@ -52,15 +52,6 @@ run "adapter_outputs_are_not_duplicated" {
     }
   }
 
-  #
-  # -------------------------------------------------------------------
-  # Assertions
-  # -------------------------------------------------------------------
-  #
-
-  #
-  # Exactly one Longhorn label
-  #
   assert {
     condition = (
       length([
@@ -72,9 +63,6 @@ run "adapter_outputs_are_not_duplicated" {
     error_message = "Duplicate Longhorn labels detected."
   }
 
-  #
-  # Exactly one Longhorn kubelet root mount
-  #
   assert {
     condition = (
       length([
@@ -86,9 +74,6 @@ run "adapter_outputs_are_not_duplicated" {
     error_message = "Duplicate Longhorn kubelet mounts detected."
   }
 
-  #
-  # Exactly one Spegel file
-  #
   assert {
     condition = (
       length([
