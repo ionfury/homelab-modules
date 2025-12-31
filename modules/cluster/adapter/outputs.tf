@@ -37,7 +37,7 @@ output "cluster_endpoint" {
 output "talos_cluster_config" {
   description = "Rendered Talos cluster configuration YAML."
   value = templatefile("${path.module}/../resources/templates/talos_cluster.yaml.tftpl", {
-    cluster_endpoint                  = local.cluster_endpoint
+    cluster_endpoint                  = local.cluster_api_url
     cluster_name                      = var.name
     cluster_pod_subnet               = var.networking.pod_subnet
     cluster_service_subnet            = var.networking.service_subnet

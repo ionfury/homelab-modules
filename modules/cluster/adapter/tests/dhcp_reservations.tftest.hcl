@@ -5,6 +5,9 @@ run "dhcp_reservations_for_all_machines" {
     name     = "dev"
     features = []
 
+    nameservers = ["1.1.1.1", "8.8.8.8"]
+    timeservers = ["time.cloudflare.com"]
+
     networking = {
       tld            = "internal.dev.example.com"
       vip            = "10.0.0.10"

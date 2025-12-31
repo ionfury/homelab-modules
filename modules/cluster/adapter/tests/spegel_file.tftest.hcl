@@ -5,6 +5,9 @@ run "spegel_injects_containerd_config_file" {
     name     = "dev"
     features = ["spegel"]
 
+    nameservers = ["1.1.1.1", "8.8.8.8"]
+    timeservers = ["time.cloudflare.com"]
+
     networking = {
       tld            = ""
       vip            = ""

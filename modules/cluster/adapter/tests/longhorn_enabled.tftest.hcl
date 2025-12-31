@@ -5,6 +5,9 @@ run "longhorn_disk_annotation_is_generated" {
     name     = "dev"
     features = ["longhorn"]
 
+    nameservers = ["1.1.1.1", "8.8.8.8"]
+    timeservers = ["time.cloudflare.com"]
+
     networking = {
       tld            = "internal.dev.example.com"
       vip            = "10.0.0.10"

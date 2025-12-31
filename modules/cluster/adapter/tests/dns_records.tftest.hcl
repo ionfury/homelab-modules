@@ -5,6 +5,9 @@ run "dns_records_only_for_controlplane" {
     name     = "dev"
     features = []
 
+    nameservers = ["1.1.1.1", "8.8.8.8"]
+    timeservers = ["time.cloudflare.com"]
+
     networking = {
       tld            = "internal.dev.example.com"
       vip            = "10.0.0.10"

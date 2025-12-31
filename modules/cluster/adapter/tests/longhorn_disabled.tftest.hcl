@@ -5,6 +5,9 @@ run "longhorn_annotation_is_not_generated_when_feature_disabled" {
     name     = "dev"
     features = [] # <-- longhorn NOT enabled
 
+    nameservers = ["1.1.1.1", "8.8.8.8"]
+    timeservers = ["time.cloudflare.com"]
+
     networking = {
       tld            = "internal.dev.example.com"
       vip            = "10.0.0.10"

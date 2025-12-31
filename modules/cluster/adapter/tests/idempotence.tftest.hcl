@@ -5,6 +5,9 @@ run "adapter_outputs_are_not_duplicated" {
     name     = "dev"
     features = ["longhorn", "spegel"]
 
+    nameservers = ["1.1.1.1", "8.8.8.8"]
+    timeservers = ["time.cloudflare.com"]
+
     networking = {
       tld            = "internal.dev.example.com"
       vip            = "10.0.0.10"

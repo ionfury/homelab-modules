@@ -120,3 +120,13 @@ variable "versions" {
   })
   default = {}
 }
+
+variable "nameservers" {
+  description = "The nameservers to use for the cluster nodes."
+  type        = list(string)
+}
+
+variable "timeservers" {
+  description = "The timeservers to use for the cluster nodes."
+  type        = list(string)
+}

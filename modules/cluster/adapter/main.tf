@@ -5,8 +5,8 @@ locals {
   feature_prometheus  = contains(var.features, "prometheus")
   feature_gateway_api = contains(var.features, "gateway-api")
 
-  dns_name         = "k8s.${var.networking.tld}"
-  cluster_endpoint = "https://${local.dns_name}:6443"
+  dns_name        = "k8s.${var.networking.tld}"
+  cluster_api_url = "https://${local.dns_name}:6443"
 
   extra_manifests = concat(
     local.feature_prometheus ? [
@@ -156,8 +156,8 @@ locals {
         machine_hostname            = name
         machine_interfaces          = m.interfaces
         cluster_vip                 = var.networking.vip
-        machine_nameservers         = [] # Runtime will provide these
-        machine_timeservers         = [] # Runtime will provide these
+        machine_nameservers         = var.nameservers
+        machine_timeservers         = var.timeservers
         machine_disks = [
           for d in m.disks : {
             device     = try(d.device, null)

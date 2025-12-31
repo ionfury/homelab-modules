@@ -71,20 +71,13 @@ variable "cluster_env_vars" {
 variable "versions" {
   description = "Component versions used by the runtime."
   type = object({
-    kubernetes = string
-    talos      = string
-    flux       = string
+    kubernetes  = string
+    talos       = string
+    cilium      = optional(string)
+    flux        = string
+    prometheus  = optional(string)
+    gateway_api = optional(string)
   })
-}
-
-variable "nameservers" {
-  description = "Nameservers configured on cluster nodes."
-  type        = list(string)
-}
-
-variable "timeservers" {
-  description = "Timeservers configured on cluster nodes."
-  type        = list(string)
 }
 
 variable "talos_config_path" {

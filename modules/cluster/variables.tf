@@ -53,14 +53,6 @@ variable "on_destroy" {
   }
 }
 
-variable "cilium" {
-  description = "Cilium configuration (used when feature \"cilium\" is enabled)."
-  type = object({
-    helm_values = optional(string)
-  })
-  default = {}
-}
-
 variable "features" {
   description = "Feature flags that enable optional cluster behavior."
   type        = set(string)

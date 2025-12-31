@@ -5,6 +5,9 @@ run "kernel_fast_injects_kernel_args" {
     name     = "dev"
     features = ["kernel-fast"]
 
+    nameservers = ["1.1.1.1", "8.8.8.8"]
+    timeservers = ["time.cloudflare.com"]
+
     networking = {
       tld            = "internal.dev.example.com"
       vip            = "10.0.0.10"
