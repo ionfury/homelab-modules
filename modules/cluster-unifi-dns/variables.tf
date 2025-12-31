@@ -1,20 +1,22 @@
-variable "cluster_endpoint" {
-  description = "DNS name to create for the cluster control plane endpoints."
-  type        = string
+variable "dns_records" {
+  description = "DNS records to create in Unifi."
+  type = map(object({
+    name   = string
+    record = string
+  }))
 }
 
-variable "machines" {
-  description = "A list of machines to create Unifi records for."
+variable "dhcp_reservations" {
+  description = "Static DHCP reservations."
   type = map(object({
-    type = string
-    interfaces = list(object({
-      hardwareAddr = string
-      addresses = list(object({
-        ip   = string
-        cidr = optional(string, "24")
-      }))
-    }))
+    mac = string
+    ip  = string
   }))
+}
+
+variable "cluster_endpoint" {
+  description = "DNS endpoint for the Kubernetes control plane."
+  type        = string
 }
 
 variable "unifi" {

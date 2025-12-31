@@ -1,34 +1,9 @@
-variable "cluster_name" {
+variable "name" {
   description = "A name to provide for the cluster."
   type        = string
 }
 
-variable "cluster_tld" {
-  description = "A tld for the cluster. Format: asdf.com"
-  type        = string
-}
-
-variable "cluster_vip" {
-  description = "The VIP to use for the Talos cluster. Applied to the first interface of control plane machines. Format: 10.10.10.10"
-  type        = string
-}
-
-variable "cluster_node_subnet" {
-  description = "The subnet to use for the Talos cluster nodes. Format: 10.10.10.10/16"
-  type        = string
-}
-
-variable "cluster_pod_subnet" {
-  description = "The pod subnet to use for pods on the Talos cluster. Format: 10.10.10.10/16"
-  type        = string
-}
-
-variable "cluster_service_subnet" {
-  description = "The pod subnet to use for services on the Talos cluster. Format: 10.10.10.10/16"
-  type        = string
-}
-
-variable "cluster_env_vars" {
+variable "env_vars" {
   description = "List of key value pairs to pass to cluster via the generated-cluster-vars.env."
   type = list(object({
     name  = string
@@ -37,7 +12,7 @@ variable "cluster_env_vars" {
   default = []
 }
 
-variable "cluster_etcd_extraArgs" {
+variable "etcd_extraArgs" {
   description = "List of key value pairs to pass to the etcd service."
   type = list(object({
     name  = string
@@ -46,7 +21,7 @@ variable "cluster_etcd_extraArgs" {
   default = []
 }
 
-variable "cluster_controllerManager_extraArgs" {
+variable "controllerManager_extraArgs" {
   description = "List of key value pairs to pass to the controller manager service."
   type = list(object({
     name  = string
@@ -55,7 +30,7 @@ variable "cluster_controllerManager_extraArgs" {
   default = []
 }
 
-variable "cluster_scheduler_extraArgs" {
+variable "scheduler_extraArgs" {
   description = "List of key value pairs to pass to the scheduler service."
   type = list(object({
     name  = string
@@ -64,12 +39,12 @@ variable "cluster_scheduler_extraArgs" {
   default = []
 }
 
-variable "cluster_on_destroy" {
+variable "on_destroy" {
   description = "How to preform node destruction"
   type = object({
-    graceful = string
-    reboot   = string
-    reset    = string
+    graceful = bool
+    reboot   = bool
+    reset    = bool
   })
   default = {
     graceful = false
@@ -78,45 +53,73 @@ variable "cluster_on_destroy" {
   }
 }
 
-variable "cilium_helm_values" {
-  description = "The Helm values to use for Cilium."
-  type        = string
+variable "cilium" {
+  description = "Cilium configuration (used when feature \"cilium\" is enabled)."
+  type = object({
+    helm_values = optional(string)
+  })
+  default = {}
+
+  validation {
+    condition = !(
+      contains(var.features, "cilium") &&
+      try(var.cilium.helm_values, null) == null
+    )
+    error_message = "Feature 'cilium' requires cilium.helm_values to be set."
+  }
 }
 
-variable "cilium_version" {
-  description = "The version of Cilium to use."
-  type        = string
-  default     = "1.18.4"
+variable "features" {
+  description = "Feature flags that enable optional cluster behavior."
+  type        = set(string)
+  default     = []
+
+  validation {
+    condition = alltrue([
+      for f in var.features :
+      contains([
+        "longhorn",
+        "cilium",
+        "kernel-fast",
+        "spegel",
+        "gateway-api",
+        "prometheus",
+      ], f)
+    ])
+    error_message = "Unsupported feature specified."
+  }
 }
 
-variable "kubernetes_version" {
-  description = "The version of Kubernetes to use."
-  type        = string
-  default     = "1.34.2"
+variable "networking" {
+  description = "Cluster networking configuration."
+  type = object({
+    tld            = string
+    vip            = string
+    node_subnet    = string
+    pod_subnet     = string
+    service_subnet = string
+  })
 }
 
-variable "talos_version" {
-  description = "The version of Talos to use."
-  type        = string
-  default     = "v1.10.8"
-}
+variable "versions" {
+  description = "Component versions for the cluster."
+  type = object({
+    kubernetes  = string
+    talos       = string
+    cilium      = string
+    flux        = string
+    prometheus  = string
+    gateway_api = string
+  })
 
-variable "prometheus_version" {
-  description = "The version of Prometheus to use."
-  type        = string
-  default     = "20.0.0"
-}
-
-variable "gateway_api_version" {
-  description = "The version of GatewayAPI to use."
-  type        = string
-  default     = "v1.4.1"
-}
-
-variable "flux_version" {
-  description = "The version of Flux to use."
-  type        = string
-  default     = "v2.4.0"
+  default = {
+    kubernetes  = "1.34.2"
+    talos       = "v1.10.8"
+    cilium      = "1.18.4"
+    flux        = "v2.4.0"
+    prometheus  = "20.0.0"
+    gateway_api = "v1.4.1"
+  }
 }
 
 variable "nameservers" {
@@ -146,43 +149,44 @@ variable "ssm_output_path" {
 }
 
 variable "machines" {
-  description = "A list of machines to create the talos cluster from."
+  description = "Cluster machine inventory."
   type = map(object({
-    type = string
+    type = string # controlplane | worker
+
     install = object({
-      selector          = string
-      extensions        = optional(list(string), [])
-      extra_kernel_args = optional(list(string), [])
-      secureboot        = optional(bool, false)
-      architecture      = optional(string, "amd64")
-      platform          = optional(string, "metal")
-      sbc               = optional(string, "")
-      wipe              = optional(bool, true)
+      selector = string
+      wipe     = optional(bool, true)
+
+      # semantic data intent (used by features like longhorn)
+      data = optional(object({
+        enabled = bool
+        tags    = optional(list(string), [])
+      }))
     })
+
+    disks = optional(list(object({
+      device     = optional(string)
+      mountpoint = string
+      tags       = optional(list(string), [])
+    })), [])
+
     labels = optional(list(object({
       key   = string
       value = string
     })), [])
+
     annotations = optional(list(object({
       key   = string
       value = string
     })), [])
-    disks = optional(list(object({
-      device     = string
-      mountpoint = string
-    })), [])
+
     files = optional(list(object({
       path        = string
       op          = string
       permissions = string
       content     = string
     })), [])
-    kubelet_extraMounts = optional(list(object({
-      destination = string
-      type        = string
-      source      = string
-      options     = list(string)
-    })), [])
+
     interfaces = list(object({
       addresses = list(object({
         ip   = string
@@ -200,6 +204,25 @@ variable "machines" {
       })), [])
     }))
   }))
+
+  validation {
+    condition = alltrue([
+      for _, m in var.machines :
+      contains(["controlplane", "worker"], m.type)
+    ])
+    error_message = "Machine type must be 'controlplane' or 'worker'."
+  }
+
+  validation {
+    condition = !(
+      contains(var.features, "longhorn") &&
+      anytrue([
+        for _, m in var.machines :
+        length(m.disks) == 0
+      ])
+    )
+    error_message = "Feature 'longhorn' requires at least one disk per machine."
+  }
 }
 
 variable "unifi" {

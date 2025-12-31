@@ -56,7 +56,8 @@ time:
 %{ endfor ~}
 disks:
 %{ for disk in machine_disks ~}
-  - device: ${disk.device}
+  -%{ if try(disk.device, null) != null ~} device: ${disk.device}
+%{ endif ~}
     partitions:
       - mountpoint: ${disk.mountpoint}
 %{ endfor ~}
