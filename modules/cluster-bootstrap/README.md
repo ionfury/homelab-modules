@@ -6,7 +6,7 @@
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.8.8 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | 5.80.0 |
 | <a name="requirement_cloudflare"></a> [cloudflare](#requirement\_cloudflare) | 5.6.0 |
-| <a name="requirement_github"></a> [github](#requirement\_github) | 6.4.0 |
+| <a name="requirement_github"></a> [github](#requirement\_github) | 6.9.0 |
 | <a name="requirement_healthchecksio"></a> [healthchecksio](#requirement\_healthchecksio) | 2.0.0 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | 3.1.0 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | 2.36.0 |
@@ -17,7 +17,7 @@
 | Name | Version |
 |------|---------|
 | <a name="provider_cloudflare"></a> [cloudflare](#provider\_cloudflare) | 5.6.0 |
-| <a name="provider_github"></a> [github](#provider\_github) | 6.4.0 |
+| <a name="provider_github"></a> [github](#provider\_github) | 6.9.0 |
 | <a name="provider_healthchecksio"></a> [healthchecksio](#provider\_healthchecksio) | 2.0.0 |
 | <a name="provider_helm"></a> [helm](#provider\_helm) | 3.1.0 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.36.0 |
@@ -33,7 +33,7 @@ No modules.
 |------|------|
 | [cloudflare_dns_record.ingress](https://registry.terraform.io/providers/cloudflare/cloudflare/5.6.0/docs/resources/dns_record) | resource |
 | [cloudflare_zero_trust_tunnel_cloudflared.this](https://registry.terraform.io/providers/cloudflare/cloudflare/5.6.0/docs/resources/zero_trust_tunnel_cloudflared) | resource |
-| [github_repository_file.this](https://registry.terraform.io/providers/integrations/github/6.4.0/docs/resources/repository_file) | resource |
+| [github_repository_file.this](https://registry.terraform.io/providers/integrations/github/6.9.0/docs/resources/repository_file) | resource |
 | [healthchecksio_check.this](https://registry.terraform.io/providers/kristofferahl/healthchecksio/2.0.0/docs/resources/check) | resource |
 | [helm_release.flux_instance](https://registry.terraform.io/providers/hashicorp/helm/3.1.0/docs/resources/release) | resource |
 | [helm_release.flux_operator](https://registry.terraform.io/providers/hashicorp/helm/3.1.0/docs/resources/release) | resource |
@@ -45,7 +45,7 @@ No modules.
 | [random_password.this](https://registry.terraform.io/providers/hashicorp/random/3.6.3/docs/resources/password) | resource |
 | [cloudflare_accounts.this](https://registry.terraform.io/providers/cloudflare/cloudflare/5.6.0/docs/data-sources/accounts) | data source |
 | [cloudflare_zero_trust_tunnel_cloudflared_token.this](https://registry.terraform.io/providers/cloudflare/cloudflare/5.6.0/docs/data-sources/zero_trust_tunnel_cloudflared_token) | data source |
-| [github_repository.this](https://registry.terraform.io/providers/integrations/github/6.4.0/docs/data-sources/repository) | data source |
+| [github_repository.this](https://registry.terraform.io/providers/integrations/github/6.9.0/docs/data-sources/repository) | data source |
 | [healthchecksio_channel.this](https://registry.terraform.io/providers/kristofferahl/healthchecksio/2.0.0/docs/data-sources/channel) | data source |
 
 ## Inputs
